@@ -1,0 +1,141 @@
+.landing-container {
+  min-height: 100vh;
+  background-color: var(--bg-light);
+}
+
+/* ==========================================================================
+   🌐 NAVBAR RESPONSIVO CON MENÚ DE HAMBURGUESA
+   ========================================================================== */
+.main-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 40px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-top-row { display: flex; align-items: center; justify-content: space-between; }
+.brand { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+.brand .tag { font-size: 0.8rem; background: var(--primary-light); color: var(--primary); padding: 2px 8px; border-radius: 20px; margin-left: 4px; }
+
+.nav-links { display: flex; gap: 24px; }
+.nav-links a { color: var(--text-muted); font-weight: 600; font-size: 0.95rem; cursor: pointer; padding: 6px 0; border-bottom: 2px solid transparent; }
+.nav-links a:hover, .nav-links a.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+.navbar-actions { display: flex; align-items: center; gap: 16px; }
+.auth-cart-group { display: flex; align-items: center; gap: 12px; }
+.search-bar-container input { width: 220px; padding: 8px 14px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; }
+.nav-cart-btn { background: var(--primary-light); color: var(--primary); border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; }
+.badge-nav { background: #ef4444; color: white; padding: 1px 6px; border-radius: 50%; font-size: 0.75rem; }
+
+.nav-login-btn { background-color: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; }
+.user-profile-badge { font-size: 0.9rem; font-weight: 600; color: var(--text-dark); cursor: pointer; background: #f1f5f9; padding: 8px 12px; border-radius: 20px; }
+.logout-hint { font-size: 0.75rem; color: #ef4444; margin-left: 4px; }
+.hamburger-menu-btn { display: none; background: none; border: none; font-size: 1.8rem; color: var(--primary); cursor: pointer; }
+
+/* 📱 Cambios estructurales para Celulares */
+@media (max-width: 768px) {
+  .main-navbar { flex-direction: column; align-items: stretch; padding: 12px 20px; }
+  .navbar-top-row { width: 100%; display: flex; }
+  .hamburger-menu-btn { display: block; }
+  .nav-links { display: none; flex-direction: column; gap: 8px; padding: 12px 0; border-top: 1px solid #e2e8f0; width: 100%; }
+  .nav-links a { padding: 8px 4px; width: 100%; }
+  .navbar-actions { display: none; flex-direction: column; align-items: stretch; gap: 12px; padding: 12px 0; border-top: 1px solid #e2e8f0; }
+  .search-bar-container input { width: 100%; }
+  .auth-cart-group { justify-content: space-between; width: 100%; }
+  .nav-links.show, .navbar-actions.show { display: flex; }
+}
+
+/* ==========================================================================
+   🏡 VISTAS COMERCIALES Y SECCIONES
+   ========================================================================== */
+.hero-section { text-align: center; padding: 80px 20px; background: linear-gradient(135deg, #e0f2fe 0%, #f8fafc 100%); }
+.hero-section h1 { font-size: 2.3rem; margin-bottom: 16px; color: var(--text-dark); }
+.hero-section .highlight { color: var(--primary); }
+.hero-section p { font-size: 1.05rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 24px; }
+.btn-hero-chat { background-color: var(--secondary); color: white; border: none; padding: 14px 28px; font-size: 1rem; font-weight: 700; border-radius: 30px; cursor: pointer; }
+
+.categories-section { padding: 40px 20px; text-align: center; }
+.categories-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; margin-top: 20px; }
+.category-card { background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; width: 120px; cursor: pointer; }
+
+.page-section-content { text-align: center; padding: 60px 20px; max-width: 800px; margin: 0 auto; }
+.placeholder-box { background: white; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 40px; margin-top: 24px; color: var(--text-muted); }
+
+/* ==========================================================================
+   🔒 COMPONENTE FORMULARIO LOGIN
+   ========================================================================== */
+.login-page-section { display: flex; justify-content: center; align-items: center; padding: 60px 20px; background: #f1f5f9; min-height: calc(100vh - 80px); }
+.login-card { background: white; padding: 32px; border-radius: 16px; box-shadow: var(--shadow); width: 100%; max-width: 380px; text-align: center; }
+.form-group { text-align: left; margin-bottom: 16px; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
+.form-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; }
+.btn-submit-login { background-color: var(--primary); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 8px; }
+
+/* ==========================================================================
+   🤖 CONTROL WIDGET DRA. AI Y ELEMENTOS INTERNOS
+   ========================================================================== */
+.floating-widget-btn { position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px; background-color: var(--primary); border: none; border-radius: 50%; cursor: pointer; box-shadow: 0 4px 16px rgba(0, 119, 182, 0.4); display: flex; align-items: center; justify-content: center; z-index: 999; }
+.widget-icon { font-size: 28px; color: white; }
+.widget-badge { position: absolute; top: -2px; right: -2px; background: #ef4444; color: white; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 50%; }
+
+.chat-popup-wrapper { position: fixed; bottom: 96px; right: 24px; width: 340px; height: 500px; z-index: 1000; }
+.chat-container { display: flex; flex-direction: column; height: 100%; background-color: var(--bg-light); border-radius: 16px; box-shadow: 0 12px 30px rgba(0,0,0,0.15); overflow: hidden; border: 1px solid #e2e8f0; }
+
+.chat-header { background-color: var(--primary); color: #ffffff; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+.avatar-info { display: flex; align-items: center; gap: 10px; }
+.avatar-placeholder { font-size: 20px; }
+.chat-header h2 { font-size: 1rem; margin: 0; color: white; }
+.status-online { font-size: 0.7rem; color: var(--secondary); }
+.close-btn { background: none; border: none; color: white; font-size: 1.1rem; cursor: pointer; }
+
+.chat-messages { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.msg-row-user { display: flex; justify-content: flex-end; width: 100%; }
+.msg-row-bot { display: flex; flex-direction: column; justify-content: flex-start; width: 100%; }
+
+.chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 14px; font-size: 0.9rem; }
+.bubble-bot { background-color: #ffffff; color: var(--text-dark); border-bottom-left-radius: 4px; border: 1px solid #e2e8f0; }
+.bubble-user { background-color: var(--primary); color: #ffffff; border-bottom-right-radius: 4px; }
+
+.products-carousel { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; width: 100%; }
+.product-card-chat { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px; min-width: 130px; max-width: 130px; text-align: center; display: flex; flex-direction: column; gap: 4px; }
+.med-icon-placeholder { font-size: 22px; }
+.product-card-chat h3 { font-size: 0.78rem; margin: 2px 0; color: var(--text-dark); }
+.price { font-weight: 700; color: var(--primary); font-size: 0.85rem; }
+.btn-add-cart { background-color: var(--primary); color: white; border: none; width: 100%; padding: 6px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
+
+.chat-footer { background-color: #ffffff; padding: 10px; border-top: 1px solid #e2e8f0; }
+.checkout-actions { display: flex; padding-bottom: 8px; }
+.btn-checkout-start { background-color: var(--secondary); color: white; border: none; padding: 8px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; cursor: pointer; width: 100%; }
+
+.quick-replies { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; }
+.quick-reply-chip { background-color: #ffffff; border: 1px solid var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 50px; font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
+
+.input-area { display: flex; gap: 6px; align-items: center; }
+.input-area input { flex: 1; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 20px; font-size: 0.85rem; outline: none; }
+.btn-action-chat, .btn-send { background: var(--primary-light); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; }
+.btn-send { background: var(--primary); color: white; }
+
+.invoice-card { background-color: #ffffff; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 12px; margin: 8px 0; width: 90%; }
+.invoice-card h3 { font-size: 0.9rem; color: var(--primary); text-align: center; margin: 0 0 6px; }
+.invoice-card hr { border: 0; border-top: 1px solid #e2e8f0; margin: 6px 0; }
+.invoice-card p { font-size: 0.78rem; margin-bottom: 4px; color: #334155; text-align: left; }
+.invoice-total { display: flex; justify-content: space-between; font-size: 0.85rem; margin: 8px 0; }
+.invoice-total strong { color: var(--secondary); }
+.btn-confirm-final { background-color: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+
+/* Estilos de Carrito modal */
+.cart-modal { position: absolute; top: 70px; right: 40px; width: 280px; background: white; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid #e2e8f0; z-index: 1001; }.cart-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; border-radius: 12px 12px 0 0; }.cart-modal-header h3 { font-size: 0.85rem; margin:0; color:var(--primary); }.close-modal-btn { background: none; border:none; cursor: pointer; color: #64748b; }.cart-modal-body { padding: 12px; max-height: 200px; overflow-y: auto; }.cart-empty { font-size: 0.8rem; text-align: center; color: #64748b; }.cart-item-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #f1f5f9; }.item-qty { font-size: 0.75rem; font-weight: 700; color: var(--primary); background: var(--primary-light); border-radius: 4px; padding: 2px 4px; }.item-details h4 { font-size: 0.78rem; margin: 0; color: var(--text-dark); }.item-details small { font-size: 0.68rem; color: var(--text-muted); }
+
+.landing-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 📱 UX: Obliga al footer a pegarse al fondo pase lo que pase */
+  background-color: var(--bg-light);
+  overflow-y: auto;
+}

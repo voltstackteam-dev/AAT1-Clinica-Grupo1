@@ -1,0 +1,44 @@
+<footer class="main-footer" *ngIf="seccionActual !== 'login'">
+  <div class="footer-grid">
+    
+    <!-- Columna 1: Marca Rebrandeada -->
+    <div class="footer-col brand-col">
+      <h4>🧬 Ma&Ja-Tech</h4>
+      <p>Tu salud guiada por inteligencia artificial en tiempo real. Medicamentos confiables a la puerta de tu hogar.</p>
+      <span class="copyright">© 2026 Ma&Ja-Tech. Todos los derechos reservados.</span>
+    </div>
+
+    <!-- Columna 2: Enlaces Interactivos -->
+    <div class="footer-col">
+      <h5>Navegación</h5>
+      <ul>
+        <li><a (click)="navegar.emit('inicio')">Inicio</a></li>
+        <li><a (click)="navegar.emit('categorias')">Categorías de Fármacos</a></li>
+        <li><a (click)="navegar.emit('premium')">Línea Premium</a></li>
+        <li><a (click)="navegar.emit('contacto')">Contacto de Soporte</a></li>
+      </ul>
+    </div>
+
+    <!-- Columna 3: Información de Salud Legal -->
+    <div class="footer-col">
+      <h5>Información Legal</h5>
+      <ul>
+        <li><a>Términos y Condiciones</a></li>
+        <li><a>Política de Privacidad Médica</a></li>
+        <li><a>Control de Medicamentos Regulados</a></li>
+        <li><a>Advertencia de Auto-medicación</a></li>
+      </ul>
+    </div>
+
+    <!-- Columna 4: Métodos de Pago y Atención -->
+    <div class="footer-col">
+      <h5>Atención y Pagos</h5>
+      <p class="schedule">⏰ Abierto las 24 Horas / 365 días</p>
+      <div class="payment-methods">
+        <span class="payment-badge" title="Efectivo Contra Entrega">💵 Efectivo</span>
+        <span class="payment-badge" title="Tarjeta de Crédito/Débito">💳 Tarjeta</span>
+      </div>
+    </div>
+
+  </div>
+</footer>

@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+/* You can ad/* ==========================================================================
+   🧬 CONFIGURACIÓN RAÍZ GLOBAL - FARMIA DIGITAL (SIN AISLAMIENTO)
+   ========================================================================== */
+:root {
+  --primary: #0077b6 !important;
+  --primary-light: #e0f2fe !important;
+  --secondary: #06d6a0 !important;
+  --bg-light: #f8fafc !important;
+  --text-dark: #1e293b !important;
+  --text-muted: #64748b !important;
+  --shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f8fafc !important;
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
