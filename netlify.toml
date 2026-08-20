@@ -1,6 +1,7 @@
 [build]
+  base = "farmacia-app"
   command = "npm run build"
-  publish = "dist/farmacia-app/browser"
+  publish = "farmacia-app/dist/farmacia-app/browser"
 
 [[plugins]]
   package = "@netlify/angular-runtime"
