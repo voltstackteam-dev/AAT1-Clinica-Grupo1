@@ -1,0 +1,105 @@
+<div class="admin-dashboard-modulo">
+  
+  <!-- Encabezado de Control Central -->
+  <div class="dashboard-header">
+    <div class="header-texto">
+      <h1>Panel de Control Clínico</h1>
+      <p>Módulo de Gestión de Citas, Autorizaciones y Bitácora para Médicos y Personal Administrativo</p>
+    </div>
+    <!-- Contador de Volumen -->
+    <div class="badge-total-citas">
+      Citas en Sistema: <span>{{ citasAdministrativas.length }}</span>
+    </div>
+  </div>
+
+  <!-- Barra de Filtros Rápidos -->
+  <div class="dashboard-filtros-bar">
+    <button (click)="filtroEstado = 'Todos'" [class.activo]="filtroEstado === 'Todos'">Todas las Solicitudes</button>
+    <button (click)="filtroEstado = 'Pendiente'" [class.activo]="filtroEstado === 'Pendiente'">⚠️ Pendientes de Aprobación</button>
+    <button (click)="filtroEstado = 'Confirmada'" [class.activo]="filtroEstado === 'Confirmada'">✅ Confirmadas / Activas</button>
+  </div>
+
+  <!-- Grilla de Control de Citas (Formato Layout Corporativo) -->
+  <div class="dashboard-tabla-contenedor">
+    
+    <div class="tarjeta-control-cita" *ngFor="let cita of citasFiltradas">
+      
+      <!-- Fila Informativa Superior -->
+      <div class="cita-admin-top">
+        <div class="id-bloque">
+          <span class="label-id">ID Operación:</span>
+          <span class="valor-id">{{ cita.id_cita }}</span>
+        </div>
+        <span class="status-badge-admin" [ngClass]="cita.estado === 'Confirmada' ? 'bg-verde' : 'bg-amarillo'">
+          {{ cita.estado }}
+        </span>
+      </div>
+
+      <!-- Fila de Datos del Paciente e Historial -->
+      <div class="cita-admin-datos-grid">
+        <div class="datos-bloque">
+          <h4>Paciente</h4>
+          <p class="txt-principal">{{ cita.paciente }}</p>
+          <p class="txt-secundario">DPI: {{ cita.dpi }}</p>
+        </div>
+        <div class="datos-bloque">
+          <h4>Médico & Especialidad</h4>
+          <p class="txt-principal">{{ cita.medico }}</p>
+          <p class="txt-secundario-tag">{{ cita.especialidad }}</p>
+        </div>
+        <div class="datos-bloque">
+          <h4>Logística Programada</h4>
+          <p class="txt-principal">📅 {{ cita.fecha }}</p>
+          <p class="txt-secundario">⏱️ {{ cita.hora }}</p>
+        </div>
+      </div>
+
+      <!-- Sección Interactiva: Notas Médicas y Comentarios Clínicos (CRUD PUT) -->
+      <div class="cita-admin-comentarios-seccion">
+        <h4>Observaciones Clínicas / Diagnóstico Preventivo</h4>
+        
+        <!-- Estado de Lectura Normal -->
+        <div *ngIf="citaEnEdicionId !== cita.id_cita" class="comentario-lectura-box">
+          <p *ngIf="cita.comentarios" class="txt-comentario-existente">{{ cita.comentarios }}</p>
+          <p *ngIf="!cita.comentarios" class="txt-comentario-vacio">No hay anotaciones registradas para esta consulta.</p>
+          <button class="btn-editar-nota" (click)="iniciarEdicionComentario(cita.id_cita, cita.comentarios)">
+            📝 Modificar Notas
+          </button>
+        </div>
+
+        <!-- Estado de Edición Activa (Caja de Texto) -->
+        <div *ngIf="citaEnEdicionId === cita.id_cita" class="comentario-edicion-box">
+          <textarea [(ngModel)]="comentarioTemporal" placeholder="Escriba las indicaciones médicas, cambios de horario o comentarios clínicos..."></textarea>
+          <div class="edicion-botones-grupo">
+            <button class="btn-guardar-nota" (click)="guardarComentario(cita.id_cita)">Guardar Cambios</button>
+            <button class="btn-cancelar-nota" (click)="citaEnEdicionId = null">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila Inferior de Decisiones Administrativas (CRUD PUT / DELETE) -->
+      <div class="cita-admin-acciones-footer">
+        <div class="botones-izquierdos">
+          <button 
+            *ngIf="cita.estado === 'Pendiente'" 
+            class="btn-aprobar-cita" 
+            (click)="aceptarCita(cita.id_cita)">
+            ✔ Aceptar y Autorizar Cita
+          </button>
+        </div>
+        <button class="btn-denegar-cita" (click)="eliminarCita(cita.id_cita)">
+          ❌ Denegar / Eliminar Registro
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Alerta en caso de vaciado por filtros -->
+    <div class="alerta-sin-registros" *ngIf="citasFiltradas.length === 0">
+      No se encontraron solicitudes de citas bajo el criterio seleccionado.
+    </div>
+
+  </div>
+
+</div>
+

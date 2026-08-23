@@ -1,0 +1,126 @@
+.admin-login-modulo {
+  width: 100%;
+  min-height: 80vh;
+  background-color: #1a202c; /* Fondo gris oscuro/carbono para diferenciar del portal público */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.admin-login-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 45px 40px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
+.admin-login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.icono-restringido {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.admin-login-header h2 {
+  font-size: 1.7rem;
+  color: #1a365d;
+  margin: 0 0 6px 0;
+  font-weight: 800;
+}
+
+.admin-login-header p {
+  font-size: 0.88rem;
+  color: #718096;
+  margin: 0 0 15px 0;
+  line-height: 1.4;
+}
+
+.linea-decorativa-roja {
+  width: 50px;
+  height: 4px;
+  background-color: #e53e3e; /* Rojo de alerta/seguridad */
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.campo-admin-grupo {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.campo-admin-grupo label {
+  font-size: 0.82rem;
+  color: #2d3748;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.campo-admin-grupo input {
+  padding: 12px 15px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  outline: none;
+  box-sizing: border-box;
+  background-color: #f7fafc;
+  transition: all 0.2s;
+}
+
+.campo-admin-grupo input:focus {
+  border-color: #4a5568;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(74, 85, 104, 0.1);
+}
+
+.btn-admin-login-submit {
+  width: 100%;
+  padding: 14px 0;
+  background-color: #1a365d; /* Azul marino Voltstack */
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.btn-admin-login-submit:hover { background-color: #2c5282; }
+.btn-admin-login-submit:disabled { background-color: #cbd5e0; color: #718096; cursor: not-allowed; }
+
+.alerta-error-admin {
+  background-color: #fff5f5;
+  border: 1px solid #fed7d7;
+  color: #c53030;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 25px;
+  text-align: left;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.admin-login-footer {
+  margin-top: 30px;
+  border-top: 1px solid #edf2f7;
+  padding-top: 15px;
+}
+
+.admin-login-footer p {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  line-height: 1.4;
+  margin: 0;
+}
