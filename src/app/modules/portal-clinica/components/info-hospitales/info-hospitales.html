@@ -1,1 +1,28 @@
-<p>info-hospitales works!</p>
+<section class="hospitales-section">
+  <!-- Encabezado de la Sección -->
+  <div class="hospitales-encabezado">
+    <h2 class="titulo-hospitales">Nuestras Sedes</h2>
+    <div class="linea-decorativa-hospitales"></div>
+    <p class="subtitulo-hospitales">Infraestructura hospitalaria de vanguardia cerca de ti</p>
+  </div>
+
+  <!-- Rejilla de Sedes -->
+  <div class="hospitales-grid">
+    <div *ngFor="let sede of sedesHospital" class="sede-card">
+      <div class="sede-badge-zona">{{ sede.zona }}</div>
+      <h3 class="sede-nombre">{{ sede.nombre }}</h3>
+      
+      <div class="sede-detalles">
+        <p class="sede-direccion">📍 {{ sede.direccion }}</p>
+        <p class="sede-telefono">{{ sede.telefono }}</p>
+        <p class="sede-horario">{{ sede.horario }}</p>
+      </div>
+      
+      <!-- BOTÓN CON DISPARADOR INTERACTIVO DIRECTO DE ANGULAR (Línea Corregida) -->
+      <button class="btn-sede-mapa" (click)="abrirRuta(sede.urlMaps)">
+        Cómo llegar →
+      </button>
+
+    </div>
+  </div>
+</section>

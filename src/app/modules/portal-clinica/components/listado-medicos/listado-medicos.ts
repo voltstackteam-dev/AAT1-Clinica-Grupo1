@@ -5,21 +5,50 @@ import { CommonModule } from '@angular/common';
   selector: 'app-listado-medicos',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './listado-medicos.html', // <-- Asegúrate de que NO diga .component
-  styleUrl: './listado-medicos.css'      // <-- Asegúrate de que NO diga .component
+  templateUrl: './listado-medicos.html',
+  styleUrl: './listado-medicos.css'
 })
-
 export class ListadoMedicosComponent {
-  // Arreglo temporal simulando los médicos del mockup
+  
+  // Listado mapeado uno a uno con los nombres de tus archivos en la carpeta public
   listaDoctores = [
-    { id: 1, iniciales: 'DR' },
-    { id: 2, iniciales: 'DR' },
-    { id: 3, iniciales: 'DR' },
-    { id: 4, iniciales: 'DR' },
-    { id: 5, iniciales: 'DR' }
+    { 
+      id: 1, 
+      nombre: 'Dr. Alejandro Méndez', 
+      especialidad: 'Cardiología',
+      disponible: true,
+      foto: '/DrAlejandroMendez.png' 
+    },
+    { 
+      id: 2, 
+      nombre: 'Dra. Elena Rostova', 
+      especialidad: 'Pediatría',
+      disponible: false,
+      foto: '/DraElenaRostova.png' 
+    },
+    { 
+      id: 3, 
+      nombre: 'Dr. Carlos Mendoza', 
+      especialidad: 'Traumatología',
+      disponible: true,
+      foto: '/DrCarlosMendoza.png' 
+    },
+    { 
+      id: 4, 
+      nombre: 'Dra. Sofía Martínez', 
+      especialidad: 'Neurología',
+      disponible: false,
+      foto: '/DraSofiaMartinez.png' 
+    },
+    { 
+      id: 5, 
+      nombre: 'Dr. Ricardo Peralta', 
+      especialidad: 'Medicina General',
+      disponible: true,
+      foto: '/DrRicardoPeralta.png' 
+    }
   ];
 
-  // Evento que avisa al componente Padre cuando se selecciona un círculo
   @Output() medicoSeleccionado = new EventEmitter<number>();
 
   seleccionar(id: number): void {

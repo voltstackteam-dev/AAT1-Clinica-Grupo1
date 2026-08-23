@@ -1,0 +1,154 @@
+/* ==========================================================================
+   ESTILOS DE CUADRÍCULA SIMÉTRICA CON IMÁGENES REALES
+   ========================================================================== */
+
+/* Contenedor de la Sección */
+.especialidades-section {
+  background-color: #ffffff;
+  padding: 80px 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Estilos del Encabezado */
+.especialidades-encabezado {
+  text-align: center;
+  margin-bottom: 60px;
+  font-family: Arial, sans-serif;
+}
+
+.titulo-especialidades {
+  font-size: 2.4rem;
+  color: #1a365d; /* Azul oscuro Voltstack */
+  font-weight: 800;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.linea-decorativa-azul {
+  width: 70px;
+  height: 4px;
+  background-color: #4299e1;
+  margin: 0 auto 18px auto;
+  border-radius: 2px;
+}
+
+.subtitulo-especialidades {
+  font-size: 1.15rem;
+  color: #718096;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* --- CUADRÍCULA SIMÉTRICA COMPACTA (Tablero 2x2) --- */
+.especialidades-grid-cuadricula {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Fuerza exactamente 2 columnas iguales */
+  gap: 25px;
+  box-sizing: border-box;
+}
+
+/* Tarjetas Reestructuradas para alojar la Imagen al lado izquierdo */
+.cuadrula-card {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px; /* Redondeado de la celda completa */
+  display: flex; 
+  align-items: stretch; /* Estira la imagen para igualar la altura de los textos */
+  gap: 0; /* Sin espacio directo para que la foto toque el borde izquierdo */
+  overflow: hidden; /* Corta los bordes de la imagen siguiendo el redondeado */
+  transition: all 0.25s ease;
+  font-family: Arial, sans-serif;
+  height: 200px; /* Altura uniforme perfecta para el tablero */
+}
+
+/* CONTENEDOR DE LA IMAGEN IZQUIERDA */
+.cuadrula-imagen-portada {
+  width: 160px; /* Ancho del recuadro de la foto */
+  height: 100%;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Atributos del Elemento Gráfico de la Red */
+.img-especialidad-src {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Corta y adapta la foto proporcionalmente sin estirarla */
+  object-position: center;
+  transition: transform 0.4s ease; /* Transición para zoom fluido */
+}
+
+/* Bloque de Información al lado derecho */
+.cuadrula-info {
+  text-align: left;
+  padding: 25px; /* Margen interno exclusivo para los textos */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cuadrula-info h3 {
+  font-size: 1.3rem;
+  color: #1a365d;
+  margin: 0 0 6px 0;
+  font-weight: bold;
+}
+
+.cuadrula-info p {
+  font-size: 0.88rem; /* Tamaño balanceado para el espacio */
+  color: #4a5568;
+  line-height: 1.4;
+  margin: 0 0 12px 0;
+}
+
+.cuadrula-enlace {
+  font-size: 0.85rem;
+  color: #3182ce;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+/* --- EFECTO INTERACTIVO CON ZOOM EN LA FOTO --- */
+.cuadrula-card:hover {
+  background-color: #ffffff;
+  border-color: #4299e1;
+  box-shadow: 0 8px 25px rgba(66, 153, 225, 0.12);
+}
+
+/* Al pasar el mouse por la card, la foto izquierda hace un zoom limpio */
+.cuadrula-card:hover .img-especialidad-src {
+  transform: scale(1.06);
+}
+
+.cuadrula-card:hover .cuadrula-enlace {
+  color: #2b6cb0;
+}
+
+/* --- ADAPTABILIDAD RESPONSIVA --- */
+@media (max-width: 850px) {
+  .especialidades-grid-cuadricula {
+    grid-template-columns: 1fr; /* Colapsa a una sola columna en pantallas medianas */
+    max-width: 550px;
+  }
+}
+
+@media (max-width: 550px) {
+  .especialidades-section { padding: 40px 20px; }
+  .cuadrula-card { 
+    flex-direction: column; /* Apila la foto arriba y el texto abajo en celulares */
+    height: auto; 
+  }
+  .cuadrula-imagen-portada { 
+    width: 100%; 
+    height: 160px; 
+  }
+  .cuadrula-info { 
+    text-align: center; 
+    padding: 20px; 
+  }
+}

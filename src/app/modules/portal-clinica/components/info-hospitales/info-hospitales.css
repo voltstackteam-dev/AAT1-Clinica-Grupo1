@@ -1,0 +1,129 @@
+/* Contenedor General de la Sección */
+.hospitales-section {
+  background-color: #ffffff;
+  padding: 80px 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Encabezado */
+.hospitales-encabezado {
+  text-align: center;
+  margin-bottom: 50px;
+  font-family: Arial, sans-serif;
+}
+
+.titulo-hospitales {
+  font-size: 2.4rem;
+  color: #1a365d; /* Azul oscuro Voltstack */
+  font-weight: 800;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.linea-decorativa-hospitales {
+  width: 70px;
+  height: 4px;
+  background-color: #4299e1; /* Azul intermedio */
+  margin: 0 auto 18px auto;
+  border-radius: 2px;
+}
+
+.subtitulo-hospitales {
+  font-size: 1.15rem;
+  color: #718096;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Grilla de Tarjetas */
+.hospitales-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 35px;
+  box-sizing: border-box;
+}
+
+/* Tarjeta Individual de Sede */
+.sede-card {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 35px 30px;
+  text-align: left;
+  font-family: Arial, sans-serif;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s ease;
+}
+
+.sede-badge-zona {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background-color: #ebf8ff;
+  color: #2b6cb0;
+  font-size: 0.78rem;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid #bee3f8;
+}
+
+.sede-nombre {
+  font-size: 1.4rem;
+  color: #1a365d;
+  font-weight: bold;
+  margin: 0 0 20px 0;
+  padding-right: 60px; /* Evita que el nombre choque con el badge */
+}
+
+.sede-detalles p {
+  font-size: 0.9rem;
+  color: #4a5568;
+  line-height: 1.5;
+  margin: 0 0 12px 0;
+}
+
+.sede-horario {
+  color: #718096 !important;
+  font-size: 0.85rem !important;
+  margin-bottom: 25px !important;
+}
+
+/* Botón "Cómo llegar" */
+.btn-sede-mapa {
+  padding: 10px 22px;
+  background-color: transparent;
+  color: #3182ce;
+  border: 1px solid #3182ce;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: bold;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: all 0.2s ease;
+}
+
+/* --- INTERACCIÓN HOVER --- */
+.sede-card:hover {
+  transform: translateY(-4px);
+  border-color: #3182ce;
+  box-shadow: 0 8px 25px rgba(49, 130, 206, 0.12);
+}
+
+.btn-sede-mapa:hover {
+  background-color: #3182ce;
+  color: #ffffff;
+}
+
+/* Adaptabilidad Celular */
+@media (max-width: 768px) {
+  .hospitales-section { padding: 40px 20px; }
+  .sede-card { padding: 25px 20px; }
+}

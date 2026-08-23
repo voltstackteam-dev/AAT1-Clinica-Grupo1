@@ -1,75 +1,175 @@
+/* Contenedor General de la Sección */
 .medicos-section {
-  padding: 60px 40px;
-  background-color: #ffffff;
+  background-color: #f8fafc;
+  padding: 80px 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Encabezado */
+.medicos-encabezado {
+  text-align: center;
+  margin-bottom: 50px;
+  font-family: Arial, sans-serif;
+}
+
+.titulo-medicos {
+  font-size: 2.4rem;
+  color: #1a365d; 
+  font-weight: 800;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.linea-decorativa-medicos {
+  width: 70px;
+  height: 4px;
+  background-color: #4299e1; 
+  margin: 0 auto 18px auto;
+  border-radius: 2px;
+}
+
+.subtitulo-medicos {
+  font-size: 1.15rem;
+  color: #718096;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Contenedor Flexbox Horizontal */
+.medicos-flex-container {
+  max-width: 1250px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 35px;
+  box-sizing: border-box;
+}
+
+/* Tarjeta / Item Individual */
+.medico-tarjeta-accion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  width: 210px; 
+  transition: transform 0.3s ease;
+}
+
+/* MARCO DEL CÍRCULO PERFECTO */
+.circulo-imagen-marco {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%; 
+  position: relative;
+  overflow: hidden; 
+  border: 4px solid #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  background-color: #cbd5e0;
+  margin-bottom: 15px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Imagen Real del Doctor (Optimizado para encuadrar rostros) */
+.foto-medico-src {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;           /* Adapta la imagen sin deformarla ni estirarla */
+  object-position: center top; /* Centra y enfoca la parte superior (rostro del doctor) */
+  transition: transform 0.4s ease;
+}
+
+/* Capa hover interactiva */
+.capa-hover-agendar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(43, 108, 176, 0.85); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; 
+  transition: opacity 0.3s ease;
+}
+
+.capa-hover-agendar span {
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+/* Datos de texto inferiores */
+.medico-nombre-texto {
+  font-size: 1.1rem;
+  color: #1a365d;
+  font-weight: bold;
+  margin: 0 0 4px 0;
   text-align: center;
 }
 
-.seccion-titulo {
-  font-size: 1.8rem;
-  color: #1a365d;
-  margin-bottom: 5px;
+.medico-especialidad-etiqueta {
+  font-size: 0.88rem;
+  color: #4a5568;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+/* --- CLASES DE ESTADO DINÁMICO DE DISPONIBILIDAD --- */
+.medico-status-badge {
+  font-size: 0.78rem;
   font-weight: bold;
+  padding: 4px 14px;
+  border-radius: 15px;
+  transition: all 0.2s ease;
 }
 
-.seccion-subtitulo {
-  font-size: 1rem;
-  color: #718096;
-  margin-bottom: 40px;
+/* Estado Disponible (Verde) */
+.status-verde {
+  color: #2f855a;
+  background-color: #f0fff4;
+  border: 1px solid #c6f6d5;
 }
 
-.circulos-contenedor {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 35px;
-  flex-wrap: wrap;
+/* Estado Agotado / Lleno (Rojo) */
+.status-rojo {
+  color: #c53030;
+  background-color: #fff5f5;
+  border: 1px solid #fed7d7;
 }
 
-.medico-circulo {
-  position: relative;
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #63b3ed, #3182ce);
-  padding: 4px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+/* --- COMPORTAMIENTO INTERACTIVO HOVER PREMIUM --- */
+.medico-tarjeta-accion:hover {
+  transform: translateY(-5px); 
 }
 
-.medico-circulo:hover {
-  transform: scale(1.1);
-  box-shadow: 0 8px 15px rgba(49, 130, 206, 0.3);
+.medico-tarjeta-accion:hover .circulo-imagen-marco {
+  border-color: #4299e1; 
+  box-shadow: 0 10px 25px rgba(66, 153, 225, 0.35); 
 }
 
-.circulo-interno {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.medico-tarjeta-accion:hover .foto-medico-src {
+  transform: scale(1.08);
 }
 
-.avatar-texto {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #2b6cb0;
+.medico-tarjeta-accion:hover .capa-hover-agendar {
+  opacity: 1;
 }
 
-.badge-numero {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: #e53e3e;
-  color: #ffffff;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  font-size: 0.8rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+/* Adaptabilidad para Dispositivos Móviles */
+@media (max-width: 768px) {
+  .medicos-section { padding: 40px 20px; }
+  .medicos-flex-container { gap: 25px; }
+  .medico-tarjeta-accion { width: 170px; }
+  .circulo-imagen-marco { width: 110px; height: 110px; }
 }
+
