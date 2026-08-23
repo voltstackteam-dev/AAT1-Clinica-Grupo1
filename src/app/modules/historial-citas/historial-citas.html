@@ -1,0 +1,52 @@
+<div class="historial-contenedor">
+  
+  <!-- Encabezado del Perfil -->
+  <div class="perfil-encabezado-bloque">
+    <h2>Mi Panel de Paciente</h2>
+    <p>Gestiona tus consultas médicas programadas en la red Voltstack</p>
+    <div class="linea-decorativa-perfil"></div>
+  </div>
+
+  <!-- Vista Condicional: Si NO hay citas programadas -->
+  <div class="citas-vacias-alerta" *ngIf="misCitas.length === 0">
+    <div class="vacio-icono">📅</div>
+    <h3>No tienes citas programadas</h3>
+    <p>Actualmente no cuentas con ninguna reservación activa en el sistema.</p>
+  </div>
+
+  <!-- Contenedor de la Rejilla de Citas Activas -->
+  <div class="citas-grid-historial" *ngIf="misCitas.length > 0">
+    <div *ngFor="let cita of misCitas" class="cita-historial-card">
+      
+      <!-- Fila Superior de Control -->
+      <div class="cita-card-top">
+        <span class="cita-codigo">Código: {{ cita.id }}</span>
+        <span class="badge-estado" [ngClass]="cita.estado === 'Confirmada' ? 'estado-confirmada' : 'estado-pendiente'">
+          ● {{ cita.estado }}
+        </span>
+      </div>
+
+      <!-- Datos del Médico y Rama -->
+      <div class="cita-card-cuerpo">
+        <h3>{{ cita.medico }}</h3>
+        <span class="cita-especialidad-tag">{{ cita.especialidad }}</span>
+        
+        <div class="cita-detalles-logistica">
+          <p><span>Fecha:</span> {{ cita.fecha }}</p>
+          <p><span>Hora:</span> {{ cita.hora }}</p>
+          <p><span>Lugar:</span> {{ cita.sede }}</p>
+        </div>
+      </div>
+
+      <!-- Botón de Control Destructivo -->
+      <div class="cita-card-acciones">
+        <button class="btn-cancelar-urgente" (click)="cancelarCita(cita.id)">
+          Cancelar Cita
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
