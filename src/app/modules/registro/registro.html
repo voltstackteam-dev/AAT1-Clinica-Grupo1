@@ -1,0 +1,51 @@
+<div class="registro-modulo-container">
+  
+  <!-- Mensaje de Éxito Temporal -->
+  <div class="alerta-exito-registro" *ngIf="exitoRegistro">
+    <h3>🎉 ¡Cuenta Creada con Éxito!</h3>
+    <p>Tu registro clínico en Voltstack fue procesado. Redirigiéndote al Login...</p>
+  </div>
+
+  <div class="registro-card-box" *ngIf="!exitoRegistro">
+    
+    <div class="registro-header">
+      <h2>Registro de Paciente</h2>
+      <p>Crea tu cuenta de afiliación médica digital en Voltstack</p>
+      <div class="linea-azul"></div>
+    </div>
+
+    <form #formRegistro="ngForm" (ngSubmit)="ejecutarRegistro()">
+      
+      <div class="campo-grupo">
+        <label>Nombre Completo</label>
+        <input type="text" name="nombre" [(ngModel)]="nuevoUsuario.nombre" required placeholder="Ej. Carlos López" />
+      </div>
+
+      <div class="campo-grupo">
+        <label>Documento de Identificación (DPI)</label>
+        <input type="text" name="dpi" [(ngModel)]="nuevoUsuario.dpi" required placeholder="Ej. 2450 12345 0101" />
+      </div>
+
+      <div class="campo-grupo">
+        <label>Correo Electrónico</label>
+        <input type="email" name="correo" [(ngModel)]="nuevoUsuario.correo" required placeholder="carlos@correo.com" />
+      </div>
+
+      <div class="campo-grupo">
+        <label>Contraseña para el Portal</label>
+        <input type="password" name="contrasena" [(ngModel)]="nuevoUsuario.contrasena" required placeholder="Mínimo 6 caracteres" />
+      </div>
+
+      <button type="submit" class="btn-registro-enviar" [disabled]="!formRegistro.form.valid">
+        Crear Cuenta Médica
+      </button>
+
+    </form>
+
+    <div class="registro-footer-enlaces">
+      <p>¿Ya tienes una cuenta activa? <a routerLink="/login">Inicia sesión aquí</a></p>
+    </div>
+
+  </div>
+</div>
+
