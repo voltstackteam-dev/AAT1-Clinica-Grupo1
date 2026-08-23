@@ -1,0 +1,137 @@
+.citas-modulo-contenedor {
+  width: 100%;
+  background-color: #f7fafc;
+  padding-bottom: 80px;
+  font-family: Arial, sans-serif;
+}
+
+/* Hero Banner */
+.citas-hero-banner {
+  width: 100%;
+  height: 200px;
+  background-image: url('https://unsplash.com');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.citas-hero-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(135deg, rgba(26, 54, 93, 0.9) 0%, rgba(43, 108, 176, 0.6) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 40px;
+  color: #ffffff;
+}
+
+.citas-hero-overlay h1 { font-size: 2.2rem; margin: 0 0 10px 0; font-weight: bold; }
+.citas-hero-overlay p { font-size: 1.05rem; margin: 0; color: #e2e8f0; }
+
+/* Contenedor del Formulario */
+.formulario-citas-card {
+  max-width: 850px;
+  margin: -30px auto 0 auto; /* Eleva el formulario sobre el banner */
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+/* Grillas Flexibles */
+.formulario-grid-doble {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.input-grupo {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.input-grupo label {
+  font-size: 0.88rem;
+  color: #1a365d;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.input-grupo input, .input-grupo select {
+  padding: 12px 15px;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  outline: none;
+  background-color: #ffffff;
+  color: #2d3748;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.input-grupo input:focus, .input-grupo select:focus {
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
+
+.input-deshabilitado {
+  background-color: #edf2f7 !important;
+  color: #718096 !important;
+  cursor: not-allowed;
+}
+
+/* Botón de Confirmación */
+.btn-confirmar-cita {
+  width: 100%;
+  padding: 14px 0;
+  background-color: #2b6cb0;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 15px;
+}
+
+.btn-confirmar-cita:hover { background-color: #2c5282; }
+.btn-confirmar-cita:disabled { background-color: #cbd5e0; color: #718096; cursor: not-allowed; }
+
+/* Mensaje de Confirmación Exitoso */
+.alerta-exito-confirmacion {
+  max-width: 850px;
+  margin: 40px auto 0 auto;
+  background-color: #f0fff4;
+  border: 1px solid #c6f6d5;
+  border-left: 5px solid #38a169;
+  border-radius: 12px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  animation: entradaAlerta 0.3s ease-out forwards;
+}
+
+@keyframes entradaAlerta {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.alerta-icono { font-size: 2.5rem; }
+.alerta-texto h3 { margin: 0 0 6px 0; color: #22543d; font-weight: bold; }
+.alerta-texto p { margin: 0; color: #2f855a; font-size: 0.95rem; }
+
+/* Adaptabilidad para Teléfonos */
+@media (max-width: 768px) {
+  .formulario-grid-doble { grid-template-columns: 1fr; gap: 15px; margin-bottom: 15px; }
+  .formulario-citas-card { padding: 25px; margin-top: -20px; width: calc(100% - 30px); }
+  .citas-hero-banner { height: 160px; }
+}

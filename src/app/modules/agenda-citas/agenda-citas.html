@@ -1,1 +1,87 @@
-<p>agenda-citas works!</p>
+<div class="citas-modulo-contenedor">
+  
+  <!-- Banner Informativo -->
+  <div class="citas-hero-banner">
+    <div class="citas-hero-overlay">
+      <h1>Agenda tu Cita Médica</h1>
+      <p>Completa el formulario para reservar tu espacio con nuestros especialistas certificados</p>
+    </div>
+  </div>
+
+  <!-- Alerta de Éxito Reactiva -->
+  <div class="alerta-exito-confirmacion" *ngIf="exitoRegistro">
+    <div class="alerta-icono">🎉</div>
+    <div class="alerta-texto">
+      <h3>¡Cita Reservada Exitosamente!</h3>
+      <p>Se ha enviado un correo de confirmación con los detalles y el código de acceso a tu consulta.</p>
+    </div>
+  </div>
+
+  <!-- Contenedor del Formulario -->
+  <div class="formulario-citas-card" *ngIf="!exitoRegistro">
+    <form #formCita="ngForm" (ngSubmit)="procesarCita()">
+      
+      <div class="formulario-grid-doble">
+        <!-- Campo 1 -->
+        <div class="input-grupo">
+          <label>Nombre Completo del Paciente *</label>
+          <input type="text" name="nombre" [(ngModel)]="datosCita.nombrePaciente" required placeholder="Ej. Juan Pérez" />
+        </div>
+        <!-- Campo 2 -->
+        <div class="input-grupo">
+          <label>Documento de Identificación (DPI) *</label>
+          <input type="text" name="dpi" [(ngModel)]="datosCita.dpi" required placeholder="Ej. 1234 56789 0101" />
+        </div>
+      </div>
+
+      <div class="formulario-grid-doble">
+        <!-- Campo 3 -->
+        <div class="input-grupo">
+          <label>Correo Electrónico *</label>
+          <input type="email" name="correo" [(ngModel)]="datosCita.correo" required placeholder="juan@correo.com" />
+        </div>
+        <!-- Campo 4 -->
+        <div class="input-grupo">
+          <label>Teléfono de Contacto *</label>
+          <input type="tel" name="telefono" [(ngModel)]="datosCita.telefono" required placeholder="5555-5555" />
+        </div>
+      </div>
+
+      <div class="formulario-grid-doble">
+        <!-- Campo 5 -->
+        <div class="input-grupo">
+          <label>Especialidad Requerida</label>
+          <select name="especialidad" [(ngModel)]="datosCita.especialidad" [disabled]="datosCita.medicoId !== null">
+            <option *ngFor="let esp of especialidades" [value]="esp">{{ esp }}</option>
+          </select>
+        </div>
+        <!-- Campo 6 Indice Asignado -->
+        <div class="input-grupo" *ngIf="datosCita.medicoId">
+          <label>Médico Especialista Asignado</label>
+          <input type="text" [value]="'Médico de Referencia Interna #' + datosCita.medicoId" disabled class="input-deshabilitado" />
+        </div>
+      </div>
+
+      <div class="formulario-grid-doble">
+        <!-- Campo 7 -->
+        <div class="input-grupo">
+          <label>Fecha de la Cita *</label>
+          <input type="date" name="fecha" [(ngModel)]="datosCita.fecha" required />
+        </div>
+        <!-- Campo 8 -->
+        <div class="input-grupo">
+          <label>Hora de la Cita *</label>
+          <input type="time" name="hora" [(ngModel)]="datosCita.hora" required />
+        </div>
+      </div>
+
+      <!-- Botón de Envío Validado -->
+      <button type="submit" class="btn-confirmar-cita" [disabled]="!formCita.form.valid">
+        Confirmar Reservación de Cita
+      </button>
+
+    </form>
+  </div>
+
+</div>
+
