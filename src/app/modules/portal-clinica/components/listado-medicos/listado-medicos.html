@@ -1,0 +1,17 @@
+<section class="medicos-section">
+  <h2 class="seccion-titulo">Nuestro Personal Médico Destacado</h2>
+  <p class="seccion-subtitulo">Haz clic sobre un especialista para programar tu cita</p>
+  
+  <div class="circulos-contenedor">
+    <div 
+      *ngFor="let doc of listaDoctores" 
+      class="medico-circulo"
+      (click)="seleccionar(doc.id)">
+      <div class="circulo-interno">
+        <span class="avatar-texto">{{ doc.iniciales }}</span>
+        <span class="badge-numero">{{ doc.id }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+

@@ -1,0 +1,25 @@
+<div class="hero-hospital-banner">
+  
+  <!-- VIDEO DE FONDO CON REFERENCIA PARA CONTROLAR EL PLAY -->
+  <video 
+    #miVideo
+    autoplay 
+    loop 
+    muted
+    playsinline 
+    class="video-fondo">
+    <source src="voltclinica.mp4" type="video/mp4">
+    Tu navegador no soporta videos HTML5.
+  </video>
+
+  <!-- CAPA DE SUPERPOSICIÓN DE TEXTOS -->
+  <div class="hero-overlay">
+    <div class="hero-contenido-texto">
+      <h2 class="animacion-entrada-titulo">{{ titulo }}</h2>
+      <p class="animacion-entrada-subtitulo">{{ subtitulo }}</p>
+      <button class="btn-hero-accion animacion-entrada-boton" [routerLink]="rutaEnlace">
+        {{ textoBoton }}
+      </button>
+    </div>
+  </div>
+</div>

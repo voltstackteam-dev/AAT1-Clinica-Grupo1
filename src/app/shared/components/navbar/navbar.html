@@ -1,0 +1,49 @@
+<header class="header-hospital">
+  <!-- Barra Superior Blanca (Logotipo y Acciones de Cuenta) -->
+  <div class="top-bar">
+    
+    <div class="logo-container" routerLink="/">
+      <img src="LogoClinica1.png" alt="Logo Voltstack" class="logo-imagen-src" />
+      <div class="logo-placeholder">
+        <span class="logo-texto-principal">VOLTSTACK</span>
+        <span class="logo-texto-secundario">GRUPO HOSPITALARIO</span>
+      </div>
+    </div>
+    
+    <div class="top-acciones">
+      <button class="btn-top btn-contacto">CONTÁCTANOS</button>
+      <button class="btn-top btn-cita" routerLink="/agenda-citas">AGENDA TU CITA</button>
+      
+      <div class="usuario-menu">
+        <div class="avatar-icon"></div>
+        <select class="select-sesion">
+          <option>INICIAR SESIÓN</option>
+          <option>Mi Perfil</option>
+          <option>Mis Citas</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Botón de Hamburguesa para Celulares -->
+    <button class="menu-hamburguesa" (click)="alternarMenu()">
+      ☰
+    </button>
+  </div>
+
+  <!-- BARRA DE NAVEGACIÓN INFERIOR AZUL (Se activa con NgClass) -->
+  <nav class="nav-bar" [ngClass]="{ 'abierto': menuAbierto }">
+    <ul class="nav-links">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Inicio</a></li>
+      <li><a routerLink="/servicios" routerLinkActive="active" (click)="cerrarMenu()">Servicios</a></li>
+      <li><a routerLink="/especialidades" routerLinkActive="active" (click)="cerrarMenu()">Especialidades</a></li>
+      <li><a routerLink="/medicos" routerLinkActive="active" (click)="cerrarMenu()">Médicos</a></li>
+      <li><a routerLink="/hospitales" routerLinkActive="active" (click)="cerrarMenu()">Hospitales</a></li>
+      <li><a routerLink="/farmacia" routerLinkActive="active" (click)="cerrarMenu()">Farmacia</a></li>
+    </ul>
+
+    <div class="buscador-container">
+      <input type="text" placeholder="BÚSQUEDA..." class="input-busqueda-global" />
+      <span class="icono-lupa">🔍</span>
+    </div>
+  </nav>
+</header>
