@@ -1,0 +1,22 @@
+/* --- OPTIMIZACIÓN DE FLUIDEZ CINEMATOGRÁFICA EN VISTAS --- */
+
+.portal-home-layout {
+  width: 100%;
+  overflow-x: hidden;
+  background-color: #f8fafc;
+}
+
+/* Transición de opacidad fluida al alternar de pestañas */
+.fade-seccion-smooth {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform; /* Le avisa al navegador que use la GPU */
+}
+
+/* Evita bloqueos visuales ocultando físicamente los elementos inactivos sin destruirlos */
+[hidden] {
+  display: none !important;
+  opacity: 0 !important;
+  transform: translateY(10px) !important;
+}

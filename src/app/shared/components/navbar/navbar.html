@@ -2,7 +2,8 @@
   <!-- Barra Superior Blanca (Logotipo y Acciones de Cuenta) -->
   <div class="top-bar">
     
-    <div class="logo-container" routerLink="/">
+    <!-- ACTUALIZADO: El logotipo ahora redirige al Home principal de forma nativa -->
+    <div class="logo-container" routerLink="/" style="cursor: pointer;">
       <img src="LogoClinica1.png" alt="Logo Voltstack" class="logo-imagen-src" />
       <div class="logo-placeholder">
         <span class="logo-texto-principal">VOLTSTACK</span>
@@ -16,13 +17,9 @@
       
       <div class="usuario-menu">
         <div class="avatar-icon"></div>
-        <!-- CORREGIDO: Escucha de cambios de opción para la navegación -->
         <select class="select-sesion" (change)="manejarNavegacionSesion($event)">
           <option value="" disabled selected hidden>CUENTA</option>
-          <option value="/login">INICIAR SESIÓN</option>
-          <option value="/mis-citas">Mi Perfil (Citas)</option>
-          
-          <!-- CORREGIDO: Ahora apunta a la ruta intermedia del Login Administrativo Seguro -->
+          <option value="/login">👤 Mi Perfil (Citas)</option>
           <option value="/login-personal">👨‍⚕️ Panel Médico / Admin</option>
         </select>
       </div>
@@ -34,7 +31,7 @@
     </button>
   </div>
 
-  <!-- BARRA DE NAVEGACIÓN INFERIOR AZUL (Se activa con NgClass) -->
+  <!-- BARRA DE NAVEGACIÓN INFERIOR AZUL ENLAZADA POR RUTAS FÍSICAS FLUIDAS -->
   <nav class="nav-bar" [ngClass]="{ 'abierto': menuAbierto }">
     <ul class="nav-links">
       <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Inicio</a></li>

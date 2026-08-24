@@ -21,15 +21,14 @@ export class LoginComponent {
 
   constructor(private router: Router) {}
 
-  // Simulación de validación de credenciales médicas
   ejecutarIngresar(): void {
-    if (this.credenciales.correo === 'paciente@voltstack.com' && this.credenciales.contrasena === '123456') {
+    if (this.credenciales.correo.trim() === 'paciente@voltstack.com' && this.credenciales.contrasena === '123456') {
       this.errorAutenticacion = false;
-      // Redirección inmediata al panel de citas tras loguearse con éxito
+      console.log('CRUD PHP [POST]: Autenticación de paciente en /api/login_paciente.php');
+      // Redirige al historial de citas del cliente
       this.router.navigate(['/mis-citas']); 
     } else {
       this.errorAutenticacion = true;
     }
   }
 }
-

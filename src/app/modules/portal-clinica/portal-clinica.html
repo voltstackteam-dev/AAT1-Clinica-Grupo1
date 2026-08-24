@@ -1,9 +1,28 @@
-<!-- LLAMADO DE TU COMPONENTE HERO QUE TIENE EL VIDEO -->
-<app-hero-hospital></app-hero-hospital>
+<div class="portal-home-layout">
+  
+  <!-- 1. Contenedor del Hero Banner Principal -->
+  <div class="fade-seccion-smooth" [hidden]="seccionActiva !== 'inicio'">
+    <app-hero-hospital></app-hero-hospital>
+  </div>
 
-<!-- Los demás bloques hijos del mockup se pintarán abajo de forma ordenada -->
-<app-seccion-servicios></app-seccion-servicios>
-<app-seccion-especialidades></app-seccion-especialidades>
-<app-listado-medicos (medicoSeleccionado)="redirigirCita($event)"></app-listado-medicos>
-<app-info-hospitales></app-info-hospitales>
+  <!-- 2. Módulo exclusivo de Servicios -->
+  <div class="fade-seccion-smooth" [hidden]="seccionActiva !== 'servicios' && seccionActiva !== 'inicio'">
+    <app-seccion-servicios></app-seccion-servicios>
+  </div>
 
+  <!-- 3. Módulo exclusivo de Especialidades -->
+  <div class="fade-seccion-smooth" [hidden]="seccionActiva !== 'especialidades' && seccionActiva !== 'inicio'">
+    <app-seccion-especialidades></app-seccion-especialidades>
+  </div>
+
+  <!-- 4. Módulo exclusivo de Médicos Destacados -->
+  <div class="fade-seccion-smooth" [hidden]="seccionActiva !== 'medicos' && seccionActiva !== 'inicio'">
+    <app-listado-medicos></app-listado-medicos>
+  </div>
+
+  <!-- 5. Módulo exclusivo de Sedes Hospitalarias -->
+  <div class="fade-seccion-smooth" [hidden]="seccionActiva !== 'hospitales' && seccionActiva !== 'inicio'">
+    <app-info-hospitales></app-info-hospitales>
+  </div>
+
+</div>

@@ -1,42 +1,43 @@
 <div class="login-modulo-container">
   <div class="login-card-box">
     
-    <!-- Encabezado Institucional -->
+    <!-- Encabezado Estructurado Estilo Panel Médico Adaptado al Cliente -->
     <div class="login-header">
-      <h2>Iniciar Sesión</h2>
-      <p>Ingresa a tu cuenta Voltstack para gestionar tus citas clínicas</p>
+      <div style="font-size: 2.5rem; margin-bottom: 10px;">🔐</div>
+      <h2>Portal del Paciente</h2>
+      <p>Área de autenticación para afiliados de la red hospitalaria Voltstack</p>
       <div class="linea-azul"></div>
     </div>
 
-    <!-- Alerta de Error Condicional -->
+    <!-- Alerta de Error Condicional (Simulación de API) -->
     <div class="alerta-error-login" *ngIf="errorAutenticacion">
-      ⚠️ Credenciales incorrectas. Prueba con: paciente@voltstack.com / 123456
+      ❌ Acceso Denegado. Verifique su correo o contraseña de paciente.
+      <br><span style="font-size: 0.78rem; font-weight: normal;">Prueba con: paciente@voltstack.com / 123456</span>
     </div>
 
-    <!-- Formulario de Acceso -->
+    <!-- Formulario de Acceso Controlado -->
     <form #formLogin="ngForm" (ngSubmit)="ejecutarIngresar()">
       
       <div class="campo-grupo">
-        <label>Correo Electrónico</label>
+        <label>Correo Electrónico Afiliado</label>
         <input type="email" name="correo" [(ngModel)]="credenciales.correo" required placeholder="correo@ejemplo.com" />
       </div>
 
       <div class="campo-grupo">
-        <label>Contraseña</label>
-        <input type="password" name="contrasena" [(ngModel)]="credenciales.contrasena" required placeholder="******" />
+        <label>Contraseña del Portal</label>
+        <input type="password" name="contrasena" [(ngModel)]="credenciales.contrasena" required placeholder="••••••••" />
       </div>
 
       <button type="submit" class="btn-login-enviar" [disabled]="!formLogin.form.valid">
-        Ingresar al Portal
+        Verificar Credenciales de Paciente
       </button>
 
     </form>
 
-    <!-- Enlace de desvío al Registro -->
+    <!-- Enlace de desvío al Registro de Nuevos Clientes -->
     <div class="login-footer-enlaces">
       <p>¿No tienes una cuenta médica? <a routerLink="/registro">Regístrate aquí</a></p>
     </div>
 
   </div>
 </div>
-

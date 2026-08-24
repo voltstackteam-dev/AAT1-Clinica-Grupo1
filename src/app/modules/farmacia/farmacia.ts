@@ -14,7 +14,7 @@ export class FarmaciaComponent {
   // Categoría activa seleccionada para el filtrado
   categoriaSeleccionada: string = 'Todos';
 
-  // Catálogo base de medicamentos corregido con URLs estables de producción
+  // Catálogo base de medicamentos actualizado con imágenes de la carpeta public
   productosFarmacia = [
     {
       id: 101,
@@ -22,7 +22,7 @@ export class FarmaciaComponent {
       categoria: 'Analgésicos',
       precio: 15.50,
       disponibilidad: true,
-      foto: 'https://unsplash.com'
+      foto: 'paracetamol.png' // <-- Actualizado a tu archivo local .png
     },
     {
       id: 102,
@@ -30,7 +30,7 @@ export class FarmaciaComponent {
       categoria: 'Antibióticos',
       precio: 85.00,
       disponibilidad: true,
-      foto: 'https://unsplash.com'
+      foto: 'amoxicilina.png' // <-- Actualizado a tu archivo local .png
     },
     {
       id: 103,
@@ -38,7 +38,7 @@ export class FarmaciaComponent {
       categoria: 'Analgésicos',
       precio: 22.00,
       disponibilidad: true,
-      foto: 'https://unsplash.com'
+      foto: 'ibuprofeno.png' // <-- Actualizado a tu archivo local .png
     },
     {
       id: 104,
@@ -46,7 +46,7 @@ export class FarmaciaComponent {
       categoria: 'Antihistamínicos',
       precio: 18.50,
       disponibilidad: false, // Producto agotado
-      foto: 'https://unsplash.com'
+      foto: 'loratadina.png' // <-- Actualizado a tu archivo local .png
     },
     {
       id: 105,
@@ -54,9 +54,10 @@ export class FarmaciaComponent {
       categoria: 'Vitaminas',
       precio: 45.00,
       disponibilidad: true,
-      foto: 'https://unsplash.com'
+      foto: 'vitaminac.jpg' // <-- Actualizado a tu archivo local .jpg (Nota el cambio de extensión)
     }
   ];
+
 
   // --- PROPIEDADES DEL ASISTENTE VIRTUAL LÓGICO ---
   chatAbierto: boolean = false;

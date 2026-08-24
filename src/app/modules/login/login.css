@@ -1,7 +1,11 @@
+/* ==========================================================================
+   ESTILOS UNIFICADOS DE INICIO DE SESIÓN (ESTILO SEGURIDAD CARBONO)
+   ========================================================================== */
+
 .login-modulo-container {
   width: 100%;
   min-height: 80vh;
-  background-color: #f7fafc;
+  background-color: #1a202c; /* Fondo gris oscuro/carbono unificado con el admin */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,12 +15,11 @@
 
 .login-card-box {
   background-color: #ffffff;
-  border: 1px solid #e2e8f0;
   border-radius: 16px;
-  padding: 40px;
+  padding: 45px 40px;
   width: 100%;
-  max-width: 450px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  max-width: 440px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); /* Sombra de alta profundidad unificada */
   box-sizing: border-box;
 }
 
@@ -26,23 +29,23 @@
 }
 
 .login-header h2 {
-  font-size: 1.8rem;
-  color: #1a365d;
-  margin: 0 0 8px 0;
+  font-size: 1.7rem;
+  color: #1a365d; /* Azul marino Voltstack */
+  margin: 0 0 6px 0;
   font-weight: 800;
 }
 
 .login-header p {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   color: #718096;
   margin: 0 0 15px 0;
   line-height: 1.4;
 }
 
 .linea-azul {
-  width: 45px;
+  width: 50px;
   height: 4px;
-  background-color: #4299e1;
+  background-color: #4299e1; /* Azul intermedio institucional */
   margin: 0 auto;
   border-radius: 2px;
 }
@@ -55,8 +58,8 @@
 }
 
 .campo-grupo label {
-  font-size: 0.85rem;
-  color: #1a365d;
+  font-size: 0.82rem;
+  color: #2d3748;
   font-weight: bold;
   margin-bottom: 8px;
 }
@@ -64,25 +67,27 @@
 .campo-grupo input {
   padding: 12px 15px;
   border: 1px solid #cbd5e0;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 0.92rem;
   outline: none;
   box-sizing: border-box;
-  transition: border-color 0.2s;
+  background-color: #f7fafc;
+  transition: all 0.2s;
 }
 
 .campo-grupo input:focus {
   border-color: #3182ce;
+  background-color: #ffffff;
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
 }
 
 .btn-login-enviar {
   width: 100%;
-  padding: 13px 0;
-  background-color: #2b6cb0;
+  padding: 14px 0;
+  background-color: #1a365d; /* Azul marino Voltstack */
   color: #ffffff;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 0.95rem;
   font-weight: bold;
   cursor: pointer;
@@ -90,26 +95,48 @@
   margin-top: 10px;
 }
 
-.btn-login-enviar:hover { background-color: #2c5282; }
-.btn-login-enviar:disabled { background-color: #cbd5e0; color: #718096; cursor: not-allowed; }
+.btn-login-enviar:hover { 
+  background-color: #2c5282; 
+}
+
+.btn-login-enviar:disabled { 
+  background-color: #cbd5e0; 
+  color: #718096; 
+  cursor: not-allowed; 
+}
 
 .alerta-error-login {
   background-color: #fff5f5;
   border: 1px solid #fed7d7;
   color: #c53030;
-  padding: 12px;
+  padding: 14px;
   border-radius: 8px;
   font-size: 0.85rem;
   margin-bottom: 25px;
   text-align: left;
+  line-height: 1.4;
   font-weight: 500;
 }
 
 .login-footer-enlaces {
   margin-top: 25px;
   text-align: center;
+  border-top: 1px solid #edf2f7;
+  padding-top: 15px;
 }
 
-.login-footer-enlaces p { font-size: 0.88rem; color: #4a5568; margin: 0; }
-.login-footer-enlaces a { color: #3182ce; font-weight: bold; text-decoration: none; }
-.login-footer-enlaces a:hover { text-decoration: underline; }
+.login-footer-enlaces p { 
+  font-size: 0.88rem; 
+  color: #4a5568; 
+  margin: 0; 
+}
+
+.login-footer-enlaces a { 
+  color: #3182ce; 
+  font-weight: bold; 
+  text-decoration: none; 
+}
+
+.login-footer-enlaces a:hover { 
+  text-decoration: underline; 
+}

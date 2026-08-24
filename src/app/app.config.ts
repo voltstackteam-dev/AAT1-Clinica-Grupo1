@@ -1,13 +1,19 @@
-import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core'; // ◄ Nombre oficial estable
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core'; // <-- CORREGIDO SÉGÚN SUGERENCIA TS2724
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // 🚀 Configuración oficial estable Zoneless de Angular
+    // CORRECCIÓN DEFINITIVA: Activa el motor asíncrono nativo por señales estable
     provideZonelessChangeDetection(),
-    provideRouter(routes),
-    provideHttpClient()
+    
+    // Registramos el enrutador con el scroll por fragmentos activo
+    provideRouter(
+      routes, 
+      withInMemoryScrolling({
+        anchorScrolling: 'enabled',
+        scrollPositionRestoration: 'enabled'
+      })
+    )
   ]
 };
