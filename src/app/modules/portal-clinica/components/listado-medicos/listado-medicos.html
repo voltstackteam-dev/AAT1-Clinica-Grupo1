@@ -1,40 +1,38 @@
 <section class="medicos-section">
-  <!-- Encabezado Institucional de Voltstack -->
   <div class="medicos-encabezado">
-    <h2 class="titulo-medicos">Médicos Destacados</h2>
-    <div class="linea-decorativa-medicos"></div>
-    <p class="subtitulo-medicos">Selecciona un especialista médico para agendar tu cita de forma inmediata</p>
+    <h2>Nuestros Médicos Especialistas</h2>
+    <div class="linea-decorativa-azul"></div>
+    <p>Conoce al equipo de profesionales comprometidos con tu salud y bienestar</p>
   </div>
 
-  <!-- Contenedor Horizontal Adaptable -->
-  <div class="medicos-flex-container">
-    
-    <!-- Bloque de Médico Individual -->
-    <div 
-      *ngFor="let doc of listaDoctores" 
-      class="medico-tarjeta-accion" 
-      (click)="seleccionar(doc.id)">
-      
-      <!-- Círculo contenedor de la foto real -->
-      <div class="circulo-imagen-marco">
-        <img [src]="doc.foto" [alt]="doc.nombre" class="foto-medico-src" />
-        
-        <!-- Capa hover interactiva -->
-        <div class="capa-hover-agendar">
-          <span>AGENDAR CITA</span>
+  <div class="medicos-grid">
+    @for (medico of medicos(); track medico.id_medico) {
+      <div class="medico-card">
+        <div class="medico-foto-container">
+          <img 
+            [src]="medico.foto_med" 
+            [alt]="medico.nombre_med + ' ' + medico.apellido_med"
+            class="medico-foto"
+            onerror="this.src='/DrCarlosMendoza.png'" 
+          />
+        </div>
+        <div class="medico-info">
+          <span class="medico-especialidad">{{ medico.nombre_especialidad }}</span>
+          
+          <!-- Condición dinámica para Dr. o Dra. -->
+          <h3>
+            {{ medico.foto_med?.includes('Dra') ? 'Dra.' : 'Dr.' }} {{ medico.nombre_med }} {{ medico.apellido_med }}
+          </h3>
+
+          <p class="medico-telefono">📞 {{ medico.telefono_med }}</p>
+          <p class="medico-equipo">🛠️ Equipos: {{ medico.equipo_disponible }}</p>
+          <button class="btn-agendar-cita" (click)="seleccionar(medico.id_medico)">Agendar Cita</button>
         </div>
       </div>
-      
-      <!-- Información inferior descriptiva -->
-      <h3 class="medico-nombre-texto">{{ doc.nombre }}</h3>
-      <span class="medico-especialidad-etiqueta">{{ doc.especialidad }}</span>
-      
-      <!-- EVALUACIÓN DINÁMICA DE LA BASE DE DATOS MEDIANTE NGCLASS -->
-      <span class="medico-status-badge" [ngClass]="doc.disponible ? 'status-verde' : 'status-rojo'">
-        {{ doc.disponible ? '● Disponible Hoy' : '🚫 Agenda Llena' }}
-      </span>
-
-    </div>
-
+    } @empty {
+      <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+        <p>Cargando médicos disponibles...</p>
+      </div>
+    }
   </div>
 </section>
