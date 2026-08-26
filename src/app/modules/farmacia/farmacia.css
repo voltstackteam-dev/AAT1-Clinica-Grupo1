@@ -1,324 +1,174 @@
-.farmacia-modulo {
-  width: 100%;
-  background-color: #f7fafc;
-  padding-bottom: 60px;
-  font-family: Arial, sans-serif;
+:host {
+  display: block;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-/* Portada de Farmacia */
-.farmacia-hero {
-  width: 100%;
-  height: 220px;
-  /* Corregido: Enlace estable con imagen de estantería farmacéutica real */
-  background-image: url('https://unsplash.com');
-  background-size: cover;
-  background-position: center;
-  position: relative;
+/* Encabezado y Categorías */
+.farmacia-header {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 2.5rem auto;
 }
 
-.farmacia-hero-overlay {
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(135deg, rgba(26, 54, 93, 0.9) 0%, rgba(43, 108, 176, 0.6) 100%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 40px;
-  color: #ffffff;
+.farmacia-header h2 {
+  color: #1e3a8a;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
 }
 
-.farmacia-hero-overlay h1 { font-size: 2.3rem; margin: 0 0 10px 0; font-weight: bold; }
-.farmacia-hero-overlay p { font-size: 1.1rem; margin: 0; color: #e2e8f0; }
+.farmacia-header p {
+  color: #64748b;
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+}
 
-/* Botones de Categorías */
-.categorias-nav-bar {
+.filtros-categoria {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 15px;
-  padding: 30px 40px;
+  gap: 0.75rem;
+}
+
+.filtros-categoria button {
   background-color: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.categorias-nav-bar button {
-  padding: 10px 22px;
-  background-color: #f8fafc;
-  border: 1px solid #cbd5e0;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: #4a5568;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  padding: 0.6rem 1.4rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s ease-in-out;
 }
 
-.categorias-nav-bar button:hover, .categorias-nav-bar button.activo {
-  background-color: #2b6cb0;
+.filtros-categoria button:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.filtros-categoria button.active {
+  background-color: #2563eb;
   color: #ffffff;
-  border-color: #2b6cb0;
+  border-color: #2563eb;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 }
 
 /* Grilla de Medicamentos */
-.productos-catalogo-grid {
-  max-width: 1200px;
-  margin: 40px auto 0 auto;
+.medicamentos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 30px;
-  padding: 0 40px;
-  box-sizing: border-box;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Tarjeta de Producto */
-.producto-card {
-  background-color: #ffffff;
+/* Tarjeta individual */
+.card-medicamento {
+  background: #ffffff;
+  border-radius: 16px;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+  position: relative;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.producto-card:hover {
+.card-medicamento:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.1);
 }
 
-.producto-imagen-contenedor {
+.badge-cat {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: #0f172a;
+  color: #ffffff;
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  z-index: 2;
+}
+
+.card-medicamento img {
   width: 100%;
   height: 180px;
-  position: relative;
-  background-color: #f7fafc;
-}
-
-.img-medicamento {
-  width: 100%; height: 100%; object-fit: cover;
-}
-
-.badge-categoria {
-  position: absolute; top: 12px; left: 12px;
-  background-color: rgba(26, 54, 93, 0.85);
-  color: #ffffff; font-size: 0.72rem; font-weight: bold;
-  padding: 3px 10px; border-radius: 10px;
-}
-
-.producto-info-cuerpo {
-  padding: 20px;
-  display: flex; flex-direction: column; flex-grow: 1;
-}
-
-.producto-info-cuerpo h3 {
-  font-size: 1.1rem; color: #1a365d; margin: 0 0 8px 0; font-weight: bold;
-}
-
-.producto-precio {
-  font-size: 1.25rem; color: #2b6cb0; font-weight: 800; margin: 0 0 10px 0;
-}
-
-.stock-indicador {
-  font-size: 0.78rem; font-weight: bold; color: #e53e3e; margin-bottom: 20px;
-}
-
-.stock-indicador.en-stock { color: #38a169; }
-
-/* Botón Comprar */
-.btn-carrito {
-  width: 100%; padding: 11px 0;
-  background-color: #3182ce; color: #ffffff;
-  border: none; border-radius: 6px;
-  font-size: 0.9rem; font-weight: bold;
-  cursor: pointer; margin-top: auto;
-  transition: background-color 0.2s;
-}
-
-.btn-carrito:hover { background-color: #2b6cb0; }
-.btn-carrito:disabled { background-color: #cbd5e0; color: #718096; cursor: not-allowed; }
-
-
-/* ==========================================================================
-   ESTILOS INTERACTIVOS COMPLEMENTARIOS DEL ASISTENTE VIRTUAL
-   ========================================================================== */
-
-/* Botón Disparador Flotante Fijo */
-.btn-asistente-flotante {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  background-color: #2b6cb0;
-  color: #ffffff;
-  border: none;
-  padding: 14px 24px;
-  border-radius: 30px;
-  font-size: 0.95rem;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 2000; /* Asegura flotación superior sobre el Footer */
-  box-shadow: 0 4px 15px rgba(43, 108, 176, 0.4);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-asistente-flotante:hover {
-  background-color: #2c5282;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(43, 108, 176, 0.5);
-}
-
-/* Panel Emergente del Chat */
-.chat-ventana-emergente {
-  position: fixed;
-  bottom: 90px;
-  right: 25px;
-  width: 360px;
-  height: 480px;
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  z-index: 1999;
-  overflow: hidden;
-  border: 1px solid #e2e8f0;
-  animation: chatEntrada 0.3s ease-out forwards;
-}
-
-@keyframes chatEntrada {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Encabezado Azul Marino */
-.chat-header-institucional {
-  background-color: #1a365d;
-  color: #ffffff;
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.chat-avatar-status {
-  font-size: 1.8rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  width: 45px; height: 45px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-}
-
-.chat-header-institucional h4 { margin: 0; font-size: 1rem; font-weight: bold; }
-.status-en-linea { font-size: 0.72rem; color: #68d391; font-weight: 500; }
-
-/* Contenedor del Historial de Mensajes */
-.chat-cuerpo-mensajes {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #f7fafc;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Bloques de Mensajes Asimétricos */
-.mensaje-bloque { display: flex; width: 100%; }
-.mensaje-bloque.asistente { justify-content: flex-start; }
-.mensaje-bloque.usuario { justify-content: flex-end; }
-
-.mensaje-burbuja {
-  max-width: 80%;
-  padding: 10px 14px;
-  border-radius: 14px;
-  font-size: 0.88rem;
-  line-height: 1.4;
-}
-
-.asistente .mensaje-burbuja {
+  object-fit: cover;
   background-color: #e2e8f0;
-  color: #2d3748;
-  border-top-left-radius: 2px;
 }
 
-.usuario .mensaje-burbuja {
-  background-color: #3182ce;
-  color: #ffffff;
-  border-top-right-radius: 2px;
-}
-
-/* Área de Entrada de Mensajes */
-.chat-barra-entrada {
+/* Cuerpo de la tarjeta */
+.card-body {
+  padding: 1.5rem;
   display: flex;
-  padding: 12px 15px;
-  background-color: #ffffff;
-  border-top: 1px solid #e2e8f0;
-  gap: 10px;
-}
-
-.chat-barra-entrada input {
+  flex-direction: column;
   flex-grow: 1;
-  padding: 10px 15px;
-  border: 1px solid #cbd5e0;
-  border-radius: 20px;
-  font-size: 0.88rem;
-  outline: none;
 }
 
-.chat-barra-entrada button {
-  background-color: #3182ce;
+.card-body h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+}
+
+.precio {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin: 0 0 0.8rem 0;
+}
+
+.en-stock {
+  color: #16a34a;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0 0 1.2rem 0;
+}
+
+.agotado {
+  color: #dc2626;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0 0 1.2rem 0;
+}
+
+/* Botones de acción */
+.btn-carrito {
+  width: 100%;
+  background-color: #2563eb;
   color: #ffffff;
   border: none;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.9rem;
-  transition: background-color 0.2s;
-}
-
-.chat-barra-entrada button:hover { background-color: #2b6cb0; }
-
-
-/* Adaptabilidad Celular */
-@media (max-width: 600px) {
-  .productos-catalogo-grid { padding: 0 20px; gap: 20px; }
-  .categorias-nav-bar { padding: 20px; }
-  
-  /* Redimensionamiento del Chat en pantallas chicas */
-  .chat-ventana-emergente {
-    width: calc(100% - 40px);
-    right: 20px; left: 20px;
-    bottom: 85px; height: 400px;
-  }
-}
-/* Contenedor de la Imagen del Medicamento */
-.producto-imagen-contenedor {
-  width: 100%;
-  height: 200px;         /* Altura fija obligatoria para que la foto tenga espacio */
-  position: relative;
-  background-color: #edf2f7; /* Fondo gris claro de respaldo */
-  overflow: hidden;
-}
-
-/* Control del Gráfico Nativo */
-.img-medicamento {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;     /* Recorta y adapta la foto proporcionalmente sin deformarla */
-  object-position: center;
-  display: block;
-}
-
-/* Ajuste del Badge para que flote limpiamente sobre la foto */
-.badge-categoria {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background-color: rgba(26, 54, 93, 0.9);
-  color: #ffffff;
-  font-size: 0.72rem;
-  font-weight: bold;
-  padding: 4px 10px;
+  padding: 0.8rem 1rem;
   border-radius: 10px;
-  z-index: 5;            /* Queda por encima de la imagen */
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: auto;
+}
+
+.btn-carrito:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-agotado {
+  width: 100%;
+  background-color: #cbd5e1;
+  color: #64748b;
+  border: none;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: not-allowed;
+  margin-top: auto;
 }
