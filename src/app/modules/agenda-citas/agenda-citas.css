@@ -1,137 +1,111 @@
-.citas-modulo-contenedor {
-  width: 100%;
-  background-color: #f7fafc;
-  padding-bottom: 80px;
-  font-family: Arial, sans-serif;
+.agenda-cita-container {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Hero Banner */
-.citas-hero-banner {
+.agenda-card {
+  background: #ffffff;
   width: 100%;
-  height: 200px;
-  background-image: url('https://unsplash.com');
-  background-size: cover;
-  background-position: center;
-  position: relative;
+  max-width: 760px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 2.5rem;
 }
 
-.citas-hero-overlay {
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(135deg, rgba(26, 54, 93, 0.9) 0%, rgba(43, 108, 176, 0.6) 100%);
+.agenda-header {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.agenda-header h2 {
+  color: #1e3a8a;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.agenda-header p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form-group {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 0 40px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin-bottom: 0.4rem;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  background-color: #f8fafc;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #3b82f6;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.form-actions {
+  margin-top: 2rem;
+}
+
+.btn-confirmar {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #cbd5e1;
+  color: #475569;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-confirmar:hover:not(:disabled) {
+  background-color: #2563eb;
   color: #ffffff;
 }
 
-.citas-hero-overlay h1 { font-size: 2.2rem; margin: 0 0 10px 0; font-weight: bold; }
-.citas-hero-overlay p { font-size: 1.05rem; margin: 0; color: #e2e8f0; }
-
-/* Contenedor del Formulario */
-.formulario-citas-card {
-  max-width: 850px;
-  margin: -30px auto 0 auto; /* Eleva el formulario sobre el banner */
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 40px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  position: relative;
-  z-index: 10;
-  box-sizing: border-box;
-}
-
-/* Grillas Flexibles */
-.formulario-grid-doble {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-  margin-bottom: 25px;
-}
-
-.input-grupo {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-}
-
-.input-grupo label {
-  font-size: 0.88rem;
-  color: #1a365d;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.input-grupo input, .input-grupo select {
-  padding: 12px 15px;
-  border: 1px solid #cbd5e0;
-  border-radius: 8px;
-  font-size: 0.92rem;
-  outline: none;
-  background-color: #ffffff;
-  color: #2d3748;
-  transition: border-color 0.2s;
-  box-sizing: border-box;
-}
-
-.input-grupo input:focus, .input-grupo select:focus {
-  border-color: #3182ce;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
-}
-
-.input-deshabilitado {
-  background-color: #edf2f7 !important;
-  color: #718096 !important;
+.btn-confirmar:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* Botón de Confirmación */
-.btn-confirmar-cita {
-  width: 100%;
-  padding: 14px 0;
-  background-color: #2b6cb0;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 15px;
-}
-
-.btn-confirmar-cita:hover { background-color: #2c5282; }
-.btn-confirmar-cita:disabled { background-color: #cbd5e0; color: #718096; cursor: not-allowed; }
-
-/* Mensaje de Confirmación Exitoso */
-.alerta-exito-confirmacion {
-  max-width: 850px;
-  margin: 40px auto 0 auto;
-  background-color: #f0fff4;
-  border: 1px solid #c6f6d5;
-  border-left: 5px solid #38a169;
-  border-radius: 12px;
-  padding: 30px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  animation: entradaAlerta 0.3s ease-out forwards;
-}
-
-@keyframes entradaAlerta {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.alerta-icono { font-size: 2.5rem; }
-.alerta-texto h3 { margin: 0 0 6px 0; color: #22543d; font-weight: bold; }
-.alerta-texto p { margin: 0; color: #2f855a; font-size: 0.95rem; }
-
-/* Adaptabilidad para Teléfonos */
-@media (max-width: 768px) {
-  .formulario-grid-doble { grid-template-columns: 1fr; gap: 15px; margin-bottom: 15px; }
-  .formulario-citas-card { padding: 25px; margin-top: -20px; width: calc(100% - 30px); }
-  .citas-hero-banner { height: 160px; }
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 }
