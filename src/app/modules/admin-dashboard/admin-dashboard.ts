@@ -19,6 +19,14 @@ export interface CitaClinica {
   nombre_especialidad: string;
 }
 
+export interface MedicamentoAdmin {
+  id_medicamento: number;
+  nombre: string;
+  categoria: string;
+  precio: number;
+  stock: number;
+}
+
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -28,17 +36,32 @@ export interface CitaClinica {
 })
 export class AdminDashboardComponent implements OnInit {
   private http = inject(HttpClient);
+  
+  // URLs de Citas
   private urlGet = 'http://localhost/api_citas/get_citas.php';
   private urlActualizar = 'http://localhost/api_citas/actualizar_cita.php';
 
+  // URLs de Farmacia / Medicamentos
+  private apiGetMed = 'http://localhost/api_citas/get_medicamentos.php';
+  private apiUpdateMed = 'http://localhost/api_citas/actualizar_medicamento.php';
+
+  // Signals de Citas
   citas = signal<CitaClinica[]>([]);
-  filtroActual = signal<string>('todas'); // 'todas', 'pendiente', 'confirmada'
+  filtroActual = signal<string>('todas');
   cargando = signal(false);
+
+  // Signals de Medicamentos
+  medicamentos = signal<MedicamentoAdmin[]>([]);
+  mensajeExitoMed = signal<string>('');
 
   ngOnInit() {
     this.cargarCitas();
+    this.cargarMedicamentos();
   }
 
+  // ==========================================
+  // LÓGICA DE CITAS MÉDICAS (Tus funciones originales)
+  // ==========================================
   cargarCitas() {
     this.cargando.set(true);
     this.http.get<any>(this.urlGet).subscribe({
@@ -55,24 +78,19 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-// Filtrar según el botón seleccionado en la parte superior
-citasFiltradas() {
-  const filtro = this.filtroActual();
-  if (filtro === 'pendiente') {
-    return this.citas().filter(c => c.estado_cita.toLowerCase() === 'pendiente');
+  citasFiltradas() {
+    const filtro = this.filtroActual();
+    if (filtro === 'pendiente') {
+      return this.citas().filter(c => c.estado_cita.toLowerCase() === 'pendiente');
+    }
+    if (filtro === 'confirmada') {
+      return this.citas().filter(c => c.estado_cita.toLowerCase() === 'confirmada');
+    }
+    if (filtro === 'finalizada') {
+      return this.citas().filter(c => c.estado_cita.toLowerCase() === 'finalizada');
+    }
+    return this.citas();
   }
-  if (filtro === 'confirmada') {
-    return this.citas().filter(c => c.estado_cita.toLowerCase() === 'confirmada');
-  }
-  if (filtro === 'finalizada') {
-    return this.citas().filter(c => c.estado_cita.toLowerCase() === 'finalizada');
-  }
-  if (filtro === 'finalizada') {
-    return this.citas().filter(c => c.estado_cita.toLowerCase() === 'finalizada');
-  
-  }
-  return this.citas();
-}
 
   setFiltro(filtro: string) {
     this.filtroActual.set(filtro);
@@ -86,7 +104,7 @@ citasFiltradas() {
           this.cargarCitas();
         }
       },
-      error: (err) => alert('Error al autorizar cita')
+      error: () => alert('Error al autorizar cita')
     });
   }
 
@@ -99,7 +117,7 @@ citasFiltradas() {
             this.cargarCitas();
           }
         },
-        error: (err) => alert('Error al cancelar cita')
+        error: () => alert('Error al cancelar cita')
       });
     }
   }
@@ -117,8 +135,40 @@ citasFiltradas() {
             this.cargarCitas();
           }
         },
-        error: (err) => alert('Error al actualizar notas')
+        error: () => alert('Error al actualizar notas')
       });
     }
+  }
+
+  // ==========================================
+  // LÓGICA DE GESTIÓN DE FARMACIA / MEDICAMENTOS
+  // ==========================================
+  cargarMedicamentos() {
+    this.http.get<any>(this.apiGetMed).subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          this.medicamentos.set(res.data);
+        }
+      },
+      error: (err) => console.error('Error al cargar medicamentos:', err)
+    });
+  }
+
+  guardarCambiosMed(med: MedicamentoAdmin) {
+    const payload = {
+      id_medicamento: med.id_medicamento,
+      stock: Number(med.stock),
+      precio: Number(med.precio)
+    };
+
+    this.http.post<any>(this.apiUpdateMed, payload).subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          this.mensajeExitoMed.set(`¡${med.nombre} actualizado en Farmacia!`);
+          setTimeout(() => this.mensajeExitoMed.set(''), 3500);
+        }
+      },
+      error: (err) => console.error('Error al actualizar medicamento:', err)
+    });
   }
 }
