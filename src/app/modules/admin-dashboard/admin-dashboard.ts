@@ -45,6 +45,9 @@ export class AdminDashboardComponent implements OnInit {
   private apiGetMed = 'http://localhost/api_citas/get_medicamentos.php';
   private apiUpdateMed = 'http://localhost/api_citas/actualizar_medicamento.php';
 
+  // Control de Pestañas Principales ('citas' o 'farmacia')
+  vistaActiva = signal<'citas' | 'farmacia'>('citas');
+
   // Signals de Citas
   citas = signal<CitaClinica[]>([]);
   filtroActual = signal<string>('todas');
@@ -59,8 +62,13 @@ export class AdminDashboardComponent implements OnInit {
     this.cargarMedicamentos();
   }
 
+  // Alternar entre pestañas
+  cambiarVista(vista: 'citas' | 'farmacia') {
+    this.vistaActiva.set(vista);
+  }
+
   // ==========================================
-  // LÓGICA DE CITAS MÉDICAS (Tus funciones originales)
+  // LÓGICA DE CITAS MÉDICAS
   // ==========================================
   cargarCitas() {
     this.cargando.set(true);

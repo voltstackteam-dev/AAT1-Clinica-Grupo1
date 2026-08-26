@@ -3,152 +3,140 @@
   <div class="header-admin">
     <div>
       <h2>Panel de Control Clínico</h2>
-      <p>Módulo de Gestión de Citas, Autorizaciones y Control de Farmacia</p>
+      <p>Módulo de Administración General - Voltstack</p>
     </div>
     <div class="badge-total">
-      Citas en Sistema: <strong>{{ citas().length }}</strong>
+      @if (vistaActiva() === 'citas') {
+        Citas en Sistema: <strong>{{ citas().length }}</strong>
+      } @else {
+        Medicamentos: <strong>{{ medicamentos().length }}</strong>
+      }
     </div>
   </div>
 
-  <!-- Botones de Filtrado Superior -->
-  <div class="filtros-container">
+  <!-- Pestañas Principales de Navegación -->
+  <div class="pestanas-principales">
     <button 
-      [class.active]="filtroActual() === 'todas'" 
-      (click)="setFiltro('todas')" 
-      class="btn-tab btn-blue">
-      Todas las Solicitudes
+      class="btn-pestana" 
+      [class.active]="vistaActiva() === 'citas'" 
+      (click)="cambiarVista('citas')">
+      📅 Gestión de Citas
     </button>
     <button 
-      [class.active]="filtroActual() === 'pendiente'" 
-      (click)="setFiltro('pendiente')" 
-      class="btn-tab btn-yellow">
-      ⚠️ Pendientes de Aprobación
-    </button>
-    <button 
-      [class.active]="filtroActual() === 'confirmada'" 
-      (click)="setFiltro('confirmada')" 
-      class="btn-tab btn-green">
-      ✅ Confirmadas / Activas
-    </button>
-    <button 
-      [class.active]="filtroActual() === 'finalizada'" 
-      (click)="setFiltro('finalizada')" 
-      class="btn-tab btn-gray">
-      🏁 Finalizadas
+      class="btn-pestana" 
+      [class.active]="vistaActiva() === 'farmacia'" 
+      (click)="cambiarVista('farmacia')">
+      📦 Control de Inventario y Precios
     </button>
   </div>
 
-  <!-- Tarjetas de Citas Dinámicas -->
-  <div class="citas-grid">
-    @for (cita of citasFiltradas(); track cita.id_cita) {
-      <div class="cita-card">
-        <div class="cita-header">
-          <span class="id-op">ID Operación: <strong>{{ cita.codigo_operacion || ('CITA-' + cita.id_cita) }}</strong></span>
-          <span class="status-pill" [ngClass]="cita.estado_cita.toLowerCase()">
-            {{ cita.estado_cita | titlecase }}
-          </span>
-        </div>
-
-        <div class="cita-body">
-          <!-- Columna Paciente con DPI, Correo y Teléfono -->
-          <div class="info-col">
-            <small>PACIENTE</small>
-            <h4>{{ cita.nombre_paciente || 'Sin Nombre' }}</h4>
-            <p>🪪 DPI: {{ cita.dpi_paciente || 'N/A' }}</p>
-            <p>✉️ {{ cita.email_paciente || 'Sin correo' }}</p>
-            <p>📞 {{ cita.telefono_paciente || 'Sin teléfono' }}</p>
-          </div>
-
-          <!-- Columna Médico & Especialidad -->
-          <div class="info-col">
-            <small>MÉDICO & ESPECIALIDAD</small>
-            <h4>{{ cita.nombre_medico || 'Médico General' }}</h4>
-            <span class="spec-pill">{{ cita.nombre_especialidad || 'General' }}</span>
-          </div>
-
-          <!-- Columna Logística -->
-          <div class="info-col">
-            <small>LOGÍSTICA PROGRAMADA</small>
-            <p>📅 {{ cita.fecha_cita || 'Por asignar' }}</p>
-            <p>⏰ {{ cita.hora_cita || 'Por asignar' }}</p>
-          </div>
-        </div>
-
-        <!-- Observaciones -->
-        <div class="observaciones-box">
-          <div>
-            <strong>Observaciones Clínicas / Diagnóstico Preventivo</strong>
-            <p class="obs-text">{{ cita.observaciones || 'No hay anotaciones registradas para esta consulta.' }}</p>
-          </div>
-          <button (click)="modificarNotas(cita)" class="btn-notas">📝 Modificar Notas</button>
-        </div>
-
-        <!-- Acciones -->
-        <div class="cita-actions">
-          @if (cita.estado_cita.toLowerCase() === 'pendiente') {
-            <button (click)="autorizarCita(cita.id_cita)" class="btn-autorizar">
-              ✔ Aceptar y Autorizar Cita
-            </button>
-          }
-          <button (click)="cancelarCita(cita.id_cita)" class="btn-denegar">
-            ✖ Denegar / Eliminar Registro
-          </button>
-        </div>
-      </div>
-    }
-  </div>
-
-  <!-- SECCIÓN DE GESTIÓN DE FARMACIA -->
-  <div class="seccion-farmacia-admin">
-    <div class="header-subseccion">
-      <div>
-        <h3>📦 Control de Inventario y Precios (Farmacia)</h3>
-        <p>Ajusta el stock y los precios de venta en tiempo real para el catálogo público</p>
-      </div>
+  <!-- SECCIÓN 1: CITAS MÉDICAS -->
+  @if (vistaActiva() === 'citas') {
+    <div class="filtros-container">
+      <button [class.active]="filtroActual() === 'todas'" (click)="setFiltro('todas')" class="btn-tab btn-blue">Todas las Solicitudes</button>
+      <button [class.active]="filtroActual() === 'pendiente'" (click)="setFiltro('pendiente')" class="btn-tab btn-yellow">⚠️ Pendientes de Aprobación</button>
+      <button [class.active]="filtroActual() === 'confirmada'" (click)="setFiltro('confirmada')" class="btn-tab btn-green">✅ Confirmadas / Activas</button>
+      <button [class.active]="filtroActual() === 'finalizada'" (click)="setFiltro('finalizada')" class="btn-tab btn-gray">🏁 Finalizadas</button>
     </div>
 
-    @if (mensajeExitoMed()) {
-      <div class="alerta-exito-med">
-        ✓ {{ mensajeExitoMed() }}
-      </div>
-    }
+    <div class="citas-grid">
+      @for (cita of citasFiltradas(); track cita.id_cita) {
+        <div class="cita-card">
+          <div class="cita-header">
+            <span class="id-op">ID Operación: <strong>{{ cita.codigo_operacion || ('CITA-' + cita.id_cita) }}</strong></span>
+            <span class="status-pill" [ngClass]="cita.estado_cita.toLowerCase()">{{ cita.estado_cita | titlecase }}</span>
+          </div>
 
-    <div class="tabla-med-contenedor">
-      <table class="tabla-med-admin">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Medicamento</th>
-            <th>Categoría</th>
-            <th>Precio (Q)</th>
-            <th>Stock Actual</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (med of medicamentos(); track med.id_medicamento) {
+          <div class="cita-body">
+            <div class="info-col">
+              <small>PACIENTE</small>
+              <h4>{{ cita.nombre_paciente || 'Sin Nombre' }}</h4>
+              <p>🪪 DPI: {{ cita.dpi_paciente || 'N/A' }}</p>
+              <p>✉️ {{ cita.email_paciente || 'Sin correo' }}</p>
+              <p>📞 {{ cita.telefono_paciente || 'Sin teléfono' }}</p>
+            </div>
+            <div class="info-col">
+              <small>MÉDICO & ESPECIALIDAD</small>
+              <h4>{{ cita.nombre_medico || 'Médico General' }}</h4>
+              <span class="spec-pill">{{ cita.nombre_especialidad || 'General' }}</span>
+            </div>
+            <div class="info-col">
+              <small>LOGÍSTICA PROGRAMADA</small>
+              <p>📅 {{ cita.fecha_cita || 'Por asignar' }}</p>
+              <p>⏰ {{ cita.hora_cita || 'Por asignar' }}</p>
+            </div>
+          </div>
+
+          <div class="observaciones-box">
+            <div>
+              <strong>Observaciones Clínicas / Diagnóstico Preventivo</strong>
+              <p class="obs-text">{{ cita.observaciones || 'No hay anotaciones registradas para esta consulta.' }}</p>
+            </div>
+            <button (click)="modificarNotas(cita)" class="btn-notas">📝 Modificar Notas</button>
+          </div>
+
+          <div class="cita-actions">
+            @if (cita.estado_cita.toLowerCase() === 'pendiente') {
+              <button (click)="autorizarCita(cita.id_cita)" class="btn-autorizar">✔ Aceptar y Autorizar Cita</button>
+            }
+            <button (click)="cancelarCita(cita.id_cita)" class="btn-denegar">✖ Denegar / Eliminar Registro</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- SECCIÓN 2: CONTROL DE INVENTARIO Y PRECIOS -->
+  @if (vistaActiva() === 'farmacia') {
+    <div class="seccion-farmacia-admin">
+      <div class="header-subseccion">
+        <div>
+          <h3>📦 Control de Inventario y Precios (Farmacia)</h3>
+          <p>Ajusta el stock y los precios de venta en tiempo real para el catálogo público</p>
+        </div>
+      </div>
+
+      @if (mensajeExitoMed()) {
+        <div class="alerta-exito-med">
+          ✓ {{ mensajeExitoMed() }}
+        </div>
+      }
+
+      <div class="tabla-med-contenedor">
+        <table class="tabla-med-admin">
+          <thead>
             <tr>
-              <td><strong>#{{ med.id_medicamento }}</strong></td>
-              <td class="nombre-med-col">{{ med.nombre }}</td>
-              <td><span class="badge-cat-admin">{{ med.categoria }}</span></td>
-              <td>
-                <div class="input-con-prefijo">
-                  <span>Q</span>
-                  <input type="number" [(ngModel)]="med.precio" step="0.50" min="0" class="input-med-admin" />
-                </div>
-              </td>
-              <td>
-                <input type="number" [(ngModel)]="med.stock" min="0" class="input-med-admin input-stock" />
-              </td>
-              <td>
-                <button class="btn-guardar-med" (click)="guardarCambiosMed(med)">
-                  💾 Actualizar
-                </button>
-              </td>
+              <th>ID</th>
+              <th>Medicamento</th>
+              <th>Categoría</th>
+              <th>Precio (Q)</th>
+              <th>Stock Actual</th>
+              <th>Acción</th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (med of medicamentos(); track med.id_medicamento) {
+              <tr>
+                <td><strong>#{{ med.id_medicamento }}</strong></td>
+                <td class="nombre-med-col">{{ med.nombre }}</td>
+                <td><span class="badge-cat-admin">{{ med.categoria }}</span></td>
+                <td>
+                  <div class="input-con-prefijo">
+                    <span>Q</span>
+                    <input type="number" [(ngModel)]="med.precio" step="0.50" min="0" class="input-med-admin" />
+                  </div>
+                </td>
+                <td>
+                  <input type="number" [(ngModel)]="med.stock" min="0" class="input-med-admin input-stock" />
+                </td>
+                <td>
+                  <button class="btn-guardar-med" (click)="guardarCambiosMed(med)">💾 Actualizar</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  }
 </div>
