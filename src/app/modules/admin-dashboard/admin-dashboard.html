@@ -1,105 +1,105 @@
-<div class="admin-dashboard-modulo">
-  
-  <!-- Encabezado de Control Central -->
-  <div class="dashboard-header">
-    <div class="header-texto">
-      <h1>Panel de Control Clínico</h1>
+<div class="admin-container">
+  <div class="header-admin">
+    <div>
+      <h2>Panel de Control Clínico</h2>
       <p>Módulo de Gestión de Citas, Autorizaciones y Bitácora para Médicos y Personal Administrativo</p>
     </div>
-    <!-- Contador de Volumen -->
-    <div class="badge-total-citas">
-      Citas en Sistema: <span>{{ citasAdministrativas.length }}</span>
+    <div class="badge-total">
+      Citas en Sistema: <strong>{{ citas().length }}</strong>
     </div>
   </div>
 
-  <!-- Barra de Filtros Rápidos -->
-  <div class="dashboard-filtros-bar">
-    <button (click)="filtroEstado = 'Todos'" [class.activo]="filtroEstado === 'Todos'">Todas las Solicitudes</button>
-    <button (click)="filtroEstado = 'Pendiente'" [class.activo]="filtroEstado === 'Pendiente'">⚠️ Pendientes de Aprobación</button>
-    <button (click)="filtroEstado = 'Confirmada'" [class.activo]="filtroEstado === 'Confirmada'">✅ Confirmadas / Activas</button>
-  </div>
-
-  <!-- Grilla de Control de Citas (Formato Layout Corporativo) -->
-  <div class="dashboard-tabla-contenedor">
-    
-    <div class="tarjeta-control-cita" *ngFor="let cita of citasFiltradas">
-      
-      <!-- Fila Informativa Superior -->
-      <div class="cita-admin-top">
-        <div class="id-bloque">
-          <span class="label-id">ID Operación:</span>
-          <span class="valor-id">{{ cita.id_cita }}</span>
-        </div>
-        <span class="status-badge-admin" [ngClass]="cita.estado === 'Confirmada' ? 'bg-verde' : 'bg-amarillo'">
-          {{ cita.estado }}
-        </span>
-      </div>
-
-      <!-- Fila de Datos del Paciente e Historial -->
-      <div class="cita-admin-datos-grid">
-        <div class="datos-bloque">
-          <h4>Paciente</h4>
-          <p class="txt-principal">{{ cita.paciente }}</p>
-          <p class="txt-secundario">DPI: {{ cita.dpi }}</p>
-        </div>
-        <div class="datos-bloque">
-          <h4>Médico & Especialidad</h4>
-          <p class="txt-principal">{{ cita.medico }}</p>
-          <p class="txt-secundario-tag">{{ cita.especialidad }}</p>
-        </div>
-        <div class="datos-bloque">
-          <h4>Logística Programada</h4>
-          <p class="txt-principal">📅 {{ cita.fecha }}</p>
-          <p class="txt-secundario">⏱️ {{ cita.hora }}</p>
-        </div>
-      </div>
-
-      <!-- Sección Interactiva: Notas Médicas y Comentarios Clínicos (CRUD PUT) -->
-      <div class="cita-admin-comentarios-seccion">
-        <h4>Observaciones Clínicas / Diagnóstico Preventivo</h4>
-        
-        <!-- Estado de Lectura Normal -->
-        <div *ngIf="citaEnEdicionId !== cita.id_cita" class="comentario-lectura-box">
-          <p *ngIf="cita.comentarios" class="txt-comentario-existente">{{ cita.comentarios }}</p>
-          <p *ngIf="!cita.comentarios" class="txt-comentario-vacio">No hay anotaciones registradas para esta consulta.</p>
-          <button class="btn-editar-nota" (click)="iniciarEdicionComentario(cita.id_cita, cita.comentarios)">
-            📝 Modificar Notas
-          </button>
-        </div>
-
-        <!-- Estado de Edición Activa (Caja de Texto) -->
-        <div *ngIf="citaEnEdicionId === cita.id_cita" class="comentario-edicion-box">
-          <textarea [(ngModel)]="comentarioTemporal" placeholder="Escriba las indicaciones médicas, cambios de horario o comentarios clínicos..."></textarea>
-          <div class="edicion-botones-grupo">
-            <button class="btn-guardar-nota" (click)="guardarComentario(cita.id_cita)">Guardar Cambios</button>
-            <button class="btn-cancelar-nota" (click)="citaEnEdicionId = null">Cancelar</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fila Inferior de Decisiones Administrativas (CRUD PUT / DELETE) -->
-      <div class="cita-admin-acciones-footer">
-        <div class="botones-izquierdos">
-          <button 
-            *ngIf="cita.estado === 'Pendiente'" 
-            class="btn-aprobar-cita" 
-            (click)="aceptarCita(cita.id_cita)">
-            ✔ Aceptar y Autorizar Cita
-          </button>
-        </div>
-        <button class="btn-denegar-cita" (click)="eliminarCita(cita.id_cita)">
-          ❌ Denegar / Eliminar Registro
-        </button>
-      </div>
-
-    </div>
-
-    <!-- Alerta en caso de vaciado por filtros -->
-    <div class="alerta-sin-registros" *ngIf="citasFiltradas.length === 0">
-      No se encontraron solicitudes de citas bajo el criterio seleccionado.
-    </div>
-
-  </div>
-
+<!-- Botones de Filtrado Superior -->
+<div class="filtros-container">
+  <button 
+    [class.active]="filtroActual() === 'todas'" 
+    (click)="setFiltro('todas')" 
+    class="btn-tab btn-blue">
+    Todas las Solicitudes
+  </button>
+  <button 
+    [class.active]="filtroActual() === 'pendiente'" 
+    (click)="setFiltro('pendiente')" 
+    class="btn-tab btn-yellow">
+    ⚠️ Pendientes de Aprobación
+  </button>
+  <button 
+    [class.active]="filtroActual() === 'confirmada'" 
+    (click)="setFiltro('confirmada')" 
+    class="btn-tab btn-green">
+    ✅ Confirmadas / Activas
+  </button>
+  <button 
+    [class.active]="filtroActual() === 'finalizada'" 
+    (click)="setFiltro('finalizada')" 
+    class="btn-tab btn-gray">
+    🏁 Finalizadas
+  </button>
+    <button 
+    [class.active]="filtroActual() === 'finalizada'" 
+    (click)="setFiltro('finalizada')" 
+    class="btn-tab btn-gray">
+    ❌ Canceladas
+  </button>
 </div>
 
+  <!-- Tarjetas de Citas Dinámicas -->
+  <div class="citas-grid">
+    @for (cita of citasFiltradas(); track cita.id_cita) {
+      <div class="cita-card">
+        <div class="cita-header">
+          <span class="id-op">ID Operación: <strong>{{ cita.codigo_operacion || ('CITA-' + cita.id_cita) }}</strong></span>
+          <span class="status-pill" [ngClass]="cita.estado_cita.toLowerCase()">
+            {{ cita.estado_cita | titlecase }}
+          </span>
+        </div>
+
+        <div class="cita-body">
+          <!-- Columna Paciente con DPI, Correo y Teléfono -->
+          <div class="info-col">
+            <small>PACIENTE</small>
+            <h4>{{ cita.nombre_paciente || 'Sin Nombre' }}</h4>
+            <p>🪪 DPI: {{ cita.dpi_paciente || 'N/A' }}</p>
+            <p>✉️ {{ cita.email_paciente || 'Sin correo' }}</p>
+            <p>📞 {{ cita.telefono_paciente || 'Sin teléfono' }}</p>
+          </div>
+
+          <!-- Columna Médico & Especialidad -->
+          <div class="info-col">
+            <small>MÉDICO & ESPECIALIDAD</small>
+            <h4>{{ cita.nombre_medico || 'Médico General' }}</h4>
+            <span class="spec-pill">{{ cita.nombre_especialidad || 'General' }}</span>
+          </div>
+
+          <!-- Columna Logística -->
+          <div class="info-col">
+            <small>LOGÍSTICA PROGRAMADA</small>
+            <p>📅 {{ cita.fecha_cita || 'Por asignar' }}</p>
+            <p>⏰ {{ cita.hora_cita || 'Por asignar' }}</p>
+          </div>
+        </div>
+
+        <!-- Observaciones -->
+        <div class="observaciones-box">
+          <div>
+            <strong>Observaciones Clínicas / Diagnóstico Preventivo</strong>
+            <p class="obs-text">{{ cita.observaciones || 'No hay anotaciones registradas para esta consulta.' }}</p>
+          </div>
+          <button (click)="modificarNotas(cita)" class="btn-notas">📝 Modificar Notas</button>
+        </div>
+
+        <!-- Acciones -->
+        <div class="cita-actions">
+          @if (cita.estado_cita.toLowerCase() === 'pendiente') {
+            <button (click)="autorizarCita(cita.id_cita)" class="btn-autorizar">
+              ✔ Aceptar y Autorizar Cita
+            </button>
+          }
+          <button (click)="cancelarCita(cita.id_cita)" class="btn-denegar">
+            ✖ Denegar / Eliminar Registro
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
