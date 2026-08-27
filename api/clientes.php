@@ -3,7 +3,7 @@
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 require_once "config/conexion.php";
 
@@ -30,20 +30,24 @@ try {
             /* GET */
         case 'GET':
 
-            // Si viene un ID
+            // Buscar clientes por ID
             if (isset($_GET['id'])) {
 
                 $id = $_GET['id'];
 
                 $sql = "SELECT
-                            id_cliente,
-                            nombre_cli,
-                            apellido_cli,
-                            nacimiento_cli,
-                            telefono_cli,
-                            id_usuario
-                        FROM tb_clientes
-                        WHERE id_cliente = :id";
+                        c.id_cliente,
+                        c.nombre_cli,
+                    c.apellido_cli,
+                        c.nacimiento_cli,
+                        c.telefono_cli,
+                        c.id_usuario,
+                        u.nombre_usuario
+                        FROM tb_clientes c
+                         INNER JOIN tb_usuarios u
+                            ON c.id_usuario = u.id_usuario
+                        WHERE c.id_cliente = :id";
+
 
                 $stmt = $conexion->prepare($sql);
 
@@ -55,14 +59,14 @@ try {
 
                 $stmt->execute();
 
-                $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+                $cliente = $stmt->fetch();
 
                 if ($cliente) {
 
                     echo json_encode([
                         "success" => true,
                         "data" => $cliente
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
 
                 } else {
 
@@ -71,7 +75,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "Cliente no encontrado"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                 }
 
             } else {
@@ -79,26 +83,29 @@ try {
                 // Listar todos los clientes
 
                 $sql = "SELECT
-                            id_cliente,
-                            nombre_cli,
-                            apellido_cli,
-                            nacimiento_cli,
-                            telefono_cli,
-                            id_usuario
-                        FROM tb_clientes
-                        ORDER BY id_cliente DESC";
+                            c.id_cliente,
+                            c.nombre_cli,
+                            c.apellido_cli,
+                            c.nacimiento_cli,
+                            c.telefono_cli,
+                            c.id_usuario,
+                            u.nombre_usuario
+                        FROM tb_clientes c
+                        INNER JOIN tb_usuarios u
+                            ON c.id_usuario = u.id_usuario
+                        ORDER BY c.id_cliente DESC";
 
                 $stmt = $conexion->prepare($sql);
 
                 $stmt->execute();
 
-                $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $clientes = $stmt->fetchAll();
 
                 echo json_encode([
                     "success" => true,
                     "cantidad" => count($clientes),
                     "data" => $clientes
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -112,11 +119,7 @@ try {
                 true
             );
 
-            if (
-                !isset($datos['nombre_cli']) ||
-                !isset($datos['apellido_cli'])
-            ) {
-
+            if (!$datos){
                 http_response_code(400);
 
                 echo json_encode([
@@ -126,6 +129,58 @@ try {
 
                 exit;
             }
+
+            //Validar campos obligatorios según la BD
+
+            if(
+                 !isset($datos['nombre_cli']) ||
+                !isset($datos['apellido_cli']) ||
+                !isset($datos['nacimiento_cli']) ||
+                !isset($datos['id_usuario'])
+
+            ){
+                http_response_code(400);
+
+                echo json_encode([
+                    "success" => false,
+                    "mensaje" => "Nombre, apellido, fecha de nacimiento e usuario son obligatorios"
+                ]);
+
+                exit;
+            }
+
+
+
+           /* Verificar que el usuario exista */
+
+            $sql = "SELECT id_usuario
+                    FROM tb_usuarios
+                    WHERE id_usuario = :id_usuario";
+
+            $stmt = $conexion->prepare($sql);
+
+            $stmt->bindValue(
+                ':id_usuario',
+                $datos['id_usuario'],
+                PDO::PARAM_INT
+            );
+
+            $stmt->execute();
+
+            if (!$stmt->fetch()) {
+
+                http_response_code(400);
+
+                echo json_encode([
+                    "success" => false,
+                    "mensaje" => "El usuario indicado no existe"
+                ]);
+
+                exit;
+            }
+
+
+            /* Insertar cliente */
 
             $sql = "INSERT INTO tb_clientes
                     (
@@ -158,7 +213,7 @@ try {
 
             $stmt->bindValue(
                 ':nacimiento_cli',
-                $datos['nacimiento_cli'] ?? null
+                $datos['nacimiento_cli']
             );
 
             $stmt->bindValue(
@@ -168,10 +223,8 @@ try {
 
             $stmt->bindValue(
                 ':id_usuario',
-                $datos['id_usuario'] ?? null,
-                $datos['id_usuario'] !== null
-                    ? PDO::PARAM_INT
-                    : PDO::PARAM_NULL
+                $datos['id_usuario'],
+                PDO::PARAM_INT
             );
 
             $stmt->execute();
@@ -184,10 +237,9 @@ try {
                 "success" => true,
                 "mensaje" => "Cliente creado correctamente",
                 "id_cliente" => $id
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
-
 
        
         /*  PUT  */
@@ -206,18 +258,14 @@ try {
                 exit;
             }
 
-            $id = $_GET['id'];
+            $id = intval($_GET['id']);
 
             $datos = json_decode(
                 file_get_contents("php://input"),
                 true
             );
 
-            if (
-                !isset($datos['nombre_cli']) ||
-                !isset($datos['apellido_cli'])
-            ) {
-
+            if (!$datos){
                 http_response_code(400);
 
                 echo json_encode([
@@ -227,6 +275,56 @@ try {
 
                 exit;
             }
+
+
+             if (
+                !isset($datos['nombre_cli']) ||
+                !isset($datos['apellido_cli']) ||
+                !isset($datos['nacimiento_cli']) ||
+                !isset($datos['id_usuario'])
+            ) {
+
+                http_response_code(400);
+
+                echo json_encode([
+                    "success" => false,
+                    "mensaje" => "Nombre, apellido, fecha de nacimiento e usuario son obligatorios"
+                ]);
+
+                exit;
+            }
+
+
+         /* Verificar usuario */
+
+            $sql = "SELECT id_usuario
+                    FROM tb_usuarios
+                    WHERE id_usuario = :id_usuario";
+
+            $stmt = $conexion->prepare($sql);
+
+            $stmt->bindValue(
+                ':id_usuario',
+                $datos['id_usuario'],
+                PDO::PARAM_INT
+            );
+
+            $stmt->execute();
+
+            if (!$stmt->fetch()) {
+
+                http_response_code(400);
+
+                echo json_encode([
+                    "success" => false,
+                    "mensaje" => "El usuario indicado no existe"
+                ]);
+
+                exit;
+            }
+
+
+            /* Actualizar cliente */
 
             $sql = "UPDATE tb_clientes
                     SET
@@ -251,7 +349,7 @@ try {
 
             $stmt->bindValue(
                 ':nacimiento_cli',
-                $datos['nacimiento_cli'] ?? null
+                $datos['nacimiento_cli']
             );
 
             $stmt->bindValue(
@@ -261,10 +359,8 @@ try {
 
             $stmt->bindValue(
                 ':id_usuario',
-                $datos['id_usuario'] ?? null,
-                $datos['id_usuario'] !== null
-                    ? PDO::PARAM_INT
-                    : PDO::PARAM_NULL
+                $datos['id_usuario'],
+                PDO::PARAM_INT
             );
 
             $stmt->bindValue(
@@ -280,18 +376,17 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Cliente actualizado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "No se encontró el cliente o no hubo cambios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
-
 
         /* DELETE */
 
@@ -309,7 +404,7 @@ try {
                 exit;
             }
 
-            $id = $_GET['id'];
+            $id = intval($_GET['id']);
 
             $sql = "DELETE FROM tb_clientes
                     WHERE id_cliente = :id";
@@ -329,7 +424,7 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Cliente eliminado correctamente"
-                ]);
+                ],  JSON_UNESCAPED_UNICODE);
 
             } else {
 
@@ -338,7 +433,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Cliente no encontrado"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -353,7 +448,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "mensaje" => "Método no permitido"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
     }
@@ -366,7 +461,7 @@ try {
         "success" => false,
         "mensaje" => "Error en la API",
         "error" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conexion = null;
