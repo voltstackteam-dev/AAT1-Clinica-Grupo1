@@ -34,5 +34,9 @@ export const routes: Routes = [
   { path: 'login-personal', component: AdminLoginComponent },
   { path: 'admin/control-citas', component: AdminDashboardComponent },
   
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
+
+  //Rutas: paciente, médico y admin. / //Ruta por defecto (Aun no estan porque hace falta crear la ruta de medico, admin)
+
+
 ];
