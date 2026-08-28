@@ -1,125 +1,458 @@
-.admin-dashboard-modulo {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 50px 40px;
-  font-family: Arial, sans-serif;
-  box-sizing: border-box;
+/* Contenedor Principal */
+:host {
+  display: block;
+  background-color: #f1f5f9;
+  min-height: 100vh;
+  padding-bottom: 4rem;
 }
 
-/* Encabezado */
-.dashboard-header {
+.admin-container {
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Cabecera */
+.header-admin {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 25px;
-  margin-bottom: 35px;
+  margin-bottom: 2rem;
+  background: #ffffff;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-.header-texto { text-align: left; }
-.header-texto h1 { font-size: 2.1rem; color: #1a365d; font-weight: 800; margin: 0 0 6px 0; }
-.header-texto p { font-size: 0.98rem; color: #718096; margin: 0; }
-
-.badge-total-citas {
-  background-color: #1a365d; color: #ffffff;
-  padding: 12px 22px; border-radius: 8px;
-  font-size: 0.9rem; font-weight: bold;
-}
-.badge-total-citas span { color: #63b3ed; font-size: 1.1rem; }
-
-/* Barra de Filtros */
-.dashboard-filtros-bar {
-  display: flex; gap: 15px; margin-bottom: 35px;
-}
-.dashboard-filtros-bar button {
-  padding: 10px 20px; background-color: #ffffff;
-  border: 1px solid #cbd5e0; border-radius: 6px;
-  font-size: 0.88rem; font-weight: bold; color: #4a5568;
-  cursor: pointer; transition: all 0.2s;
-}
-.dashboard-filtros-bar button:hover, .dashboard-filtros-bar button.activo {
-  background-color: #2b6cb0; color: #ffffff; border-color: #2b6cb0;
+.header-admin h2 {
+  color: #1e3a8a;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem 0;
 }
 
-/* Tarjeta de Control */
-.tarjeta-control-cita {
-  background-color: #ffffff; border: 1px solid #e2e8f0;
-  border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-  margin-bottom: 30px; overflow: hidden;
+.header-admin p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0;
 }
 
-.cita-admin-top {
-  background-color: #f8fafc; padding: 15px 25px;
+.badge-total {
+  background-color: #1e3a8a;
+  color: #ffffff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+/* Barra de Pestañas / Filtros */
+.filtros-container {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.btn-tab {
+  padding: 0.7rem 1.3rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #475569;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.btn-tab:hover {
+  background-color: #f8fafc;
+}
+
+.btn-blue.active {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.btn-yellow.active {
+  background-color: #fef3c7;
+  color: #b45309;
+  border-color: #f59e0b;
+}
+
+.btn-green.active {
+  background-color: #dcfce7;
+  color: #15803d;
+  border-color: #22c55e;
+}
+
+.btn-gray.active {
+  background-color: #e2e8f0;
+  color: #334155;
+  border-color: #94a3b8;
+}
+
+/* Lista de Tarjetas */
+.citas-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  margin-bottom: 3.5rem;
+}
+
+/* Tarjeta Individual de Cita */
+.cita-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  padding: 1.8rem;
+  border: 1px solid #e2e8f0;
+  border-left: 6px solid #94a3b8;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cita-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.08);
+}
+
+.cita-card:has(.status-pill.pendiente) {
+  border-left-color: #f59e0b;
+}
+
+.cita-card:has(.status-pill.confirmada) {
+  border-left-color: #22c55e;
+}
+
+.cita-card:has(.status-pill.cancelada) {
+  border-left-color: #ef4444;
+}
+
+.cita-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.9rem;
+  margin-bottom: 1.2rem;
+}
+
+.id-op {
+  color: #334155;
+  font-size: 1rem;
+}
+
+.status-pill {
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status-pill.pendiente {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.status-pill.confirmada {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-pill.cancelada {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.status-pill.finalizada {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+/* Columnas de información */
+.cita-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.4rem;
+}
+
+.info-col small {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.info-col h4 {
+  color: #0f172a;
+  font-size: 1.15rem;
+  margin: 0.3rem 0 0.2rem 0;
+}
+
+.info-col p {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin: 0.2rem 0;
+}
+
+.spec-pill {
+  display: inline-block;
+  background-color: #e0f2fe;
+  color: #0284c7;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* Caja de Observaciones */
+.observaciones-box {
+  background-color: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 8px;
+  padding: 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.4rem;
+}
+
+.observaciones-box strong {
+  color: #334155;
+  font-size: 0.88rem;
+}
+
+.obs-text {
+  color: #64748b;
+  font-style: italic;
+  font-size: 0.88rem;
+  margin: 0.3rem 0 0 0;
+}
+
+.btn-notas {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: #334155;
+  transition: all 0.2s;
+}
+
+.btn-notas:hover {
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* Botones de acción */
+.cita-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.btn-autorizar {
+  background-color: #22c55e;
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.btn-autorizar:hover {
+  background-color: #16a34a;
+}
+
+.btn-denegar {
+  background-color: #ffffff;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-denegar:hover {
+  background-color: #fee2e2;
+}
+
+/* ==========================================
+   ESTILOS DE LA GESTIÓN DE FARMACIA
+   ========================================== */
+.seccion-farmacia-admin {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.header-subseccion h3 {
+  color: #1e3a8a;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0 0 0.3rem 0;
+}
+
+.header-subseccion p {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.alerta-exito-med {
+  background-color: #dcfce7;
+  color: #15803d;
+  padding: 0.75rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  border: 1px solid #bbf7d0;
+}
+
+.tabla-med-contenedor {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.tabla-med-admin {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tabla-med-admin th {
+  background-color: #f8fafc;
+  color: #334155;
+  font-weight: 700;
+  padding: 0.9rem 1rem;
+  font-size: 0.88rem;
   border-bottom: 1px solid #e2e8f0;
-  display: flex; justify-content: space-between; align-items: center;
 }
-.label-id { font-size: 0.82rem; color: #718096; font-weight: 600; margin-right: 6px; }
-.valor-id { font-size: 0.88rem; color: #1a365d; font-weight: bold; }
 
-.status-badge-admin { font-size: 0.75rem; font-weight: bold; padding: 4px 12px; border-radius: 12px; }
-.bg-verde { color: #2f855a; background-color: #f0fff4; border: 1px solid #c6f6d5; }
-.bg-amarillo { color: #b7791f; background-color: #fefcbf; border: 1px solid #fef3c7; }
-
-/* Grilla de Información */
-.cita-admin-datos-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  padding: 25px; gap: 20px; border-bottom: 1px solid #f0f4f8;
+.tabla-med-admin td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  vertical-align: middle;
 }
-.datos-bloque { text-align: left; }
-.datos-bloque h4 { font-size: 0.78rem; color: #a0aec0; text-transform: uppercase; font-weight: bold; margin: 0 0 8px 0; letter-spacing: 0.5px; }
-.txt-principal { font-size: 1.1rem; color: #2d3748; font-weight: bold; margin: 0 0 4px 0; }
-.txt-secundario { font-size: 0.88rem; color: #718096; margin: 0; }
-.txt-secundario-tag { display: inline-block; font-size: 0.78rem; color: #2b6cb0; background-color: #ebf8ff; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
 
-/* Sección de Notas Médicas */
-.cita-admin-comentarios-seccion {
-  padding: 20px 25px; background-color: #fafbfc; border-bottom: 1px solid #e2e8f0; text-align: left;
+.nombre-med-col {
+  font-weight: 600;
 }
-.cita-admin-comentarios-seccion h4 { font-size: 0.82rem; color: #4a5568; font-weight: bold; margin: 0 0 10px 0; }
 
-.comentario-lectura-box { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-.txt-comentario-existente { font-size: 0.9rem; color: #2d3748; margin: 0; line-height: 1.4; font-style: italic; }
-.txt-comentario-vacio { font-size: 0.88rem; color: #a0aec0; margin: 0; font-style: italic; }
-
-.btn-editar-nota {
-  padding: 6px 14px; background-color: #ffffff; border: 1px solid #cbd5e0;
-  color: #4a5568; font-size: 0.82rem; font-weight: bold; border-radius: 4px; cursor: pointer; flex-shrink: 0;
+.badge-cat-admin {
+  background-color: #0f172a;
+  color: #ffffff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
-.btn-editar-nota:hover { background-color: #edf2f7; border-color: #a0aec0; }
 
-/* Caja de Modificación */
-.comentario-edicion-box { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-.comentario-edicion-box textarea {
-  width: 100%; height: 75px; padding: 12px; border: 1px solid #3182ce;
-  border-radius: 6px; font-size: 0.9rem; outline: none; font-family: Arial, sans-serif; box-sizing: border-box;
+.input-con-prefijo {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 700;
+  color: #1e3a8a;
 }
-.edicion-botones-grupo { display: flex; gap: 10px; }
-.btn-guardar-nota { padding: 7px 16px; background-color: #3182ce; color: #ffffff; border: none; font-size: 0.82rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
-.btn-cancelar-nota { padding: 7px 16px; background-color: transparent; color: #718096; border: 1px solid #cbd5e0; font-size: 0.82rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
 
-/* Footer de Decisiones */
-.cita-admin-acciones-footer {
-  padding: 15px 25px; background-color: #ffffff;
-  display: flex; justify-content: space-between; align-items: center;
+.input-med-admin {
+  width: 85px;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 0.2s;
 }
-.btn-aprobar-cita {
-  padding: 10px 20px; background-color: #38a169; color: #ffffff;
-  border: none; border-radius: 6px; font-size: 0.88rem; font-weight: bold; cursor: pointer;
+
+.input-med-admin:focus {
+  border-color: #2563eb;
 }
-.btn-aprobar-cita:hover { background-color: #2f855a; }
 
-.btn-denegar-cita {
-  padding: 10px 20px; background-color: transparent; color: #e53e3e;
-  border: 1px solid #fed7d7; border-radius: 6px; font-size: 0.88rem; font-weight: bold; cursor: pointer;
+.input-stock {
+  width: 75px;
 }
-.btn-denegar-cita:hover { background-color: #fff5f5; border-color: #e53e3e; }
 
-.alerta-sin-registros { padding: 40px; color: #718096; font-size: 0.95rem; font-style: italic; }
+.btn-guardar-med {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
 
-/* Responsivo */
-@media (max-width: 850px) {
-  .cita-admin-datos-grid { grid-template-columns: 1fr; gap: 15px; }
-  .comentario-lectura-box { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .admin-dashboard-modulo { padding: 30px 20px; }
+.btn-guardar-med:hover {
+  background-color: #1d4ed8;
+}
+
+@media (max-width: 768px) {
+  .header-admin {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .cita-body {
+    grid-template-columns: 1fr;
+  }
+  .observaciones-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+}
+/* Pestañas Principales */
+.pestanas-principales {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.btn-pestana {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #64748b;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-pestana:hover {
+  background-color: #e2e8f0;
+  color: #1e3a8a;
+}
+
+.btn-pestana.active {
+  background-color: #1e3a8a;
+  color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.25);
 }

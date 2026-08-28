@@ -6,56 +6,28 @@
     <p class="subtitulo-especialidades">Contamos con unidades médicas altamente capacitadas para tu cuidado integral</p>
   </div>
 
-  <!-- CUADRÍCULA SIMÉTRICA (Grid de 2x2) -->
+  <!-- CUADRÍCULA DINÁMICA CONECTADA A LA API -->
   <div class="especialidades-grid-cuadricula">
-    
-    <!-- Bloque 1: Cardiología -->
-    <div class="cuadrula-card">
-      <div class="cuadrula-imagen-portada">
-        <img src="/cardiologia1.png" alt="Cardiología" class="img-especialidad-src" />
+    @for (esp of especialidades(); track esp.id_especialidad) {
+      <div class="cuadrula-card">
+        <div class="cuadrula-imagen-portada">
+          <img 
+            [src]="'/' + esp.nombre_especialidad.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') + '1.png'" 
+            [alt]="esp.nombre_especialidad" 
+            class="img-especialidad-src"
+            onerror="this.src='/cardiologia1.png'" 
+          />
+        </div>
+        <div class="cuadrula-info">
+          <h3>{{ esp.nombre_especialidad }}</h3>
+          <p>{{ getDescripcion(esp.nombre_especialidad) }}</p>
+          <span class="cuadrula-enlace">Saber más →</span>
+        </div>
       </div>
-      <div class="cuadrula-info">
-        <h3>Cardiología</h3>
-        <p>Prevención, diagnóstico y tratamiento de enfermedades del corazón y sistema circulatorio.</p>
-        <span class="cuadrula-enlace">Saber más →</span>
+    } @empty {
+      <div style="grid-column: span 2; text-align: center; padding: 2rem;">
+        <p>Cargando especialidades desde la base de datos...</p>
       </div>
-    </div>
-
-    <!-- Bloque 2: Pediatría -->
-    <div class="cuadrula-card">
-      <div class="cuadrula-imagen-portada">
-        <img src="/pediatria1.png" alt="Pediatría" class="img-especialidad-src" />
-      </div>
-      <div class="cuadrula-info">
-        <h3>Pediatría</h3>
-        <p>Atención médica especializada, controles de crecimiento y desarrollo integral infantil.</p>
-        <span class="cuadrula-enlace">Saber más →</span>
-      </div>
-    </div>
-
-    <!-- Bloque 3: Traumatología -->
-    <div class="cuadrula-card">
-      <div class="cuadrula-imagen-portada">
-        <img src="/traumatologia1.png" alt="Traumatología" class="img-especialidad-src" />
-      </div>
-      <div class="cuadrula-info">
-        <h3>Traumatología</h3>
-        <p>Cuidado de lesiones óseas y musculares con tratamientos quirúrgicos y de rehabilitación.</p>
-        <span class="cuadrula-enlace">Saber más →</span>
-      </div>
-    </div>
-
-    <!-- Bloque 4: Neurología -->
-    <div class="cuadrula-card">
-      <div class="cuadrula-imagen-portada">
-        <img src="/neurologia1.png" alt="Neurología" class="img-especialidad-src" />
-      </div>
-      <div class="cuadrula-info">
-        <h3>Neurología</h3>
-        <p>Diagnóstico avanzado y tratamiento de trastornos del cerebro y sistema nervioso central.</p>
-        <span class="cuadrula-enlace">Saber más →</span>
-      </div>
-    </div>
-
+    }
   </div>
 </section>

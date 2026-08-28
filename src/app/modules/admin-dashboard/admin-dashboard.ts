@@ -1,6 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+
+export interface CitaClinica {
+  id_cita: number;
+  codigo_operacion: string;
+  nombre_paciente: string;
+  dpi_paciente: string;
+  email_paciente: string;
+  telefono_paciente: string;
+  fecha_cita: string;
+  hora_cita: string;
+  motivo_consulta: string;
+  observaciones: string | null;
+  estado_cita: string;
+  nombre_medico: string;
+  nombre_especialidad: string;
+}
+
+export interface MedicamentoAdmin {
+  id_medicamento: number;
+  nombre: string;
+  categoria: string;
+  precio: number;
+  stock: number;
+}
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -10,94 +35,148 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './admin-dashboard.css'
 })
 export class AdminDashboardComponent implements OnInit {
-
-  // Vista activa del panel de control
-  filtroEstado: string = 'Todos';
+  private http = inject(HttpClient);
   
-  // Modelo de edición temporal para comentarios de la cita seleccionada
-  citaEnEdicionId: string | null = null;
-  comentarioTemporal: string = '';
+  // URLs de Citas
+  private urlGet = 'http://localhost/api_citas/get_citas.php';
+  private urlActualizar = 'http://localhost/api_citas/actualizar_cita.php';
 
-  // Catálogo inicial que simula el resultado de un SELECT de PHP/MySQL
-  citasAdministrativas = [
-    {
-      id_cita: 'V-8842',
-      paciente: 'Juan Pérez',
-      dpi: '2541 88942 0101',
-      medico: 'Dr. Alejandro Méndez',
-      especialidad: 'Cardiología',
-      fecha: '2026-09-02',
-      hora: '09:30 AM',
-      estado: 'Pendiente',
-      comentarios: ''
-    },
-    {
-      id_cita: 'V-9104',
-      paciente: 'María López',
-      dpi: '1985 33214 0101',
-      medico: 'Dra. Sofía Martínez',
-      especialidad: 'Neurología',
-      fecha: '2026-09-15',
-      hora: '14:00 PM',
-      estado: 'Confirmada',
-      comentarios: 'Paciente requiere examen de reflejos previo.'
-    }
-  ];
+  // URLs de Farmacia / Medicamentos
+  private apiGetMed = 'http://localhost/api_citas/get_medicamentos.php';
+  private apiUpdateMed = 'http://localhost/api_citas/actualizar_medicamento.php';
 
-  constructor() {}
+  // Control de Pestañas Principales ('citas' o 'farmacia')
+  vistaActiva = signal<'citas' | 'farmacia'>('citas');
 
-  ngOnInit(): void {}
+  // Signals de Citas
+  citas = signal<CitaClinica[]>([]);
+  filtroActual = signal<string>('todas');
+  cargando = signal(false);
 
-  // Filtrado reactivo en interfaz
-  get citasFiltradas() {
-    if (this.filtroEstado === 'Todos') {
-      return this.citasAdministrativas;
-    }
-    return this.citasAdministrativas.filter(c => pXConvertir(c.estado) === this.filtroEstado);
+  // Signals de Medicamentos
+  medicamentos = signal<MedicamentoAdmin[]>([]);
+  mensajeExitoMed = signal<string>('');
+
+  ngOnInit() {
+    this.cargarCitas();
+    this.cargarMedicamentos();
   }
 
-  // ==========================================================================
-  // DISPARADORES LISTOS PARA CONEXIONES CRUD (PHP BACKEND ENDPOINTS)
-  // ==========================================================================
+  // Alternar entre pestañas
+  cambiarVista(vista: 'citas' | 'farmacia') {
+    this.vistaActiva.set(vista);
+  }
 
-  // 1. UPDATE: Modificar estado de la cita a 'Confirmada'
-  aceptarCita(idCita: string): void {
-    const cita = this.citasAdministrativas.find(c => c.id_cita === idCita);
-    if (cita) {
-      cita.estado = 'Confirmada';
-      console.log(`CRUD PHP [PUT]: Enviar a /api/actualizar_estado.php -> id: ${idCita}, estado: Confirmada`);
+  // ==========================================
+  // LÓGICA DE CITAS MÉDICAS
+  // ==========================================
+  cargarCitas() {
+    this.cargando.set(true);
+    this.http.get<any>(this.urlGet).subscribe({
+      next: (res) => {
+        this.cargando.set(false);
+        if (res.status === 'success') {
+          this.citas.set(res.data);
+        }
+      },
+      error: (err) => {
+        this.cargando.set(false);
+        console.error('Error al cargar citas:', err);
+      }
+    });
+  }
+
+  citasFiltradas() {
+    const filtro = this.filtroActual();
+    if (filtro === 'pendiente') {
+      return this.citas().filter(c => c.estado_cita.toLowerCase() === 'pendiente');
+    }
+    if (filtro === 'confirmada') {
+      return this.citas().filter(c => c.estado_cita.toLowerCase() === 'confirmada');
+    }
+    if (filtro === 'finalizada') {
+      return this.citas().filter(c => c.estado_cita.toLowerCase() === 'finalizada');
+    }
+    return this.citas();
+  }
+
+  setFiltro(filtro: string) {
+    this.filtroActual.set(filtro);
+  }
+
+  autorizarCita(id_cita: number) {
+    this.http.post<any>(this.urlActualizar, { id_cita, accion: 'autorizar' }).subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          alert('¡Cita autorizada con éxito!');
+          this.cargarCitas();
+        }
+      },
+      error: () => alert('Error al autorizar cita')
+    });
+  }
+
+  cancelarCita(id_cita: number) {
+    if (confirm('¿Estás seguro de denegar o cancelar esta cita?')) {
+      this.http.post<any>(this.urlActualizar, { id_cita, accion: 'cancelar' }).subscribe({
+        next: (res) => {
+          if (res.status === 'success') {
+            alert('Cita cancelada');
+            this.cargarCitas();
+          }
+        },
+        error: () => alert('Error al cancelar cita')
+      });
     }
   }
 
-  // 2. UPDATE: Abrir bloque de edición de bitácora médica
-  iniciarEdicionComentario(idCita: string, comentarioActual: string): void {
-    this.citaEnEdicionId = idCita;
-    this.comentarioTemporal = comentarioActual;
-  }
-
-  // 3. UPDATE: Confirmar y guardar la bitácora de comentarios en caliente
-  guardarComentario(idCita: string): void {
-    const cita = this.citasAdministrativas.find(c => c.id_cita === idCita);
-    if (cita) {
-      cita.comentarios = this.comentarioTemporal;
-      this.citaEnEdicionId = null; // Cierra la caja de texto
-      console.log(`CRUD PHP [PUT]: Enviar a /api/guardar_comentario.php -> id: ${idCita}, comentarios: ${this.comentarioTemporal}`);
-      alert('Comentarios médicos actualizados en el historial.');
+  modificarNotas(cita: CitaClinica) {
+    const nuevaNota = prompt('Ingresa las observaciones clínicas / diagnóstico preventivo:', cita.observaciones || '');
+    if (nuevaNota !== null) {
+      this.http.post<any>(this.urlActualizar, { 
+        id_cita: cita.id_cita, 
+        accion: 'notas', 
+        observaciones: nuevaNota 
+      }).subscribe({
+        next: (res) => {
+          if (res.status === 'success') {
+            this.cargarCitas();
+          }
+        },
+        error: () => alert('Error al actualizar notas')
+      });
     }
   }
 
-  // 4. DELETE: Remover la cita del listado (Cancelación / Rechazo administrativo)
-  eliminarCita(idCita: string): void {
-    const confirmar = confirm(`¿Desea denegar y eliminar permanentemente la cita ${idCita} del sistema?`);
-    if (confirmar) {
-      this.citasAdministrativas = this.citasAdministrativas.filter(c => c.id_cita !== idCita);
-      console.log(`CRUD PHP [DELETE]: Enviar a /api/eliminar_cita.php -> id: ${idCita}`);
-    }
+  // ==========================================
+  // LÓGICA DE GESTIÓN DE FARMACIA / MEDICAMENTOS
+  // ==========================================
+  cargarMedicamentos() {
+    this.http.get<any>(this.apiGetMed).subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          this.medicamentos.set(res.data);
+        }
+      },
+      error: (err) => console.error('Error al cargar medicamentos:', err)
+    });
+  }
+
+  guardarCambiosMed(med: MedicamentoAdmin) {
+    const payload = {
+      id_medicamento: med.id_medicamento,
+      stock: Number(med.stock),
+      precio: Number(med.precio)
+    };
+
+    this.http.post<any>(this.apiUpdateMed, payload).subscribe({
+      next: (res) => {
+        if (res.status === 'success') {
+          this.mensajeExitoMed.set(`¡${med.nombre} actualizado en Farmacia!`);
+          setTimeout(() => this.mensajeExitoMed.set(''), 3500);
+        }
+      },
+      error: (err) => console.error('Error al actualizar medicamento:', err)
+    });
   }
 }
-
-// Función auxiliar interna para estandarizar cadenas
-function pXConvertir(val: string): string {
-  return val;
-}
-

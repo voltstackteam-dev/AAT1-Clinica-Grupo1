@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-agenda-citas',
@@ -10,57 +10,68 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './agenda-citas.html',
   styleUrl: './agenda-citas.css'
 })
-export class AgendaCitasComponent implements OnInit {
-  
-  // Modelo de datos para el formulario
-  datosCita = {
-    nombrePaciente: '',
-    dpi: '',
-    correo: '',
-    telefono: '',
-    especialidad: 'Medicina General',
-    medicoId: null as number | null,
-    fecha: '',
-    hora: ''
-  };
+export class AgendaCitasComponent {
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost/api_citas/crear_cita.php';
 
-  // Listado para validación de especialidades
-  especialidades = ['Medicina General', 'Cardiología', 'Pediatría', 'Traumatología', 'Neurología'];
-  
-  exitoRegistro: boolean = false;
+  // Datos del formulario
+  nombrePaciente = signal('');
+  dpiPaciente = signal('');
+  emailPaciente = signal('');
+  telefonoPaciente = signal('');
+  idEspecialidad = signal(1);
+  fechaCita = signal('');
+  horaCita = signal('');
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  // Control de estado y mensaje
+  exitoRegistro = signal(false);
+  codigoGenerado = signal('');
+  cargando = signal(false);
 
-  ngOnInit(): void {
-    // Captura reactiva del parámetro ID del médico enviado por la URL
-    this.route.params.subscribe(params => {
-      if (params['id']) {
-        this.datosCita.medicoId = +params['id'];
-        this.autoAsignarEspecialidad(this.datosCita.medicoId);
+  confirmarCita() {
+    if (!this.nombrePaciente() || !this.dpiPaciente() || !this.fechaCita() || !this.horaCita()) {
+      alert('Por favor completa los campos obligatorios (*)');
+      return;
+    }
+
+    const payload = {
+      nombre_paciente: this.nombrePaciente(),
+      dpi_paciente: this.dpiPaciente(),
+      email_paciente: this.emailPaciente(),
+      telefono_paciente: this.telefonoPaciente(),
+      id_especialidad: this.idEspecialidad(),
+      fecha_cita: this.fechaCita(),
+      hora_cita: this.horaCita()
+    };
+
+    this.cargando.set(true);
+
+    this.http.post<any>(this.apiUrl, payload).subscribe({
+      next: (res) => {
+        this.cargando.set(false);
+        if (res.status === 'success') {
+          this.exitoRegistro.set(true);
+          this.codigoGenerado.set(res.codigo_operacion);
+          alert(`¡Cita agendada con éxito! Código: ${res.codigo_operacion}`);
+          this.limpiarFormulario();
+        } else {
+          alert('Error: ' + res.message);
+        }
+      },
+      error: (err) => {
+        this.cargando.set(false);
+        alert('Error al conectar con el servidor');
+        console.error(err);
       }
     });
   }
 
-  // Asigna automáticamente la rama médica según el doctor elegido en el Home
-  autoAsignarEspecialidad(id: number): void {
-    const mapaEspecialidades: { [key: number]: string } = {
-      1: 'Cardiología',
-      2: 'Pediatría',
-      3: 'Traumatología',
-      4: 'Neurología',
-      5: 'Medicina General'
-    };
-    this.datosCita.especialidad = mapaEspecialidades[id] || 'Medicina General';
-  }
-
-  // Procesa el envío del formulario y simula la inserción en la Base de Datos
-  procesarCita(): void {
-    this.exitoRegistro = true;
-    
-    // Simulación: En producción aquí se enviaría el objeto 'this.datosCita' vía HTTP POST
-    setTimeout(() => {
-      this.exitoRegistro = false;
-      this.router.navigate(['/']); // Redirige al inicio tras confirmar
-    }, 4000);
+  limpiarFormulario() {
+    this.nombrePaciente.set('');
+    this.dpiPaciente.set('');
+    this.emailPaciente.set('');
+    this.telefonoPaciente.set('');
+    this.fechaCita.set('');
+    this.horaCita.set('');
   }
 }
