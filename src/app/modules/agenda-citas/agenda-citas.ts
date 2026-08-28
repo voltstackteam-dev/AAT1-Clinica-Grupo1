@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AgendaCitasComponent {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost/api_citas/crear_cita.php';
+  private apiUrl = 'http://localhost:8000/backend/crear_cita.php';
 
   // Datos del formulario
   nombrePaciente = signal('');

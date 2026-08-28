@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { CarritoService } from '../../services/carrito';
 
 export interface Medicamento {
   id_medicamento: number;
@@ -20,7 +21,8 @@ export interface Medicamento {
 })
 export class FarmaciaComponent implements OnInit {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost/api_citas/get_medicamentos.php';
+  private carritoService = inject(CarritoService);
+  private apiUrl = 'http://localhost:8000/backend/get_medicamentos.php';
 
   medicamentos = signal<Medicamento[]>([]);
   categoriaActual = signal<string>('Todos');
@@ -42,4 +44,16 @@ export class FarmaciaComponent implements OnInit {
       error: (err) => console.error('Error al cargar medicamentos:', err)
     });
   }
+  
+  agregarAlCarrito(medicamento: Medicamento) {
+  this.carritoService.agregarProducto({
+    id: medicamento.id_medicamento,
+    nombre: medicamento.nombre,
+    gramaje: medicamento.categoria,
+    precio: Number(medicamento.precio),
+    requiere_receta: false
+  });
+
+  console.log('Producto agregado al carrito:', medicamento.nombre);
+}
 }

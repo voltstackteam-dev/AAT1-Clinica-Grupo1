@@ -46,7 +46,7 @@
         <!-- Indicador de Stock reactivo -->
         @if (med.stock > 0) {
           <p class="en-stock">● En Stock</p>
-          <button class="btn-carrito">Añadir al Carrito</button>
+          <button class="btn-carrito" (click)="agregarAlCarrito(med)">Añadir al Carrito </button>
         } @else {
           <p class="agotado">⊘ Agotado</p>
           <button class="btn-agotado" disabled>Sin Existencias</button>

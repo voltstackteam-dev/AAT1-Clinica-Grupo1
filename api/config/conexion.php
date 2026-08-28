@@ -8,7 +8,7 @@ $baseDatos = "db_sys_citas";
 try {
 
     $conexion = new PDO(
-        "mysql:host=$servidor;dbname=$baseDatos;charset=utf8mb4",
+        "mysql:host=$servidor;port=3307;dbname=$baseDatos;charset=utf8mb4",
         $usuario,
         $password,
        [

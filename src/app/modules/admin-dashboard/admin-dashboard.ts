@@ -38,12 +38,12 @@ export class AdminDashboardComponent implements OnInit {
   private http = inject(HttpClient);
   
   // URLs de Citas
-  private urlGet = 'http://localhost/api_citas/get_citas.php';
-  private urlActualizar = 'http://localhost/api_citas/actualizar_cita.php';
+  private urlGet = 'http://localhost:8000/backend/get_citas.php';
+private urlActualizar = 'http://localhost:8000/backend/actualizar_cita.php';
 
   // URLs de Farmacia / Medicamentos
-  private apiGetMed = 'http://localhost/api_citas/get_medicamentos.php';
-  private apiUpdateMed = 'http://localhost/api_citas/actualizar_medicamento.php';
+  private apiGetMed = 'http://localhost:8000/backend/get_medicamentos.php';
+private apiUpdateMed = 'http://localhost:8000/backend/actualizar_medicamento.php';
 
   // Control de Pestañas Principales ('citas' o 'farmacia')
   vistaActiva = signal<'citas' | 'farmacia'>('citas');

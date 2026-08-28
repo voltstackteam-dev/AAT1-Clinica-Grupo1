@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ClinicaService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost/api_citas';
+  private apiUrl = 'http://localhost:8000/backend';
 
   // 1. Obtener especialidades
   getEspecialidades(): Observable<any> {

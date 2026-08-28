@@ -12,6 +12,11 @@
     </div>
     
     <div class="top-acciones">
+      <button class="btn-carrito-nav" (click)="alternarCarrito()">
+  Carrito @if (cantidadItems() > 0) {
+    <span class="badge-carrito">{{ cantidadItems() }}</span>
+  }
+</button>
       <button class="btn-top btn-contacto">CONTÁCTANOS</button>
       <button class="btn-top btn-cita" routerLink="/agenda-citas">AGENDA TU CITA</button>
       
@@ -47,4 +52,10 @@
       <span class="icono-lupa">🔍</span>
     </div>
   </nav>
+
+  @if (carritoAbierto) {
+  <div class="carrito-dropdown">
+    <app-carrito></app-carrito>
+  </div>
+}
 </header>

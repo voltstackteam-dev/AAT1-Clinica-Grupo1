@@ -272,3 +272,43 @@
   top: 0;               /* Posición exacta arriba del todo */
   z-index: 1000;        /* Capa suprema para que nada tape al menú al hacer scroll */
 }
+
+/* Carrito implementacion */
+
+.btn-carrito-nav {
+  padding: 10px 18px;
+  border-radius: 20px;
+  border: none;
+  background-color: #63b3ed;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s ease;
+}
+
+.btn-carrito-nav:hover {
+  filter: brightness(0.95);
+}
+
+.badge-carrito {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  margin-left: 5px;
+  padding: 0 5px;
+  border-radius: 50%;
+  background-color: #e53e3e;
+  color: white;
+  font-size: 0.7rem;
+}
+
+.carrito-dropdown {
+  position: absolute;
+  top: 85px;
+  right: 40px;
+  z-index: 2000;
+}
