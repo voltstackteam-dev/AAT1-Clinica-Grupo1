@@ -23,7 +23,7 @@ try {
             echo json_encode([
                 "success" => true,
                 "mensaje" => "Preflight OK"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             exit;
 
@@ -58,7 +58,7 @@ try {
                     echo json_encode([
                         "success" => true,
                         "data" => $especialidad
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
 
                 } else {
 
@@ -88,7 +88,7 @@ try {
                     "success" => true,
                     "cantidad" => count($especialidades),
                     "data" => $especialidades
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -110,7 +110,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El nombre de la especialidad es obligatorio"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -141,7 +141,7 @@ try {
                 "success" => true,
                 "mensaje" => "Especialidad creada correctamente",
                 "id_especialidad" => $id
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -158,7 +158,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID de la especialidad"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -177,7 +177,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El nombre de la especialidad es obligatorio"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -207,14 +207,14 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Especialidad actualizada correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "No se encontró la especialidad o no hubo cambios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -230,7 +230,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID de la especialidad"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -255,7 +255,7 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Especialidad eliminada correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
@@ -264,7 +264,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Especialidad no encontrada"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -279,7 +279,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "mensaje" => "Método no permitido"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
     }
@@ -292,7 +292,7 @@ try {
         "success" => false,
         "mensaje" => "Error en la API",
         "error" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conexion = null;

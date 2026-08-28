@@ -23,7 +23,7 @@ try {
             echo json_encode([
                 "success" => true,
                 "mensaje" => "Preflight OK"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             exit;
 
@@ -121,7 +121,7 @@ try {
                     "success" => true,
                     "cantidad" => count($medicos),
                     "data" => $medicos
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -148,16 +148,12 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Nombre, apellido, especialidad e usuario son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
 
-            /*
-            |----------------------------------------------------------------------
-            | Verificar que la especialidad exista
-            |----------------------------------------------------------------------
-            */
+            /*Verificar que la especialidad exista*/
 
             $sql = "SELECT id_especialidad
                     FROM tb_especialidades
@@ -180,7 +176,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "La especialidad indicada no existe"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -209,7 +205,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El usuario indicado no existe"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -280,7 +276,7 @@ try {
                 "success" => true,
                 "mensaje" => "Médico creado correctamente",
                 "id_medico" => $id
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -297,7 +293,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del médico"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -321,7 +317,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Nombre, apellido, especialidad e usuario son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -384,14 +380,14 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Médico actualizado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "No se encontró el médico o no hubo cambios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -408,7 +404,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del médico"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -433,7 +429,7 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Médico eliminado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
@@ -442,7 +438,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Médico no encontrado"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -457,7 +453,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "mensaje" => "Método no permitido"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
     }
@@ -470,7 +466,7 @@ try {
         "success" => false,
         "mensaje" => "Error en la API",
         "error" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conexion = null;

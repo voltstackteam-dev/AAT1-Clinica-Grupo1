@@ -23,7 +23,7 @@ try {
             echo json_encode([
                 "success" => true,
                 "mensaje" => "Preflight OK"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             exit;
 
@@ -63,7 +63,7 @@ try {
                     echo json_encode([
                         "success" => true,
                         "data" => $usuario
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
 
                 } else {
 
@@ -72,7 +72,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "Usuario no encontrado"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                 }
 
             } else {
@@ -99,7 +99,7 @@ try {
                     "success" => true,
                     "cantidad" => count($usuarios),
                     "data" => $usuarios
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -125,7 +125,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Nombre de usuario, contraseña e ID de rol son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -152,7 +152,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El nombre de usuario ya existe"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -178,11 +178,7 @@ try {
                 $datos['nombre_usuario']
             );
 
-            /*
-             * Por ahora utilizamos la contraseña recibida.
-             * Más adelante, cuando hagamos LOGIN/JWT,
-             * podemos mejorar esto utilizando password_hash().
-             */
+            /*Por ahora utilizamos la contraseña recibida. - podemos mejorar esto utilizando password_hash(). */
 
             $stmt->bindValue(
                 ':contrasenia',
@@ -205,7 +201,7 @@ try {
                 "success" => true,
                 "mensaje" => "Usuario creado correctamente",
                 "id_usuario" => $id
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -222,7 +218,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del usuario"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -245,7 +241,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Nombre de usuario, contraseña e ID de rol son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -289,14 +285,14 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Usuario actualizado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "No se encontró el usuario o no hubo cambios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -313,7 +309,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del usuario"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -338,7 +334,7 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Usuario eliminado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
@@ -347,7 +343,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Usuario no encontrado"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -361,7 +357,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "mensaje" => "Método no permitido"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
     }
@@ -374,7 +370,7 @@ try {
         "success" => false,
         "mensaje" => "Error en la API",
         "error" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conexion = null;

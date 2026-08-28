@@ -23,7 +23,7 @@ try {
             echo json_encode([
                 "success" => true,
                 "mensaje" => "Preflight OK"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             exit;
 
@@ -76,7 +76,7 @@ try {
                     echo json_encode([
                         "success" => true,
                         "data" => $horario
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
 
                 } else {
 
@@ -85,7 +85,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "Horario no encontrado"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                 }
 
             }
@@ -135,7 +135,7 @@ try {
                     "success" => true,
                     "cantidad" => count($horarios),
                     "data" => $horarios
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             /* Buscar horarios disponibles */
@@ -175,7 +175,7 @@ try {
                     "success" => true,
                     "cantidad" => count($horarios),
                     "data" => $horarios
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             /*  Listar todos */
@@ -213,7 +213,7 @@ try {
                     "success" => true,
                     "cantidad" => count($horarios),
                     "data" => $horarios
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -239,7 +239,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Fecha, hora y médico son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -269,7 +269,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El médico indicado no existe"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -311,7 +311,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El médico ya tiene un horario registrado para esa fecha y hora"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -368,7 +368,7 @@ try {
                 "success" => true,
                 "mensaje" => "Horario creado correctamente",
                 "id_horario" => $id
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -385,7 +385,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del horario"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -409,7 +409,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Fecha, hora, disponibilidad y médico son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -467,7 +467,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "No se encontró el horario o no hubo cambios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -484,7 +484,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del horario"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -509,7 +509,7 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Horario eliminado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
@@ -518,7 +518,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Horario no encontrado"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -533,7 +533,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "mensaje" => "Método no permitido"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
     }
@@ -546,7 +546,7 @@ try {
         "success" => false,
         "mensaje" => "Error en la API",
         "error" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conexion = null;
