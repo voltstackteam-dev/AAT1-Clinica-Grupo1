@@ -22,7 +22,7 @@ try {
             echo json_encode([
                 "success" => true,
                 "mensaje" => "Preflight OK"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             exit;
 
@@ -66,7 +66,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "Rol no encontrado"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                 }
 
             } else {
@@ -87,7 +87,7 @@ try {
                     "success" => true,
                     "cantidad" => count($roles),
                     "data" => $roles
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -109,7 +109,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El nombre del rol es obligatorio"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -140,7 +140,7 @@ try {
                 "success" => true,
                 "mensaje" => "Rol creado correctamente",
                 "id_rol" => $id
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -157,7 +157,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del rol"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -176,7 +176,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El nombre del rol es obligatorio"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -206,14 +206,14 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Rol actualizado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "No se encontró el rol o no hubo cambios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -229,7 +229,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del rol"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -254,7 +254,7 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Rol eliminado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
@@ -263,7 +263,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Rol no encontrado"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -276,7 +276,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "mensaje" => "Método no permitido"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
     }
@@ -289,7 +289,7 @@ try {
         "success" => false,
         "mensaje" => "Error en la API",
         "error" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conexion = null;

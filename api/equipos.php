@@ -67,7 +67,7 @@ try {
                     echo json_encode([
                         "success" => true,
                         "data" => $equipo
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
 
                 } else {
 
@@ -76,7 +76,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "Equipo no encontrado"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                 }
 
             } else {
@@ -106,7 +106,7 @@ try {
                     "success" => true,
                     "cantidad" => count($equipos),
                     "data" => $equipos
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -131,7 +131,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Nombre, especialidad y cantidad son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -143,7 +143,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "La cantidad no puede ser negativa"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -173,7 +173,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "La especialidad indicada no existe"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -223,7 +223,7 @@ try {
                 "success" => true,
                 "mensaje" => "Equipo creado correctamente",
                 "id_equipo" => $id
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -240,7 +240,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del equipo"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -263,7 +263,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Nombre, especialidad y cantidad son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -275,7 +275,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "La cantidad no puede ser negativa"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -320,14 +320,14 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Equipo actualizado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "No se encontró el equipo o no hubo cambios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -344,7 +344,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del equipo"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -369,7 +369,7 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Equipo eliminado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
@@ -378,7 +378,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Equipo no encontrado"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -393,7 +393,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "mensaje" => "Método no permitido"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
     }
@@ -406,7 +406,7 @@ try {
         "success" => false,
         "mensaje" => "Error en la API",
         "error" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conexion = null;

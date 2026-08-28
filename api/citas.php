@@ -20,7 +20,7 @@ if($metodo === 'OPTIONS'){
             echo json_encode([
                 "success" => true,
                 "mensaje" => "Preflight OK"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             exit;
 
@@ -33,9 +33,6 @@ $usuarioToken = validarToken();
 try {
 
     switch ($metodo) {
-
-
-
 
         /* GET */
 
@@ -110,7 +107,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "Cita no encontrada"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                 }
 
             }
@@ -172,7 +169,7 @@ try {
                     "success" => true,
                     "cantidad" => count($citas),
                     "data" => $citas
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             /*  Filtrar por médico  */
@@ -232,7 +229,7 @@ try {
                     "success" => true,
                     "cantidad" => count($citas),
                     "data" => $citas
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             /* Filtrar por estado */
@@ -295,7 +292,7 @@ try {
                     "success" => true,
                     "cantidad" => count($citas),
                     "data" => $citas
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             /* Listar todas las citas */
@@ -349,7 +346,7 @@ try {
                     "success" => true,
                     "cantidad" => count($citas),
                     "data" => $citas
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -379,7 +376,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Médico, cliente, sala, horario y motivo de consulta son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -415,7 +412,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El cliente no existe"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -450,7 +447,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El médico no existe"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -485,7 +482,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "La sala no existe"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -505,7 +502,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "La sala seleccionada no corresponde a la especialidad del médico"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -544,7 +541,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El horario no existe"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -564,7 +561,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El horario seleccionado no pertenece al médico"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -581,7 +578,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El horario seleccionado no está disponible"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -618,7 +615,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Ya existe una cita activa para este horario"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -662,7 +659,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "La sala ya está ocupada en ese horario"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -766,7 +763,7 @@ try {
                 "success" => true,
                 "mensaje" => "Cita reservada correctamente",
                 "id_cita" => $id_cita
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -783,7 +780,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID de la cita"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -822,7 +819,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Cita no encontrada"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -873,7 +870,7 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Cita cancelada correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 break;
             }
@@ -921,7 +918,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "El nuevo horario no existe"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
 
                     exit;
                 }
@@ -941,7 +938,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "El nuevo horario no pertenece al médico de la cita"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
 
                     exit;
                 }
@@ -958,7 +955,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "El nuevo horario no está disponible"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
 
                     exit;
                 }
@@ -1002,7 +999,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "El nuevo horario ya tiene una cita activa"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
 
                     exit;
                 }
@@ -1077,7 +1074,7 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Cita reprogramada correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 break;
             }
@@ -1151,7 +1148,7 @@ try {
             echo json_encode([
                 "success" => true,
                 "mensaje" => "Cita actualizada correctamente"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -1167,7 +1164,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID de la cita"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -1204,7 +1201,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Cita no encontrada"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -1247,7 +1244,7 @@ try {
             echo json_encode([
                 "success" => true,
                 "mensaje" => "Cita eliminada correctamente"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -1261,7 +1258,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "mensaje" => "Método no permitido"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
     }
@@ -1278,7 +1275,7 @@ try {
         "success" => false,
         "mensaje" => "Error en la API",
         "error" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conexion = null;

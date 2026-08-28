@@ -22,7 +22,7 @@ try {
             echo json_encode([
                 "success" => true,
                 "mensaje" => "Preflight OK"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             exit;
 
@@ -63,7 +63,7 @@ try {
                     echo json_encode([
                         "success" => true,
                         "data" => $administrador
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
 
                 } else {
 
@@ -72,7 +72,7 @@ try {
                     echo json_encode([
                         "success" => false,
                         "mensaje" => "Administrador no encontrado"
-                    ]);
+                    ], JSON_UNESCAPED_UNICODE);
                 }
 
             } else {
@@ -98,7 +98,7 @@ try {
                     "success" => true,
                     "cantidad" => count($administradores),
                     "data" => $administradores
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -124,7 +124,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Nombre, apellido e ID de usuario son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -154,7 +154,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "El usuario indicado no existe"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -183,7 +183,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Este usuario ya está registrado como administrador"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -230,7 +230,7 @@ try {
                 "success" => true,
                 "mensaje" => "Administrador creado correctamente",
                 "id_administrador" => $id
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -246,7 +246,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del administrador"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -269,7 +269,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Nombre, apellido e ID de usuario son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -313,14 +313,14 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Administrador actualizado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "No se encontró el administrador o no hubo cambios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -337,7 +337,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Debe indicar el ID del administrador"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -362,7 +362,7 @@ try {
                 echo json_encode([
                     "success" => true,
                     "mensaje" => "Administrador eliminado correctamente"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
             } else {
 
@@ -371,7 +371,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Administrador no encontrado"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
             }
 
             break;
@@ -386,7 +386,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "mensaje" => "Método no permitido"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
     }
@@ -399,7 +399,7 @@ try {
         "success" => false,
         "mensaje" => "Error en la API",
         "error" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conexion = null;

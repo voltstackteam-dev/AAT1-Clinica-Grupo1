@@ -46,7 +46,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Usuario y contraseña son obligatorios"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -80,7 +80,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Usuario o contraseña incorrectos"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -94,7 +94,7 @@ try {
                 echo json_encode([
                     "success" => false,
                     "mensaje" => "Usuario o contraseña incorrectos"
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
 
                 exit;
             }
@@ -112,7 +112,7 @@ try {
                     "nombre_usuario" => $usuario["nombre_usuario"],
                     "id_rol" => $usuario["id_rol"]
                 ]
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
 
@@ -124,7 +124,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "mensaje" => "Método no permitido"
-            ]);
+            ], JSON_UNESCAPED_UNICODE);
 
             break;
     }
@@ -137,7 +137,7 @@ try {
         "success" => false,
         "mensaje" => "Error en la API",
         "error" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conexion = null;
