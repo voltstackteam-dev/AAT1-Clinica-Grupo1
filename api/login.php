@@ -6,17 +6,9 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-require_once "config/conexion.php";
-require_once "config/jwt.php";
-
 $metodo = $_SERVER['REQUEST_METHOD'];
 
-try {
-
-    switch ($metodo) {
-
-        case 'OPTIONS':
-
+if ($metodo === 'OPTIONS') {
             http_response_code(200);
 
             echo json_encode([
@@ -25,7 +17,15 @@ try {
             ]);
 
             exit;
+            }
 
+
+require_once "config/conexion.php";
+require_once "config/jwt.php";
+
+try {
+
+    switch ($metodo) {
 
         case 'POST':
 
