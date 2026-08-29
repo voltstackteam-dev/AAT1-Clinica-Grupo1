@@ -172,3 +172,383 @@
   cursor: not-allowed;
   margin-top: auto;
 }
+
+/* ==========================================================================
+   ESTILOS INTERACTIVOS COMPLEMENTARIOS DEL ASISTENTE VIRTUAL
+   ========================================================================== */
+
+/* Botón Disparador Flotante Fijo */
+.btn-asistente-flotante {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background-color: #2b6cb0;
+  color: #ffffff;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 30px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 2000;
+  box-shadow: 0 4px 15px rgba(43, 108, 176, 0.4);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-asistente-flotante:hover {
+  background-color: #2c5282;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(43, 108, 176, 0.5);
+}
+
+/* Panel Emergente del Chat */
+.chat-ventana-emergente {
+  position: fixed;
+  bottom: 90px;
+  right: 25px;
+  width: 360px;
+  height: 480px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 1999;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  animation: chatEntrada 0.3s ease-out forwards;
+}
+
+@keyframes chatEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Encabezado Azul Marino */
+.chat-header-institucional {
+  background-color: #1a365d;
+  color: #ffffff;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-avatar-status {
+  font-size: 1.8rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-header-institucional h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.status-en-linea {
+  font-size: 0.72rem;
+  color: #68d391;
+  font-weight: 500;
+}
+
+/* Contenedor del Historial de Mensajes */
+.chat-cuerpo-mensajes {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #f7fafc;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Bloques de Mensajes Asimétricos */
+.mensaje-bloque {
+  display: flex;
+  width: 100%;
+}
+
+.mensaje-bloque.asistente {
+  justify-content: flex-start;
+}
+
+.mensaje-bloque.usuario {
+  justify-content: flex-end;
+}
+
+.mensaje-burbuja {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.asistente .mensaje-burbuja {
+  background-color: #e2e8f0;
+  color: #2d3748;
+  border-top-left-radius: 2px;
+}
+
+.usuario .mensaje-burbuja {
+  background-color: #3182ce;
+  color: #ffffff;
+  border-top-right-radius: 2px;
+}
+
+/* Área de Entrada de Mensajes */
+.chat-barra-entrada {
+  display: flex;
+  padding: 12px 15px;
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  gap: 10px;
+}
+
+.chat-barra-entrada input {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: 1px solid #cbd5e0;
+  border-radius: 20px;
+  outline: none;
+  font-size: 0.85rem;
+  transition: border-color 0.2s;
+}
+
+.chat-barra-entrada input:focus {
+  border-color: #3182ce;
+}
+
+.chat-barra-entrada button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: #3182ce;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.chat-barra-entrada button:hover {
+  background-color: #2c5282;
+}
+
+/* Adaptación para celulares */
+@media (max-width: 600px) {
+  .chat-ventana-emergente {
+    width: calc(100% - 30px);
+    right: 15px;
+    bottom: 85px;
+    height: 450px;
+  }
+
+  .btn-asistente-flotante {
+    right: 15px;
+    bottom: 15px;
+  }
+}
+
+/* ==========================================================================
+   ESTILOS INTERACTIVOS COMPLEMENTARIOS DEL ASISTENTE VIRTUAL
+   ========================================================================== */
+
+/* Botón Disparador Flotante Fijo */
+.btn-asistente-flotante {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background-color: #2b6cb0;
+  color: #ffffff;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 30px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 2000;
+  box-shadow: 0 4px 15px rgba(43, 108, 176, 0.4);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-asistente-flotante:hover {
+  background-color: #2c5282;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(43, 108, 176, 0.5);
+}
+
+/* Panel Emergente del Chat */
+.chat-ventana-emergente {
+  position: fixed;
+  bottom: 90px;
+  right: 25px;
+  width: 360px;
+  height: 480px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 1999;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  animation: chatEntrada 0.3s ease-out forwards;
+}
+
+@keyframes chatEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Encabezado Azul Marino */
+.chat-header-institucional {
+  background-color: #1a365d;
+  color: #ffffff;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-avatar-status {
+  font-size: 1.8rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-header-institucional h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.status-en-linea {
+  font-size: 0.72rem;
+  color: #68d391;
+  font-weight: 500;
+}
+
+/* Contenedor del Historial de Mensajes */
+.chat-cuerpo-mensajes {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #f7fafc;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Bloques de Mensajes Asimétricos */
+.mensaje-bloque {
+  display: flex;
+  width: 100%;
+}
+
+.mensaje-bloque.asistente {
+  justify-content: flex-start;
+}
+
+.mensaje-bloque.usuario {
+  justify-content: flex-end;
+}
+
+.mensaje-burbuja {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.asistente .mensaje-burbuja {
+  background-color: #e2e8f0;
+  color: #2d3748;
+  border-top-left-radius: 2px;
+}
+
+.usuario .mensaje-burbuja {
+  background-color: #3182ce;
+  color: #ffffff;
+  border-top-right-radius: 2px;
+}
+
+/* Área de Entrada de Mensajes */
+.chat-barra-entrada {
+  display: flex;
+  padding: 12px 15px;
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  gap: 10px;
+}
+
+.chat-barra-entrada input {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: 1px solid #cbd5e0;
+  border-radius: 20px;
+  outline: none;
+  font-size: 0.85rem;
+  transition: border-color 0.2s;
+}
+
+.chat-barra-entrada input:focus {
+  border-color: #3182ce;
+}
+
+.chat-barra-entrada button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: #3182ce;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.chat-barra-entrada button:hover {
+  background-color: #2c5282;
+}
+
+/* Adaptación para celulares */
+@media (max-width: 600px) {
+  .chat-ventana-emergente {
+    width: calc(100% - 30px);
+    right: 15px;
+    bottom: 85px;
+    height: 450px;
+  }
+
+  .btn-asistente-flotante {
+    right: 15px;
+    bottom: 15px;
+  }
+}

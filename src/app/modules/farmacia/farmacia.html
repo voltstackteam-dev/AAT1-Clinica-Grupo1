@@ -55,3 +55,53 @@
     </div>
   }
 </div>
+
+<!--
+==========================================================================
+COMPONENTES DEL ASISTENTE VIRTUAL FLOTANTE
+==========================================================================
+-->
+
+<!-- 1. Botón Disparador Circular -->
+<button class="btn-asistente-flotante" (click)="alternarChat()">
+  <span *ngIf="!chatAbierto">💬 Asistente IA</span>
+  <span *ngIf="chatAbierto">✖ Cerrar</span>
+</button>
+
+<!-- 2. Ventana Emergente del Chat -->
+<div class="chat-ventana-emergente" *ngIf="chatAbierto">
+
+  <!-- Encabezado del Asistente -->
+  <div class="chat-header-institucional">
+    <div class="chat-avatar-status">🤖</div>
+    <div>
+      <h4>Volty - Farmacia</h4>
+      <span class="status-en-linea">● En línea ahora</span>
+    </div>
+  </div>
+
+  <!-- Cuerpo de Mensajes -->
+  <div class="chat-cuerpo-mensajes">
+    <div
+      *ngFor="let msg of historialMensajes"
+      [ngClass]="['mensaje-bloque', msg.emisor]"
+    >
+      <div class="mensaje-burbuja">
+        {{ msg.texto }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra Inferior de Entrada -->
+  <div class="chat-barra-entrada">
+    <input
+      type="text"
+      placeholder="Escribe tu consulta médica..."
+      [(ngModel)]="mensajeUsuario"
+      (keyup.enter)="enviarMensajeChat()"
+    />
+
+    <button (click)="enviarMensajeChat()">➤</button>
+  </div>
+
+</div>
