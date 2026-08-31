@@ -23,7 +23,7 @@ export class ListadoMedicosComponent implements OnInit {
   cargarMedicos(idEspecialidad: number = 0): void {
     this.clinicaService.getMedicos(idEspecialidad).subscribe({
       next: (res) => {
-        if (res.status === 'success') {
+        if (res.success) {
           this.medicos.set(res.data);
         }
       },
@@ -38,8 +38,8 @@ export class ListadoMedicosComponent implements OnInit {
   // Mapea el nombre de la BD con las fotos existentes en /public/
   getFotoMedico(nombre: string, apellido: string): string {
     const nombreCompleto = `${nombre} ${apellido}`.toLowerCase();
-    if (nombreCompleto.includes('ana')) return '/DraSofiaMartinez.png';
-    if (nombreCompleto.includes('carlos')) return '/DrCarlosMendoza.png';
-    return '/DrAlejandroMendez.png';
+    if (nombreCompleto.includes('pedro')) return '/DrPedroGonzalez.png';
+    if (nombreCompleto.includes('carlos')) return '/DrCarlosLopez.png';
+    return '/DraAnaMartinez.png';
   }
 }

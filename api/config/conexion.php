@@ -8,7 +8,7 @@ $baseDatos = "db_sys_citas";
 try {
 
     $conexion = new PDO(
-        "mysql:host=$servidor;port=3307;dbname=$baseDatos;charset=utf8mb4",
+        "mysql:host=$servidor;port=3306;dbname=$baseDatos;charset=utf8mb4",
         $usuario,
         $password,
        [
@@ -29,7 +29,7 @@ try {
         "mensaje" => "Error de conexión a la base de datos"
         /* ,
         "error" => $e->getMessage() */
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 
     exit;
 }

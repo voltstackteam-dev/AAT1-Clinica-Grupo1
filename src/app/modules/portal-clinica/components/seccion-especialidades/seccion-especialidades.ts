@@ -29,7 +29,7 @@ export class SeccionEspecialidades implements OnInit {
   cargarEspecialidades(): void {
     this.clinicaService.getEspecialidades().subscribe({
       next: (res) => {
-        if (res.status === 'success') {
+        if (res.success) {
           this.especialidades.set(res.data);
         }
       },

@@ -1,116 +1,223 @@
 <section class="agenda-cita-container">
   <div class="agenda-card">
+
     <div class="agenda-header">
       <h2>Agenda tu Cita Médica</h2>
-      <p>Completa el formulario para reservar tu espacio con nuestros especialistas certificados</p>
+
+      <p>
+        Completa el formulario para reservar tu espacio
+        con nuestros especialistas certificados
+      </p>
     </div>
 
-    <form (ngSubmit)="confirmarCita()" class="agenda-form">
+<!--  MENSAJE */ --> 
+
+    @if (mensaje()) {
+      <div
+        class="mensaje-cita"
+        [class.mensaje-error]="error()"
+        [class.mensaje-exito]="!error()"
+      >
+        {{ mensaje() }}
+      </div>
+    }
+
+
+    <form
+      (ngSubmit)="confirmarCita()"
+      class="agenda-form"
+    >
+
       <div class="form-grid">
-        <div class="form-group">
-          <label for="nombre">Nombre Completo del Paciente *</label>
-          <input 
-            type="text" 
-            id="nombre"
-            [ngModel]="nombrePaciente()" 
-            (ngModelChange)="nombrePaciente.set($event)" 
-            name="nombre" 
-            placeholder="Ej. Juan Pérez" 
-            required 
-          />
-        </div>
 
-        <div class="form-group">
-          <label for="dpi">Documento de Identificación (DPI) *</label>
-          <input 
-            type="text" 
-            id="dpi"
-            [ngModel]="dpiPaciente()" 
-            (ngModelChange)="dpiPaciente.set($event)" 
-            name="dpi" 
-            placeholder="Ej. 1234 56789 0101" 
-            required 
-          />
-        </div>
 
+        <!--  MÉDICO -->
+        
         <div class="form-group">
-          <label for="email">Correo Electrónico *</label>
-          <input 
-            type="email" 
-            id="email"
-            [ngModel]="emailPaciente()" 
-            (ngModelChange)="emailPaciente.set($event)" 
-            name="email" 
-            placeholder="juan@correo.com" 
-            required 
-          />
-        </div>
 
-        <div class="form-group">
-          <label for="telefono">Teléfono de Contacto *</label>
-          <input 
-            type="text" 
-            id="telefono"
-            [ngModel]="telefonoPaciente()" 
-            (ngModelChange)="telefonoPaciente.set($event)" 
-            name="telefono" 
-            placeholder="5555-5555" 
-            required 
-          />
-        </div>
+          <label for="medico">
+            Médico *
+          </label>
 
-        <div class="form-group full-width">
-          <label for="especialidad">Especialidad Requerida</label>
-          <select 
-            id="especialidad"
-            [ngModel]="idEspecialidad()" 
-            (ngModelChange)="idEspecialidad.set($event)" 
-            name="especialidad"
-          >
-            <option [value]="1">Cardiología</option>
-            <option [value]="2">Pediatría</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="fecha">Fecha de la Cita *</label>
-          <input 
-            type="date" 
-            id="fecha"
-            [ngModel]="fechaCita()" 
-            (ngModelChange)="fechaCita.set($event)" 
-            name="fecha" 
-            required 
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="hora">Hora de la Cita *</label>
-          <select 
-            id="hora"
-            [ngModel]="horaCita()" 
-            (ngModelChange)="horaCita.set($event)" 
-            name="hora" 
+          <select
+            id="medico"
+            [ngModel]="idMedico()"
+            (ngModelChange)="idMedico.set(+$event)"
+            name="medico"
             required
           >
-            <option value="" disabled selected>Selecciona un turno</option>
-            <option value="08:00:00">08:00 AM</option>
-            <option value="09:00:00">09:00 AM</option>
-            <option value="10:00:00">10:00 AM</option>
-            <option value="11:00:00">11:00 AM</option>
-            <option value="13:00:00">01:00 PM</option>
-            <option value="14:00:00">02:00 PM</option>
-            <option value="15:00:00">03:00 PM</option>
-            <option value="16:00:00">04:00 PM</option>
+
+            <option [value]="0" disabled>
+              Selecciona un médico
+            </option>
+
+            @for (medico of medicos(); track medico.id_medico) {
+
+              <option [value]="medico.id_medico">
+
+                Dr./Dra.
+                {{ medico.nombre_med }}
+                {{ medico.apellido_med }}
+
+              </option>
+
+            }
+
           </select>
+
         </div>
+
+
+        <!--  CLIENTE -->
+        
+        <div class="form-group">
+
+          <label for="cliente">
+            Paciente *
+          </label>
+
+          <select
+            id="cliente"
+            [ngModel]="idCliente()"
+            (ngModelChange)="idCliente.set(+$event)"
+            name="cliente"
+            required
+          >
+
+            <option [value]="0" disabled>
+              Selecciona un paciente
+            </option>
+
+            @for (cliente of clientes(); track cliente.id_cliente) {
+
+              <option [value]="cliente.id_cliente">
+
+                {{ cliente.nombre_cli }}
+                {{ cliente.apellido_cli }}
+
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+
+<!--         SALA
+ -->       
+        <div class="form-group">
+
+          <label for="sala">
+            Sala *
+          </label>
+
+          <select
+            id="sala"
+            [ngModel]="idSala()"
+            (ngModelChange)="idSala.set(+$event)"
+            name="sala"
+            required
+          >
+
+            <option [value]="0" disabled>
+              Selecciona una sala
+            </option>
+
+            @for (sala of salas(); track sala.id_sala) {
+
+              <option [value]="sala.id_sala">
+
+                {{ sala.nombre_sala }}
+
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+
+<!--              HORARIO
+ -->
+        <div class="form-group">
+
+          <label for="horario">
+            Fecha y hora *
+          </label>
+
+          <select
+            id="horario"
+            [ngModel]="idHorario()"
+            (ngModelChange)="idHorario.set(+$event)"
+            name="horario"
+            required
+          >
+
+            <option [value]="0" disabled>
+              Selecciona un horario
+            </option>
+
+            @for (horario of horarios(); track horario.id_horario) {
+
+              <option [value]="horario.id_horario">
+
+                {{ horario.fecha }}
+                -
+                {{ horario.hora_reserva }}
+
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+
+            <!--  MOTIVO -->
+
+        <div class="form-group full-width">
+
+          <label for="motivo">
+            Motivo de la consulta *
+          </label>
+
+          <textarea
+            id="motivo"
+            [ngModel]="motivoConsulta()"
+            (ngModelChange)="motivoConsulta.set($event)"
+            name="motivo"
+            placeholder="Describe brevemente el motivo de la consulta"
+            rows="4"
+            required
+          ></textarea>
+
+        </div>
+
       </div>
 
+<!-- BOTÓN -->
       <div class="form-actions">
-        <button type="submit" class="btn-confirmar" [disabled]="cargando()">
-          {{ cargando() ? 'Guardando cita...' : 'Confirmar Reservación de Cita' }}
+
+        <button
+          type="submit"
+          class="btn-confirmar"
+          [disabled]="cargando()"
+        >
+
+          {{
+            cargando()
+              ? 'Guardando cita...'
+              : 'Confirmar Reservación de Cita'
+          }}
+
         </button>
+
       </div>
+
     </form>
+
   </div>
 </section>

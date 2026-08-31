@@ -38,8 +38,8 @@ export class AdminDashboardComponent implements OnInit {
   private http = inject(HttpClient);
   
   // URLs de Citas
-  private urlGet = 'http://localhost:8000/backend/get_citas.php';
-private urlActualizar = 'http://localhost:8000/backend/actualizar_cita.php';
+  private urlGet = 'http://localhost:8000/api/citas.php';
+private urlActualizar = 'http://localhost:8000/api/citas.php';
 
   // URLs de Farmacia / Medicamentos
   private apiGetMed = 'http://localhost:8000/backend/get_medicamentos.php';

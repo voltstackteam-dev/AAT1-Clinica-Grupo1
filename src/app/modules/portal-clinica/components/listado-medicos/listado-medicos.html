@@ -10,10 +10,9 @@
       <div class="medico-card">
         <div class="medico-foto-container">
           <img 
-            [src]="medico.foto_med" 
+            [src]="getFotoMedico(medico.nombre_med, medico.apellido_med)" 
             [alt]="medico.nombre_med + ' ' + medico.apellido_med"
             class="medico-foto"
-            onerror="this.src='/DrCarlosMendoza.png'" 
           />
         </div>
         <div class="medico-info">
@@ -21,7 +20,8 @@
           
           <!-- Condición dinámica para Dr. o Dra. -->
           <h3>
-            {{ medico.foto_med?.includes('Dra') ? 'Dra.' : 'Dr.' }} {{ medico.nombre_med }} {{ medico.apellido_med }}
+            {{ medico.nombre_med.toLowerCase().includes('ana') ? 'Dra.' : 'Dr.' }}
+            {{ medico.nombre_med }} {{ medico.apellido_med }}
           </h3>
 
           <p class="medico-telefono">📞 {{ medico.telefono_med }}</p>
