@@ -169,7 +169,7 @@
   color: #991b1b;
 }
 
-.status-pill.finalizada {
+.status-pill.completada {
   background-color: #e2e8f0;
   color: #475569;
 }
@@ -289,6 +289,111 @@
 
 .btn-denegar:hover {
   background-color: #fee2e2;
+}
+
+.btn-completar {
+  background-color: #1e3a8a;
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-editar-cita {
+  background-color: #ffffff;
+  color: #1e3a8a;
+  border: 1px solid #93c5fd;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-secundario {
+  background-color: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.editar-cita {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto auto;
+  align-items: end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.editar-cita label,
+.formulario-horario label,
+.selector-medico {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.editar-cita input,
+.editar-cita select,
+.formulario-horario input,
+.formulario-horario select,
+.selector-medico select {
+  padding: 0.55rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+.seccion-horarios {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.selector-medico { max-width: 360px; margin-bottom: 1rem; }
+
+.formulario-horario {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  align-items: end;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.lista-horarios { margin-top: 1rem; }
+
+.horario-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.horario-item span { color: #64748b; }
+.horario-item button { margin-left: auto; padding: 0.45rem 0.8rem; }
+.mensaje-panel { color: #1e3a8a; font-weight: 600; }
+
+.cita-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 /* ==========================================
@@ -417,6 +522,10 @@
     gap: 1rem;
   }
   .cita-body {
+    grid-template-columns: 1fr;
+  }
+  .editar-cita,
+  .formulario-horario {
     grid-template-columns: 1fr;
   }
   .observaciones-box {

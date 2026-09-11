@@ -1,47 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
-@Component({
-  selector: 'app-historial-citas',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './historial-citas.html',
-  styleUrl: './historial-citas.css'
-})
+@Component({ selector: 'app-historial-citas', standalone: true, imports: [CommonModule, FormsModule], templateUrl: './historial-citas.html', styleUrl: './historial-citas.css' })
 export class HistorialCitasComponent implements OnInit {
+  private http = inject(HttpClient); private auth = inject(AuthService); private router = inject(Router);
+  private api = 'http://localhost:8000/api/citas.php';
+  misCitas = signal<any[]>([]); cargando = signal(true); mensaje = signal(''); editando = signal<number | null>(null); actualizando = signal<number | null>(null);
+  fechaNueva = signal(''); horaNueva = signal(''); hoy = new Date().toISOString().slice(0, 10);
+  horas = Array.from({ length: 9 }, (_, indice) => `${String(indice + 8).padStart(2, '0')}:00`);
 
-  // Listado simulado de citas activas del paciente desde la Base de Datos
-  misCitas = [
-    {
-      id: 'V-8842',
-      medico: 'Dr. Alejandro Méndez',
-      especialidad: 'Cardiología',
-      fecha: '2026-09-02',
-      hora: '09:30 AM',
-      sede: 'Sede Central (Zona 10)',
-      estado: 'Confirmada'
-    },
-    {
-      id: 'V-9104',
-      medico: 'Dra. Sofía Martínez',
-      especialidad: 'Neurología',
-      fecha: '2026-09-15',
-      hora: '14:00 PM',
-      sede: 'Sede Norte (Zona 11)',
-      estado: 'Pendiente'
-    }
-  ];
-
-  constructor() {}
-
-  ngOnInit(): void {}
-
-  // Función para simular la cancelación de una cita médica
-  cancelarCita(idCita: string): void {
-    const confirmar = confirm(`¿Estás seguro de que deseas cancelar la cita con código ${idCita}?`);
-    if (confirmar) {
-      this.misCitas = this.misCitas.filter(cita => cita.id !== idCita);
-      alert('La cita ha sido cancelada de forma exitosa.');
-    }
-  }
+  ngOnInit(): void { const usuario = this.auth.obtenerUsuario(); if (!usuario || Number(usuario.id_rol) !== 3) { this.router.navigate(['/login']); return; } this.cargarCitas(); }
+  cargarCitas(): void { const usuario = this.auth.obtenerUsuario(); this.http.get<any>(`${this.api}?id_usuario=${usuario.id_usuario}`).subscribe({ next: r => { this.misCitas.set(r.data || []); this.cargando.set(false); }, error: () => { this.mensaje.set('No se pudieron cargar tus citas.'); this.cargando.set(false); } }); }
+  puedeGestionar(cita: any): boolean { return ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado); }
+  cancelar(cita: any): void { if (!confirm(`¿Deseas cancelar la cita #${cita.id_cita}?`)) return; this.actualizarEstado(cita, 'CANCELADA'); }
+  prepararReprogramacion(cita: any): void { const [fecha, hora] = String(cita.fecha_hora).split(' '); this.editando.set(cita.id_cita); this.fechaNueva.set(fecha || ''); this.horaNueva.set((hora || '').slice(0, 5)); this.mensaje.set(''); }
+  reprogramar(cita: any): void { if (!this.fechaNueva() || !this.horaNueva()) { this.mensaje.set('Selecciona una fecha y hora para reprogramar la cita.'); return; } this.actualizando.set(cita.id_cita); this.http.put<any>(this.api, { id_cita: cita.id_cita, fecha_hora: `${this.fechaNueva()}T${this.horaNueva()}` }).subscribe({ next: respuesta => { this.misCitas.update(citas => citas.map(item => item.id_cita === cita.id_cita ? { ...item, estado: respuesta.estado, fecha_hora: respuesta.fecha_hora } : item)); this.editando.set(null); this.actualizando.set(null); this.mensaje.set(respuesta.mensaje); }, error: error => { this.actualizando.set(null); this.mensaje.set(error.error?.mensaje || 'No se pudo reprogramar la cita.'); } }); }
+  private actualizarEstado(cita: any, estado: string): void { this.actualizando.set(cita.id_cita); this.http.put<any>(this.api, { id_cita: cita.id_cita, estado }).subscribe({ next: respuesta => { this.misCitas.update(citas => citas.map(item => item.id_cita === cita.id_cita ? { ...item, estado: respuesta.estado } : item)); this.actualizando.set(null); this.mensaje.set('La cita fue cancelada.'); }, error: error => { this.actualizando.set(null); this.mensaje.set(error.error?.mensaje || 'No se pudo actualizar la cita.'); } }); }
 }

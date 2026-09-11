@@ -22,9 +22,6 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: 'enabled',
         scrollPositionRestoration: 'enabled'
       })
-    ),
-
-    // Habilita el cliente HTTP para consumir las APIs de PHP en XAMPP
-    provideHttpClient()
+    )
   ]
 };

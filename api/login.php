@@ -1,8 +1,7 @@
 <?php
 
-
+header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
@@ -37,7 +36,7 @@ try {
             /* verificar que lleguen los datos */
 
             if (
-                !isset($datos['nombre_usuario']) ||
+                !isset($datos['email']) ||
                 !isset($datos['contrasenia'])
             ) {
 
@@ -54,17 +53,18 @@ try {
             /* buscar usuario */
             $sql = "SELECT
                         id_usuario,
-                        nombre_usuario,
+                        email,
                         contrasenia,
-                        id_rol
-                    FROM tb_usuarios
-                    WHERE nombre_usuario = :nombre_usuario";
+                        id_rol,
+                        activo
+                    FROM usuarios
+                    WHERE email = :email";
 
             $stmt = $conexion->prepare($sql);
 
             $stmt->bindValue(
-                ':nombre_usuario',
-                $datos['nombre_usuario']
+                ':email',
+                $datos['email']
             );
 
             $stmt->execute();
@@ -85,9 +85,19 @@ try {
                 exit;
             }
 
+            /* Validar si el usuario está activo */
+            if (isset($usuario['activo']) && $usuario['activo'] == 0) {
+                http_response_code(403);
+                echo json_encode([
+                    "success" => false,
+                    "mensaje" => "La cuenta está desactivada"
+                ], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
             /* COMPROBAR CONTRASEÑA  */
 
-            if ($datos['contrasenia'] !== $usuario['contrasenia']) {
+            if (!password_verify($datos['contrasenia'], $usuario['contrasenia']) && !hash_equals($usuario['contrasenia'], $datos['contrasenia'])) {
 
                 http_response_code(401);
 
@@ -109,7 +119,7 @@ try {
                 "token" => $token,
                 "usuario" => [
                     "id_usuario" => $usuario["id_usuario"],
-                    "nombre_usuario" => $usuario["nombre_usuario"],
+                    "email" => $usuario["email"],
                     "id_rol" => $usuario["id_rol"]
                 ]
             ], JSON_UNESCAPED_UNICODE);

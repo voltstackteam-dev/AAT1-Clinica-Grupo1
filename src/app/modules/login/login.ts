@@ -15,7 +15,7 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   
   credenciales = {
-    nombre_usuario: '',
+    email: '',
     contrasenia: ''
   };
 
@@ -38,7 +38,7 @@ export class LoginComponent {
 
 
     this.authService.login(
-      this.credenciales.nombre_usuario,
+      this.credenciales.email,
       this.credenciales.contrasenia
     ).subscribe({
 
@@ -72,21 +72,21 @@ export class LoginComponent {
           if (usuario.id_rol === 1) {
 
             // PACIENTE
-            this.router.navigate(['/mis-citas']);
+            this.router.navigate(['/admin/control-citas']);
 
           }
 
           else if (usuario.id_rol === 2) {
 
             // MÉDICO
-            this.router.navigate(['/medico']);
+            this.router.navigate(['/']);
 
           }
 
           else if (usuario.id_rol === 3) {
 
             // ADMINISTRADOR
-            this.router.navigate(['/admin']);
+            this.router.navigate(['/mis-citas']);
 
           }
 

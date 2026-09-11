@@ -1,474 +1,67 @@
 <?php
-
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
-require_once "config/conexion.php";
-
-$metodo = $_SERVER['REQUEST_METHOD'];
-
-try {
-
-    switch ($metodo) {
-
-
-      /* OPTIONS  */
-
-        case 'OPTIONS':
-
-            http_response_code(200);
-
-            echo json_encode([
-                "success" => true,
-                "mensaje" => "Preflight OK"
-            ], JSON_UNESCAPED_UNICODE);
-
-            exit;
-
-
-        /* GET */
-        case 'GET':
-
-            // Buscar médico por ID
-
-            if (isset($_GET['id'])) {
-
-                $id = $_GET['id'];
-
-                $sql = "SELECT
-                            m.id_medico,
-                            m.nombre_med,
-                            m.apellido_med,
-                            m.id_especialidad,
-                            e.nombre_especialidad,
-                            m.telefono_med,
-                            m.equipo_disponible,
-                            m.id_usuario,
-                            u.nombre_usuario
-                        FROM tb_medicos m
-
-                        INNER JOIN tb_especialidades e
-                            ON m.id_especialidad = e.id_especialidad
-
-                        INNER JOIN tb_usuarios u
-                            ON m.id_usuario = u.id_usuario
-
-                        WHERE m.id_medico = :id";
-
-                $stmt = $conexion->prepare($sql);
-
-                $stmt->bindValue(
-                    ':id',
-                    $id,
-                    PDO::PARAM_INT
-                );
-
-                $stmt->execute();
-
-                $medico = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($medico) {
-
-                    echo json_encode([
-                        "success" => true,
-                        "data" => $medico
-                    ]);
-
-                } else {
-
-                    http_response_code(404);
-
-                    echo json_encode([
-                        "success" => false,
-                        "mensaje" => "Médico no encontrado"
-                    ]);
-                }
-
-            } else {
-
-                // Listar todos los médicos
-
-                $sql = "SELECT
-                            m.id_medico,
-                            m.nombre_med,
-                            m.apellido_med,
-                            m.id_especialidad,
-                            e.nombre_especialidad,
-                            m.telefono_med,
-                            m.equipo_disponible,
-                            m.id_usuario,
-                            u.nombre_usuario
-
-                        FROM tb_medicos m
-
-                        INNER JOIN tb_especialidades e
-                            ON m.id_especialidad = e.id_especialidad
-
-                        INNER JOIN tb_usuarios u
-                            ON m.id_usuario = u.id_usuario
-
-                        ORDER BY m.id_medico DESC";
-
-                $stmt = $conexion->prepare($sql);
-
-                $stmt->execute();
-
-                $medicos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                echo json_encode([
-                    "success" => true,
-                    "cantidad" => count($medicos),
-                    "data" => $medicos
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            break;
-
-
-         /*   POST  */
-
-        case 'POST':
-
-            $datos = json_decode(
-                file_get_contents("php://input"),
-                true
-            );
-
-            if (
-                !isset($datos['nombre_med']) ||
-                !isset($datos['apellido_med']) ||
-                !isset($datos['id_especialidad']) ||
-                !isset($datos['id_usuario'])
-            ) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Nombre, apellido, especialidad e usuario son obligatorios"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-            /*Verificar que la especialidad exista*/
-
-            $sql = "SELECT id_especialidad
-                    FROM tb_especialidades
-                    WHERE id_especialidad = :id_especialidad";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':id_especialidad',
-                $datos['id_especialidad'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            if (!$stmt->fetch()) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "La especialidad indicada no existe"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-
-            /* Verificar que el usuario exista */
-
-            $sql = "SELECT id_usuario
-                    FROM tb_usuarios
-                    WHERE id_usuario = :id_usuario";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':id_usuario',
-                $datos['id_usuario'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            if (!$stmt->fetch()) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "El usuario indicado no existe"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-
-            /* Insertar médico */
-
-            $sql = "INSERT INTO tb_medicos
-                    (
-                        nombre_med,
-                        apellido_med,
-                        id_especialidad,
-                        telefono_med,
-                        equipo_disponible,
-                        id_usuario
-                    )
-                    VALUES
-                    (
-                        :nombre_med,
-                        :apellido_med,
-                        :id_especialidad,
-                        :telefono_med,
-                        :equipo_disponible,
-                        :id_usuario
-                    )";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':nombre_med',
-                $datos['nombre_med']
-            );
-
-            $stmt->bindValue(
-                ':apellido_med',
-                $datos['apellido_med']
-            );
-
-            $stmt->bindValue(
-                ':id_especialidad',
-                $datos['id_especialidad'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->bindValue(
-                ':telefono_med',
-                $datos['telefono_med'] ?? null
-            );
-
-            $stmt->bindValue(
-                ':equipo_disponible',
-                $datos['equipo_disponible'] ?? null
-            );
-
-            $stmt->bindValue(
-                ':id_usuario',
-                $datos['id_usuario'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            $id = $conexion->lastInsertId();
-
-            http_response_code(201);
-
-            echo json_encode([
-                "success" => true,
-                "mensaje" => "Médico creado correctamente",
-                "id_medico" => $id
-            ], JSON_UNESCAPED_UNICODE);
-
-            break;
-
-
-      
-        /*  PUT  */
-
-        case 'PUT':
-
-            if (!isset($_GET['id'])) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Debe indicar el ID del médico"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-            $id = $_GET['id'];
-
-            $datos = json_decode(
-                file_get_contents("php://input"),
-                true
-            );
-
-            if (
-                !isset($datos['nombre_med']) ||
-                !isset($datos['apellido_med']) ||
-                !isset($datos['id_especialidad']) ||
-                !isset($datos['id_usuario'])
-            ) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Nombre, apellido, especialidad e usuario son obligatorios"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-            $sql = "UPDATE tb_medicos
-                    SET
-                        nombre_med = :nombre_med,
-                        apellido_med = :apellido_med,
-                        id_especialidad = :id_especialidad,
-                        telefono_med = :telefono_med,
-                        equipo_disponible = :equipo_disponible,
-                        id_usuario = :id_usuario
-
-                    WHERE id_medico = :id";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':nombre_med',
-                $datos['nombre_med']
-            );
-
-            $stmt->bindValue(
-                ':apellido_med',
-                $datos['apellido_med']
-            );
-
-            $stmt->bindValue(
-                ':id_especialidad',
-                $datos['id_especialidad'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->bindValue(
-                ':telefono_med',
-                $datos['telefono_med'] ?? null
-            );
-
-            $stmt->bindValue(
-                ':equipo_disponible',
-                $datos['equipo_disponible'] ?? null
-            );
-
-            $stmt->bindValue(
-                ':id_usuario',
-                $datos['id_usuario'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->bindValue(
-                ':id',
-                $id,
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-
-                echo json_encode([
-                    "success" => true,
-                    "mensaje" => "Médico actualizado correctamente"
-                ], JSON_UNESCAPED_UNICODE);
-
-            } else {
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "No se encontró el médico o no hubo cambios"
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            break;
-
-
-          /* DELETE */
-
-        case 'DELETE':
-
-            if (!isset($_GET['id'])) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Debe indicar el ID del médico"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-            $id = $_GET['id'];
-
-            $sql = "DELETE FROM tb_medicos
-                    WHERE id_medico = :id";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':id',
-                $id,
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-
-                echo json_encode([
-                    "success" => true,
-                    "mensaje" => "Médico eliminado correctamente"
-                ], JSON_UNESCAPED_UNICODE);
-
-            } else {
-
-                http_response_code(404);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Médico no encontrado"
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            break;
-
-
-        /*  MÉTODO NO PERMITIDO  */
-
-        default:
-
-            http_response_code(405);
-
-            echo json_encode([
-                "success" => false,
-                "mensaje" => "Método no permitido"
-            ], JSON_UNESCAPED_UNICODE);
-
-            break;
+require_once __DIR__ . '/config/api.php';
+require_once __DIR__ . '/config/conexion.php';
+require_once __DIR__ . '/config/jwt.php';
+
+
+$metodo = iniciarApi();
+ejecutarApi(function () use ($conexion, $metodo): void {
+    $base = 'SELECT 
+                m.id_medico, 
+                m.id_usuario, 
+                m.id_especialidad, 
+                m.nombre, 
+                m.apellido, 
+                m.colegiado_num, 
+                m.telefono, 
+                u.email, 
+                e.nombre_especialidad 
+            FROM medicos m 
+            JOIN usuarios u 
+            ON u.id_usuario=m.id_usuario 
+            JOIN especialidades e 
+            ON e.id_especialidad=m.id_especialidad';
+
+    if ($metodo === 'GET') {
+        $where = [];
+        $p = [];
+        if (isset($_GET['id'])) {
+            $where[] = 'm.id_medico=:id';
+            $p[':id'] = idRequerido();
+        }
+        if (isset($_GET['id_especialidad'])) {
+            $where[] = 'm.id_especialidad=:especialidad';
+            $p[':especialidad'] = (int)$_GET['id_especialidad'];
+        }
+        $sql = $base . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . ' ORDER BY m.apellido, m.nombre';
+        $s = $conexion->prepare($sql);
+        $s->execute($p);
+        $data = isset($_GET['id']) ? $s->fetch() : $s->fetchAll();
+        if (isset($_GET['id']) && !$data) 
+            responderError('Medico no encontrado.', 404);
+        responder(['success' => true, 'cantidad' => is_array($data) ? count($data) : 1, 'data' => $data]);
     }
-
-} catch (PDOException $e) {
-
-    http_response_code(500);
-
-    echo json_encode([
-        "success" => false,
-        "mensaje" => "Error en la API",
-        "error" => $e->getMessage()
-    ], JSON_UNESCAPED_UNICODE);
-}
-
-$conexion = null;
-
-?>
+    verificarRol([1]);
+    if ($metodo === 'DELETE') {
+        $s = $conexion->prepare('DELETE FROM medicos WHERE id_medico=:id');
+        $s->execute([':id' => idRequerido()]);
+        if (!$s->rowCount()) responderError('Medico no encontrado.', 404);
+        responder(['success' => true, 'mensaje' => 'Medico eliminado.']);
+    }
+    $d = leerJson();
+    requerirCampos($d, ['id_usuario', 'id_especialidad', 'nombre', 'apellido', 'telefono']);
+    foreach ([['usuarios', 'id_usuario'], ['especialidades', 'id_especialidad']] as [$t, $c]) if (!existe($conexion, $t, $c, (int)$d[$c])) responderError("El {$c} indicado no existe.");
+    $p = [':usuario' => (int)$d['id_usuario'], ':especialidad' => (int)$d['id_especialidad'], ':nombre' => trim($d['nombre']), ':apellido' => trim($d['apellido']), ':colegiado' => $d['colegiado_num'] ?? null, ':telefono' => trim($d['telefono'])];
+    if ($metodo === 'POST') {
+        $s = $conexion->prepare('INSERT INTO medicos (id_usuario,id_especialidad,nombre,apellido,colegiado_num,telefono) VALUES (:usuario,:especialidad,:nombre,:apellido,:colegiado,:telefono)');
+        $s->execute($p);
+        responder(['success' => true, 'id_medico' => (int)$conexion->lastInsertId()], 201);
+    }
+    if ($metodo === 'PUT') {
+        $p[':id'] = idRequerido();
+        $s = $conexion->prepare('UPDATE medicos SET id_usuario=:usuario,id_especialidad=:especialidad,nombre=:nombre,apellido=:apellido,colegiado_num=:colegiado,telefono=:telefono WHERE id_medico=:id');
+        $s->execute($p);
+        responder(['success' => true, 'mensaje' => 'Medico actualizado.']);
+    }
+    responderError('Metodo no permitido.', 405);
+});

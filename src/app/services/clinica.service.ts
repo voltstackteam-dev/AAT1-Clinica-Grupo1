@@ -24,6 +24,6 @@ export class ClinicaService {
 
   // 3. Crear cita médica (POST)
   crearCita(datosCita: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/cita.php`, datosCita);
+    return this.http.post<any>(`${this.apiUrl}/citas.php`, datosCita);
   }
 }

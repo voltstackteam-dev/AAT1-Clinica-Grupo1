@@ -1,297 +1,40 @@
 <?php
-
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
-require_once "config/conexion.php";
-
-$metodo = $_SERVER['REQUEST_METHOD'];
-
-try {
-
-    switch ($metodo) {
-
-
-      /* OPTIONS  */
-        case 'OPTIONS':
-
-            http_response_code(200);
-
-            echo json_encode([
-                "success" => true,
-                "mensaje" => "Preflight OK"
-            ], JSON_UNESCAPED_UNICODE);
-
-            exit;
-
-
-        /* GET */
-        case 'GET':
-
-            if (isset($_GET['id'])) {
-
-                $id = $_GET['id'];
-
-                $sql = "SELECT
-                            id_rol,
-                            nombre_rol
-                        FROM tb_roles
-                        WHERE id_rol = :id";
-
-                $stmt = $conexion->prepare($sql);
-
-                $stmt->bindValue(
-                    ':id',
-                    $id,
-                    PDO::PARAM_INT
-                );
-
-                $stmt->execute();
-
-                $rol = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($rol) {
-
-                    echo json_encode([
-                        "success" => true,
-                        "data" => $rol
-                    ]);
-
-                } else {
-
-                    http_response_code(404);
-
-                    echo json_encode([
-                        "success" => false,
-                        "mensaje" => "Rol no encontrado"
-                    ], JSON_UNESCAPED_UNICODE);
-                }
-
-            } else {
-
-                $sql = "SELECT
-                            id_rol,
-                            nombre_rol
-                        FROM tb_roles
-                        ORDER BY id_rol DESC";
-
-                $stmt = $conexion->prepare($sql);
-
-                $stmt->execute();
-
-                $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                echo json_encode([
-                    "success" => true,
-                    "cantidad" => count($roles),
-                    "data" => $roles
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            break;
-
-
-          /*   POST  */
-
-        case 'POST':
-
-            $datos = json_decode(
-                file_get_contents("php://input"),
-                true
-            );
-
-            if (!isset($datos['nombre_rol'])) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "El nombre del rol es obligatorio"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-            $sql = "INSERT INTO tb_roles
-                    (
-                        nombre_rol
-                    )
-                    VALUES
-                    (
-                        :nombre_rol
-                    )";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':nombre_rol',
-                $datos['nombre_rol']
-            );
-
-            $stmt->execute();
-
-            $id = $conexion->lastInsertId();
-
-            http_response_code(201);
-
-            echo json_encode([
-                "success" => true,
-                "mensaje" => "Rol creado correctamente",
-                "id_rol" => $id
-            ], JSON_UNESCAPED_UNICODE);
-
-            break;
-
-
-        
-        /*  PUT  */
-
-        case 'PUT':
-
-            if (!isset($_GET['id'])) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Debe indicar el ID del rol"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-            $id = $_GET['id'];
-
-            $datos = json_decode(
-                file_get_contents("php://input"),
-                true
-            );
-
-            if (!isset($datos['nombre_rol'])) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "El nombre del rol es obligatorio"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-            $sql = "UPDATE tb_roles
-                    SET
-                        nombre_rol = :nombre_rol
-                    WHERE id_rol = :id";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':nombre_rol',
-                $datos['nombre_rol']
-            );
-
-            $stmt->bindValue(
-                ':id',
-                $id,
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-
-                echo json_encode([
-                    "success" => true,
-                    "mensaje" => "Rol actualizado correctamente"
-                ], JSON_UNESCAPED_UNICODE);
-
-            } else {
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "No se encontró el rol o no hubo cambios"
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            break;
-
- /*  MÉTODO NO PERMITIDO  */
-
-        case 'DELETE':
-
-            if (!isset($_GET['id'])) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Debe indicar el ID del rol"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-            $id = $_GET['id'];
-
-            $sql = "DELETE FROM tb_roles
-                    WHERE id_rol = :id";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':id',
-                $id,
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-
-                echo json_encode([
-                    "success" => true,
-                    "mensaje" => "Rol eliminado correctamente"
-                ], JSON_UNESCAPED_UNICODE);
-
-            } else {
-
-                http_response_code(404);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Rol no encontrado"
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            break;
-
-
-        default:
-
-            http_response_code(405);
-
-            echo json_encode([
-                "success" => false,
-                "mensaje" => "Método no permitido"
-            ], JSON_UNESCAPED_UNICODE);
-
-            break;
+require_once __DIR__ . '/config/api.php';
+require_once __DIR__ . '/config/conexion.php';
+$metodo = iniciarApi();
+ejecutarApi(function () use ($conexion, $metodo): void {
+    if ($metodo === 'GET') {
+        $sql = 'SELECT id_rol, nombre_rol FROM roles';
+        $parametros = [];
+        if (isset($_GET['id'])) {
+            $sql .= ' WHERE id_rol = :id';
+            $parametros[':id'] = idRequerido();
+        }
+        $sql .= ' ORDER BY nombre_rol';
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute($parametros);
+        $data = isset($_GET['id']) ? $stmt->fetch() : $stmt->fetchAll();
+        if (isset($_GET['id']) && !$data) responderError('Rol no encontrado.', 404);
+        responder(['success' => true, 'cantidad' => is_array($data) ? count($data) : 1, 'data' => $data]);
     }
-
-} catch (PDOException $e) {
-
-    http_response_code(500);
-
-    echo json_encode([
-        "success" => false,
-        "mensaje" => "Error en la API",
-        "error" => $e->getMessage()
-    ], JSON_UNESCAPED_UNICODE);
-}
-
-$conexion = null;
-
-?>
+    $datos = leerJson();
+    if ($metodo === 'POST') {
+        requerirCampos($datos, ['nombre_rol']);
+        $stmt = $conexion->prepare('INSERT INTO roles (nombre_rol) VALUES (:nombre)');
+        $stmt->execute([':nombre' => trim($datos['nombre_rol'])]);
+        responder(['success' => true, 'id_rol' => (int) $conexion->lastInsertId()], 201);
+    }
+    if ($metodo === 'PUT') {
+        requerirCampos($datos, ['nombre_rol']);
+        $stmt = $conexion->prepare('UPDATE roles SET nombre_rol = :nombre WHERE id_rol = :id');
+        $stmt->execute([':nombre' => trim($datos['nombre_rol']), ':id' => idRequerido()]);
+        responder(['success' => true, 'mensaje' => 'Rol actualizado.']);
+    }
+    if ($metodo === 'DELETE') {
+        $stmt = $conexion->prepare('DELETE FROM roles WHERE id_rol = :id');
+        $stmt->execute([':id' => idRequerido()]);
+        if (!$stmt->rowCount()) responderError('Rol no encontrado.', 404);
+        responder(['success' => true, 'mensaje' => 'Rol eliminado.']);
+    }
+    responderError('Metodo no permitido.', 405);
+});

@@ -1,53 +1,18 @@
 <div class="admin-login-modulo">
-  <div class="admin-login-card">
-    
-    <!-- Emblema de Seguridad -->
-    <div class="admin-login-header">
-      <div class="icono-restringido">🔐</div>
-      <h2>Portal del Personal</h2>
-      <p>Área restringida para Médicos, Especialistas y Equipo Administrativo Voltstack</p>
-      <div class="linea-decorativa-roja"></div>
+    <div class="admin-login-card">
+        <div class="admin-login-header">
+            <div class="icono-restringido">🔐</div>
+            <h2>Portal del Personal</h2>
+            <p>Acceso para médicos y personal administrativo.</p>
+            <div class="linea-decorativa-roja"></div>
+        </div>@if(errorAutenticacion){<div class="alerta-error-admin">{{mensajeError}}</div>}<form
+            #formAdminAuth="ngForm" (ngSubmit)="ejecutarLoginAdmin()">
+            <div class="campo-admin-grupo"><label>Correo de empleado</label><input type="email" name="email"
+                    [(ngModel)]="credencialesAdmin.email" required placeholder="correo@ejemplo.com"></div>
+            <div class="campo-admin-grupo"><label>Contraseña</label><input type="password" name="contrasenia"
+                    [(ngModel)]="credencialesAdmin.contrasenia" required></div><button type="submit"
+                class="btn-admin-login-submit" [disabled]="!formAdminAuth.form.valid || cargando">{{cargando ?
+                'Verificando...' : 'Ingresar al portal'}}</button>
+        </form>
     </div>
-
-    <!-- Alerta Condicional de Error (API Fallida) -->
-    <div class="alerta-error-admin" *ngIf="errorAutenticacion">
-      ❌ Acceso Denegado. Verifique su código de empleado o contraseña corporativa.
-      <br><span style="font-size: 0.78rem; font-weight: normal;">Prueba con: admin@voltstack.com / admin123</span>
-    </div>
-
-    <!-- Formulario Controlado -->
-    <form #formAdminAuth="ngForm" (ngSubmit)="ejecutarLoginAdmin()">
-      
-      <div class="campo-admin-grupo">
-        <label>Usuario o Correo de Empleado</label>
-        <input 
-          type="email" 
-          name="usuario" 
-          [(ngModel)]="credencialesAdmin.usuarioEmpleado" 
-          required 
-          placeholder="ejemplo@voltstack.com" />
-      </div>
-
-      <div class="campo-admin-grupo">
-        <label>Contraseña Corporativa</label>
-        <input 
-          type="password" 
-          name="clave" 
-          [(ngModel)]="credencialesAdmin.claveAcceso" 
-          required 
-          placeholder="••••••••" />
-      </div>
-
-      <button type="submit" class="btn-admin-login-submit" [disabled]="!formAdminAuth.form.valid">
-        Verificar Credenciales Clínicas
-      </button>
-
-    </form>
-
-    <div class="admin-login-footer">
-      <p>Al ingresar, todas sus operaciones de auditoría, bitácoras y cambios CRUD quedarán registradas bajo su firma digital de empleado.</p>
-    </div>
-
-  </div>
 </div>
-

@@ -25,8 +25,8 @@
     <form #formLogin="ngForm" (ngSubmit)="ejecutarIngresar()">
       
       <div class="campo-grupo">
-        <label>Usuario</label>
-        <input type="text" name="nombre_usuario" [(ngModel)]="credenciales.nombre_usuario" required placeholder="Ingrese su usuario" />
+        <label>Correo electrónico</label>
+        <input type="email" name="email" [(ngModel)]="credenciales.email" required placeholder="correo@ejemplo.com" />
         <!-- <input type="email" name="correo" [(ngModel)]="credenciales.correo" required placeholder="correo@ejemplo.com" /> -->
       </div>
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
@@ -11,10 +11,12 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(nombre_usuario: string, contrasenia: string): Observable<any> {
+  usuario = signal<any>(this.leerUsuario());
+
+  login(email: string, contrasenia: string): Observable<any> {
 
     const datos = {
-      nombre_usuario: nombre_usuario,
+      email,
       contrasenia: contrasenia
     };
 
@@ -36,6 +38,7 @@ export class AuthService {
             'usuario',
             JSON.stringify(respuesta.usuario)
           );
+          this.usuario.set(respuesta.usuario);
 
         }
 
@@ -50,6 +53,7 @@ export class AuthService {
     localStorage.removeItem('token');
 
     localStorage.removeItem('usuario');
+    this.usuario.set(null);
 
   }
 
@@ -62,16 +66,7 @@ export class AuthService {
 
 
   obtenerUsuario(): any {
-
-    const usuario = localStorage.getItem('usuario');
-
-    if (usuario) {
-
-      return JSON.parse(usuario);
-
-    }
-
-    return null;
+    return this.usuario();
   }
 
 
@@ -79,6 +74,11 @@ export class AuthService {
 
     return this.obtenerToken() !== null;
 
+  }
+
+  private leerUsuario(): any {
+    const usuario = localStorage.getItem('usuario');
+    try { return usuario ? JSON.parse(usuario) : null; } catch { return null; }
   }
 
 }

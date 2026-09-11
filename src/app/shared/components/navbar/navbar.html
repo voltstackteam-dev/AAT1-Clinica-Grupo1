@@ -22,11 +22,22 @@
       
       <div class="usuario-menu">
         <div class="avatar-icon"></div>
+        @if (usuario()) {
+          <span class="select-sesion">{{ usuario().email }}</span>
+          @if (usuario().id_rol === 3) {
+            <button class="btn-top" routerLink="/mis-citas">MIS CITAS</button>
+          }
+          @if (usuario().id_rol === 1 || usuario().id_rol === 2) {
+            <button class="btn-top" routerLink="/admin/control-citas">DASHBOARD</button>
+          }
+          <button class="btn-top" (click)="cerrarSesion()">SALIR</button>
+        } @else {
         <select class="select-sesion" (change)="manejarNavegacionSesion($event)">
           <option value="" disabled selected hidden>CUENTA</option>
           <option value="/login">👤 Mi Perfil (Citas)</option>
           <option value="/login-personal">👨‍⚕️ Panel Médico / Admin</option>
         </select>
+        }
       </div>
     </div>
 

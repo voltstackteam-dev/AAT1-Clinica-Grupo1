@@ -10,8 +10,8 @@
       <div class="medico-card">
         <div class="medico-foto-container">
           <img 
-            [src]="getFotoMedico(medico.nombre_med, medico.apellido_med)" 
-            [alt]="medico.nombre_med + ' ' + medico.apellido_med"
+            [src]="getFotoMedico(medico.nombre, medico.apellido)" 
+            [alt]="medico.nombre + ' ' + medico.apellido"
             class="medico-foto"
           />
         </div>
@@ -20,11 +20,11 @@
           
           <!-- Condición dinámica para Dr. o Dra. -->
           <h3>
-            {{ medico.nombre_med.toLowerCase().includes('ana') ? 'Dra.' : 'Dr.' }}
-            {{ medico.nombre_med }} {{ medico.apellido_med }}
+            {{ medico.nombre.toLowerCase().includes('ana') ? 'Dra.' : 'Dr.' }}
+            {{ medico.nombre }} {{ medico.apellido }}
           </h3>
 
-          <p class="medico-telefono">📞 {{ medico.telefono_med }}</p>
+          <p class="medico-telefono">📞 {{ medico.telefono }}</p>
           <p class="medico-equipo">🛠️ Equipos: {{ medico.equipo_disponible }}</p>
           <button class="btn-agendar-cita" (click)="seleccionar(medico.id_medico)">Agendar Cita</button>
         </div>

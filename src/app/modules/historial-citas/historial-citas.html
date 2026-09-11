@@ -1,52 +1,52 @@
 <div class="historial-contenedor">
-  
-  <!-- Encabezado del Perfil -->
   <div class="perfil-encabezado-bloque">
-    <h2>Mi Panel de Paciente</h2>
-    <p>Gestiona tus consultas médicas programadas en la red Voltstack</p>
+    <h2>Mis Citas</h2>
+    <p>Consulta tus citas programadas.</p>
     <div class="linea-decorativa-perfil"></div>
   </div>
 
-  <!-- Vista Condicional: Si NO hay citas programadas -->
-  <div class="citas-vacias-alerta" *ngIf="misCitas.length === 0">
-    <div class="vacio-icono">📅</div>
-    <h3>No tienes citas programadas</h3>
-    <p>Actualmente no cuentas con ninguna reservación activa en el sistema.</p>
-  </div>
-
-  <!-- Contenedor de la Rejilla de Citas Activas -->
-  <div class="citas-grid-historial" *ngIf="misCitas.length > 0">
-    <div *ngFor="let cita of misCitas" class="cita-historial-card">
-      
-      <!-- Fila Superior de Control -->
-      <div class="cita-card-top">
-        <span class="cita-codigo">Código: {{ cita.id }}</span>
-        <span class="badge-estado" [ngClass]="cita.estado === 'Confirmada' ? 'estado-confirmada' : 'estado-pendiente'">
-          ● {{ cita.estado }}
-        </span>
-      </div>
-
-      <!-- Datos del Médico y Rama -->
-      <div class="cita-card-cuerpo">
-        <h3>{{ cita.medico }}</h3>
-        <span class="cita-especialidad-tag">{{ cita.especialidad }}</span>
-        
-        <div class="cita-detalles-logistica">
-          <p><span>Fecha:</span> {{ cita.fecha }}</p>
-          <p><span>Hora:</span> {{ cita.hora }}</p>
-          <p><span>Lugar:</span> {{ cita.sede }}</p>
-        </div>
-      </div>
-
-      <!-- Botón de Control Destructivo -->
-      <div class="cita-card-acciones">
-        <button class="btn-cancelar-urgente" (click)="cancelarCita(cita.id)">
-          Cancelar Cita
-        </button>
-      </div>
-
+  @if (mensaje()) { <p class="mensaje-gestion">{{ mensaje() }}</p> }
+  @if (cargando()) {
+    <p>Cargando citas...</p>
+  } @else if (mensaje()) {
+    <p>{{ mensaje() }}</p>
+  } @else if (!misCitas().length) {
+    <div class="citas-vacias-alerta">
+      <h3>No tienes citas programadas</h3>
     </div>
-  </div>
-
+  } @else {
+    <div class="citas-grid-historial">
+      @for (cita of misCitas(); track cita.id_cita) {
+        <div class="cita-historial-card">
+          <div class="cita-card-top">
+            <span class="cita-codigo">Cita #{{ cita.id_cita }}</span>
+            <span [class]="'badge-estado estado-' + cita.estado.toLowerCase()">{{ cita.estado }}</span>
+          </div>
+          <div class="cita-card-cuerpo">
+            <h3>{{ cita.medico }}</h3>
+            <span class="cita-especialidad-tag">{{ cita.nombre_especialidad }}</span>
+            <div class="cita-detalles-logistica">
+              <p><span>Fecha:</span> {{ cita.fecha_hora | date:'medium' }}</p>
+              <p><span>Lugar:</span> {{ cita.nombre_sala }}</p>
+              <p><span>Motivo:</span> {{ cita.motivo_consulta || 'No indicado' }}</p>
+            </div>
+          </div>
+          @if (puedeGestionar(cita)) {
+            <div class="cita-card-acciones">
+              <button class="btn-cancelar-urgente" [disabled]="actualizando() === cita.id_cita" (click)="cancelar(cita)">Cancelar cita</button>
+              <button class="btn-reprogramar" [disabled]="actualizando() === cita.id_cita" (click)="prepararReprogramacion(cita)">Reprogramar</button>
+            </div>
+          }
+          @if (editando() === cita.id_cita) {
+            <div class="reprogramar-cita">
+              <label>Nueva fecha <input type="date" [min]="hoy" [ngModel]="fechaNueva()" (ngModelChange)="fechaNueva.set($event)"></label>
+              <label>Nueva hora <select [ngModel]="horaNueva()" (ngModelChange)="horaNueva.set($event)"><option value="">Selecciona una hora</option>@for (hora of horas; track hora) { <option [value]="hora">{{ hora }}</option> }</select></label>
+              <button class="btn-reprogramar" [disabled]="actualizando() === cita.id_cita" (click)="reprogramar(cita)">Guardar cambio</button>
+              <button class="btn-secundario" type="button" (click)="editando.set(null)">Cerrar</button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
 </div>
-

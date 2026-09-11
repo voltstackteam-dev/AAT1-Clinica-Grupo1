@@ -3,6 +3,7 @@ import { CommonModule, NgClass } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CarritoService } from '../../../services/carrito';
 import { CarritoComponent } from '../carrito/carrito';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,6 +15,8 @@ import { CarritoComponent } from '../carrito/carrito';
 export class NavbarComponent {
 
   private carritoService = inject(CarritoService);
+  private authService = inject(AuthService);
+  usuario = this.authService.usuario;
 
   cantidadItems = computed(() =>
     this.carritoService.items()
@@ -45,5 +48,10 @@ export class NavbarComponent {
       this.router.navigate([rutaDestino]);
       elementoSelect.value = '';
     }
+  }
+
+  cerrarSesion(): void {
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 }

@@ -17,7 +17,7 @@ function generarToken($usuario)
         "iat" => $tiempoActual,
         "exp" => $tiempoActual + (60 * 60),
         "id_usuario" => $usuario["id_usuario"],
-        "nombre_usuario" => $usuario["nombre_usuario"],
+        "email" => $usuario["email"],
         "id_rol" => $usuario["id_rol"]
     ];
 

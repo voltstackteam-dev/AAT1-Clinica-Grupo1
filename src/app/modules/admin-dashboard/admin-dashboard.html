@@ -1,142 +1,75 @@
 <div class="admin-container">
-  <!-- Cabecera Principal -->
   <div class="header-admin">
     <div>
-      <h2>Panel de Control Clínico</h2>
-      <p>Módulo de Administración General - Voltstack</p>
+      <h2>{{ esMedico ? 'Panel Médico' : 'Panel de Control Clínico' }}</h2>
+      <p>{{ esMedico ? 'Gestiona tus reservas y horarios de atención.' : 'Gestiona reservas y horarios del hospital.' }}</p>
     </div>
-    <div class="badge-total">
-      @if (vistaActiva() === 'citas') {
-        Citas en Sistema: <strong>{{ citas().length }}</strong>
-      } @else {
-        Medicamentos: <strong>{{ medicamentos().length }}</strong>
-      }
-    </div>
+    @if (vistaActiva() === 'citas') { <div class="badge-total">Citas: <strong>{{ citas().length }}</strong></div> }
   </div>
 
-  <!-- Pestañas Principales de Navegación -->
+  @if (mensaje()) { <p class="mensaje-panel">{{ mensaje() }}</p> }
+
   <div class="pestanas-principales">
-    <button 
-      class="btn-pestana" 
-      [class.active]="vistaActiva() === 'citas'" 
-      (click)="cambiarVista('citas')">
-      📅 Gestión de Citas
-    </button>
-    <button 
-      class="btn-pestana" 
-      [class.active]="vistaActiva() === 'farmacia'" 
-      (click)="cambiarVista('farmacia')">
-      📦 Control de Inventario y Precios
-    </button>
+    <button class="btn-pestana" [class.active]="vistaActiva() === 'citas'" (click)="cambiarVista('citas')">Citas</button>
+    <button class="btn-pestana" [class.active]="vistaActiva() === 'horarios'" (click)="cambiarVista('horarios')">Horarios</button>
   </div>
 
-  <!-- SECCIÓN 1: CITAS MÉDICAS -->
   @if (vistaActiva() === 'citas') {
     <div class="filtros-container">
-      <button [class.active]="filtroActual() === 'todas'" (click)="setFiltro('todas')" class="btn-tab btn-blue">Todas las Solicitudes</button>
-      <button [class.active]="filtroActual() === 'pendiente'" (click)="setFiltro('pendiente')" class="btn-tab btn-yellow">⚠️ Pendientes de Aprobación</button>
-      <button [class.active]="filtroActual() === 'confirmada'" (click)="setFiltro('confirmada')" class="btn-tab btn-green">✅ Confirmadas / Activas</button>
-      <button [class.active]="filtroActual() === 'finalizada'" (click)="setFiltro('finalizada')" class="btn-tab btn-gray">🏁 Finalizadas</button>
+      <button (click)="setFiltro('TODAS')" class="btn-tab">Todas</button>
+      <button (click)="setFiltro('PENDIENTE')" class="btn-tab">Pendientes</button>
+      <button (click)="setFiltro('CONFIRMADA')" class="btn-tab">Confirmadas</button>
+      <button (click)="setFiltro('COMPLETADA')" class="btn-tab">Completadas</button>
     </div>
-
-    <div class="citas-grid">
-      @for (cita of citasFiltradas(); track cita.id_cita) {
-        <div class="cita-card">
-          <div class="cita-header">
-            <span class="id-op">ID Operación: <strong>{{ cita.codigo_operacion || ('CITA-' + cita.id_cita) }}</strong></span>
-            <span class="status-pill" [ngClass]="cita.estado_cita.toLowerCase()">{{ cita.estado_cita | titlecase }}</span>
-          </div>
-
-          <div class="cita-body">
-            <div class="info-col">
-              <small>PACIENTE</small>
-              <h4>{{ cita.nombre_paciente || 'Sin Nombre' }}</h4>
-              <p>🪪 DPI: {{ cita.dpi_paciente || 'N/A' }}</p>
-              <p>✉️ {{ cita.email_paciente || 'Sin correo' }}</p>
-              <p>📞 {{ cita.telefono_paciente || 'Sin teléfono' }}</p>
+    @if (cargando()) { <p>Cargando citas...</p> } @else {
+      <div class="citas-grid">
+        @for (cita of citasFiltradas(); track cita.id_cita) {
+          <div class="cita-card">
+            <div class="cita-header"><strong>Cita #{{ cita.id_cita }}</strong><span [class]="'status-pill ' + cita.estado.toLowerCase()">{{ cita.estado }}</span></div>
+            <div class="cita-body">
+              <div class="info-col"><small>PACIENTE</small><h4>{{ cita.paciente }}</h4></div>
+              <div class="info-col"><small>MÉDICO Y SALA</small><h4>{{ cita.medico }}</h4><p>{{ cita.nombre_especialidad }}</p><p>{{ cita.nombre_sala }}</p></div>
+              <div class="info-col"><small>FECHA Y HORA</small><p>{{ cita.fecha_hora | date:'medium' }}</p><p>{{ cita.motivo_consulta || 'Sin motivo' }}</p></div>
             </div>
-            <div class="info-col">
-              <small>MÉDICO & ESPECIALIDAD</small>
-              <h4>{{ cita.nombre_medico || 'Médico General' }}</h4>
-              <span class="spec-pill">{{ cita.nombre_especialidad || 'General' }}</span>
-            </div>
-            <div class="info-col">
-              <small>LOGÍSTICA PROGRAMADA</small>
-              <p>📅 {{ cita.fecha_cita || 'Por asignar' }}</p>
-              <p>⏰ {{ cita.hora_cita || 'Por asignar' }}</p>
-            </div>
-          </div>
-
-          <div class="observaciones-box">
-            <div>
-              <strong>Observaciones Clínicas / Diagnóstico Preventivo</strong>
-              <p class="obs-text">{{ cita.observaciones || 'No hay anotaciones registradas para esta consulta.' }}</p>
-            </div>
-            <button (click)="modificarNotas(cita)" class="btn-notas">📝 Modificar Notas</button>
-          </div>
-
-          <div class="cita-actions">
-            @if (cita.estado_cita.toLowerCase() === 'pendiente') {
-              <button (click)="autorizarCita(cita.id_cita)" class="btn-autorizar">✔ Aceptar y Autorizar Cita</button>
+            @if (puedeConfirmar(cita) || puedeCancelar(cita) || puedeCompletar(cita) || puedeReprogramar(cita)) {
+              <div class="cita-actions">
+                @if (puedeConfirmar(cita)) { <button class="btn-autorizar" [disabled]="actualizandoCita() === cita.id_cita" (click)="actualizarEstado(cita, 'CONFIRMADA')">Confirmar</button> }
+                @if (puedeCancelar(cita)) { <button class="btn-denegar" [disabled]="actualizandoCita() === cita.id_cita" (click)="actualizarEstado(cita, 'CANCELADA')">{{ esMedico ? 'Rechazar' : 'Cancelar' }}</button> }
+                @if (puedeCompletar(cita)) { <button class="btn-completar" [disabled]="actualizandoCita() === cita.id_cita" (click)="actualizarEstado(cita, 'COMPLETADA')">Completar</button> }
+                @if (puedeReprogramar(cita)) { <button class="btn-editar-cita" [disabled]="actualizandoCita() === cita.id_cita" (click)="prepararReprogramacion(cita)">Reprogramar</button> }
+              </div>
             }
-            <button (click)="cancelarCita(cita.id_cita)" class="btn-denegar">✖ Denegar / Eliminar Registro</button>
-          </div>
-        </div>
-      }
-    </div>
-  }
-
-  <!-- SECCIÓN 2: CONTROL DE INVENTARIO Y PRECIOS -->
-  @if (vistaActiva() === 'farmacia') {
-    <div class="seccion-farmacia-admin">
-      <div class="header-subseccion">
-        <div>
-          <h3>📦 Control de Inventario y Precios (Farmacia)</h3>
-          <p>Ajusta el stock y los precios de venta en tiempo real para el catálogo público</p>
-        </div>
-      </div>
-
-      @if (mensajeExitoMed()) {
-        <div class="alerta-exito-med">
-          ✓ {{ mensajeExitoMed() }}
-        </div>
-      }
-
-      <div class="tabla-med-contenedor">
-        <table class="tabla-med-admin">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Medicamento</th>
-              <th>Categoría</th>
-              <th>Precio (Q)</th>
-              <th>Stock Actual</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (med of medicamentos(); track med.id_medicamento) {
-              <tr>
-                <td><strong>#{{ med.id_medicamento }}</strong></td>
-                <td class="nombre-med-col">{{ med.nombre }}</td>
-                <td><span class="badge-cat-admin">{{ med.categoria }}</span></td>
-                <td>
-                  <div class="input-con-prefijo">
-                    <span>Q</span>
-                    <input type="number" [(ngModel)]="med.precio" step="0.50" min="0" class="input-med-admin" />
-                  </div>
-                </td>
-                <td>
-                  <input type="number" [(ngModel)]="med.stock" min="0" class="input-med-admin input-stock" />
-                </td>
-                <td>
-                  <button class="btn-guardar-med" (click)="guardarCambiosMed(med)">💾 Actualizar</button>
-                </td>
-              </tr>
+            @if (editandoCita() === cita.id_cita) {
+              <div class="editar-cita">
+                <label>Nueva fecha <input type="date" [min]="hoy" [ngModel]="fechaNueva()" (ngModelChange)="fechaNueva.set($event)"></label>
+                <label>Nueva hora <select [ngModel]="horaNueva()" (ngModelChange)="horaNueva.set($event)"><option value="">Selecciona una hora</option>@for (hora of horas; track hora) { <option [value]="hora">{{ hora }}</option> }</select></label>
+                <button class="btn-editar-cita" [disabled]="actualizandoCita() === cita.id_cita" (click)="reprogramar(cita)">Guardar cambio</button>
+                <button class="btn-secundario" type="button" (click)="editandoCita.set(null)">Cerrar</button>
+              </div>
             }
-          </tbody>
-        </table>
+          </div>
+        }
+        @if (!citasFiltradas().length) { <p>No hay citas para este filtro.</p> }
       </div>
-    </div>
+    }
+  } @else {
+    <section class="seccion-horarios">
+      <div class="header-subseccion"><h3>Horarios de atención</h3><p>{{ esAdministrador ? 'Registra bloques de disponibilidad de lunes a viernes, entre 08:00 y 17:00.' : 'Consulta los horarios asignados por administración.' }}</p></div>
+      @if (esAdministrador) {
+        <label class="selector-medico">Médico <select [ngModel]="medicoActual()" (ngModelChange)="seleccionarMedico($event)"><option [value]="0">Selecciona un médico</option>@for (medico of medicos(); track medico.id_medico) { <option [value]="medico.id_medico">{{ medico.nombre }} {{ medico.apellido }}</option> }</select></label>
+      }
+      @if (medicoActual()) {
+        @if (esAdministrador) { <div class="formulario-horario">
+          <label>Día <select [ngModel]="diaHorario()" (ngModelChange)="diaHorario.set($event)"><option value="LUNES">Lunes</option><option value="MARTES">Martes</option><option value="MIERCOLES">Miércoles</option><option value="JUEVES">Jueves</option><option value="VIERNES">Viernes</option></select></label>
+          <label>Inicio <input type="time" min="08:00" max="16:00" [ngModel]="inicioHorario()" (ngModelChange)="inicioHorario.set($event)"></label>
+          <label>Fin <input type="time" min="09:00" max="17:00" [ngModel]="finHorario()" (ngModelChange)="finHorario.set($event)"></label>
+          <button class="btn-autorizar" (click)="guardarHorario()">{{ editandoHorario() ? 'Guardar horario' : 'Agregar horario' }}</button>
+        </div> }
+        <div class="lista-horarios">
+          @for (horario of horarios(); track horario.id_disponibilidad) { <div class="horario-item"><strong>{{ horario.dia_semana }}</strong><span>{{ horario.hora_inicio.slice(0, 5) }} - {{ horario.hora_fin.slice(0, 5) }}</span>@if (esAdministrador) { <button class="btn-editar-cita" (click)="editarHorario(horario)">Editar</button><button class="btn-denegar" (click)="eliminarHorario(horario)">Eliminar</button> }</div> }
+          @if (!horarios().length) { <p>No hay horarios registrados.</p> }
+        </div>
+      } @else { <p>Selecciona un médico para gestionar sus horarios.</p> }
+    </section>
   }
 </div>

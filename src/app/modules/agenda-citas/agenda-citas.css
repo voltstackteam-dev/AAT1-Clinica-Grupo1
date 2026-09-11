@@ -104,6 +104,30 @@
   cursor: not-allowed;
 }
 
+.aviso-sesion {
+  border: 1px solid #bfdbfe;
+  background-color: #eff6ff;
+  color: #1e3a8a;
+  padding: 1.25rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.aviso-sesion p {
+  margin: 0 0 1rem;
+  font-weight: 600;
+}
+
+.aviso-sesion button {
+  background-color: #1e3a8a;
+  color: #ffffff;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 @media (max-width: 640px) {
   .form-grid {
     grid-template-columns: 1fr;

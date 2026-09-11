@@ -1,554 +1,68 @@
 <?php
-
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
-require_once "config/conexion.php";
-
-$metodo = $_SERVER['REQUEST_METHOD'];
-
-try {
-
-    switch ($metodo) {
-
-       
-      /* OPTIONS  */
-
-        case 'OPTIONS':
-
-            http_response_code(200);
-
-            echo json_encode([
-                "success" => true,
-                "mensaje" => "Preflight OK"
-            ], JSON_UNESCAPED_UNICODE);
-
-            exit;
-
-
-              /* GET */
-        case 'GET':
-
-            //Buscar un horario por ID
-            
-
-            if (isset($_GET['id'])) {
-
-                $id = $_GET['id'];
-
-                $sql = "SELECT
-                            h.id_horario,
-                            h.fecha,
-                            h.hora_reserva,
-                            h.disponibilidad,
-                            h.id_medico,
-                            m.nombre_med,
-                            m.apellido_med,
-                            e.id_especialidad,
-                            e.nombre_especialidad
-
-                        FROM tb_horarios h
-
-                        INNER JOIN tb_medicos m
-                            ON h.id_medico = m.id_medico
-
-                        INNER JOIN tb_especialidades e
-                            ON m.id_especialidad = e.id_especialidad
-
-                        WHERE h.id_horario = :id";
-
-                $stmt = $conexion->prepare($sql);
-
-                $stmt->bindValue(
-                    ':id',
-                    $id,
-                    PDO::PARAM_INT
-                );
-
-                $stmt->execute();
-
-                $horario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($horario) {
-
-                    echo json_encode([
-                        "success" => true,
-                        "data" => $horario
-                    ], JSON_UNESCAPED_UNICODE);
-
-                } else {
-
-                    http_response_code(404);
-
-                    echo json_encode([
-                        "success" => false,
-                        "mensaje" => "Horario no encontrado"
-                    ], JSON_UNESCAPED_UNICODE);
-                }
-
-            }
-
-            /* Buscar horarios por médico */
-
-            elseif (isset($_GET['id_medico'])) {
-
-                $id_medico = $_GET['id_medico'];
-
-                $sql = "SELECT
-                            h.id_horario,
-                            h.fecha,
-                            h.hora_reserva,
-                            h.disponibilidad,
-                            h.id_medico,
-                            m.nombre_med,
-                            m.apellido_med,
-                            e.nombre_especialidad
-
-                        FROM tb_horarios h
-
-                        INNER JOIN tb_medicos m
-                            ON h.id_medico = m.id_medico
-
-                        INNER JOIN tb_especialidades e
-                            ON m.id_especialidad = e.id_especialidad
-
-                        WHERE h.id_medico = :id_medico
-
-                        ORDER BY h.fecha ASC,
-                                 h.hora_reserva ASC";
-
-                $stmt = $conexion->prepare($sql);
-
-                $stmt->bindValue(
-                    ':id_medico',
-                    $id_medico,
-                    PDO::PARAM_INT
-                );
-
-                $stmt->execute();
-
-                $horarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                echo json_encode([
-                    "success" => true,
-                    "cantidad" => count($horarios),
-                    "data" => $horarios
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            /* Buscar horarios disponibles */
-
-            elseif (isset($_GET['disponibles'])) {
-
-                $sql = "SELECT
-                            h.id_horario,
-                            h.fecha,
-                            h.hora_reserva,
-                            h.disponibilidad,
-                            h.id_medico,
-                            m.nombre_med,
-                            m.apellido_med,
-                            e.nombre_especialidad
-
-                        FROM tb_horarios h
-
-                        INNER JOIN tb_medicos m
-                            ON h.id_medico = m.id_medico
-
-                        INNER JOIN tb_especialidades e
-                            ON m.id_especialidad = e.id_especialidad
-
-                        WHERE h.disponibilidad = 1
-
-                        ORDER BY h.fecha ASC,
-                                 h.hora_reserva ASC";
-
-                $stmt = $conexion->prepare($sql);
-
-                $stmt->execute();
-
-                $horarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                echo json_encode([
-                    "success" => true,
-                    "cantidad" => count($horarios),
-                    "data" => $horarios
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            /*  Listar todos */
-
-            else {
-
-                $sql = "SELECT
-                            h.id_horario,
-                            h.fecha,
-                            h.hora_reserva,
-                            h.disponibilidad,
-                            h.id_medico,
-                            m.nombre_med,
-                            m.apellido_med,
-                            e.nombre_especialidad
-
-                        FROM tb_horarios h
-
-                        INNER JOIN tb_medicos m
-                            ON h.id_medico = m.id_medico
-
-                        INNER JOIN tb_especialidades e
-                            ON m.id_especialidad = e.id_especialidad
-
-                        ORDER BY h.fecha ASC,
-                                 h.hora_reserva ASC";
-
-                $stmt = $conexion->prepare($sql);
-
-                $stmt->execute();
-
-                $horarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                echo json_encode([
-                    "success" => true,
-                    "cantidad" => count($horarios),
-                    "data" => $horarios
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            break;
-
-
-          /*   POST  */
-
-        case 'POST':
-
-            $datos = json_decode(
-                file_get_contents("php://input"),
-                true
-            );
-
-            if (
-                !isset($datos['fecha']) ||
-                !isset($datos['hora_reserva']) ||
-                !isset($datos['id_medico'])
-            ) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Fecha, hora y médico son obligatorios"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-
-            /* Verificar médico */
-
-            $sql = "SELECT
-                        id_medico
-                    FROM tb_medicos
-                    WHERE id_medico = :id_medico";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':id_medico',
-                $datos['id_medico'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            if (!$stmt->fetch()) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "El médico indicado no existe"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-
-            /* Verificar que no exista otro horario igual para el médico  */
-
-            $sql = "SELECT
-                        id_horario
-                    FROM tb_horarios
-                    WHERE fecha = :fecha
-                    AND hora_reserva = :hora_reserva
-                    AND id_medico = :id_medico";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':fecha',
-                $datos['fecha']
-            );
-
-            $stmt->bindValue(
-                ':hora_reserva',
-                $datos['hora_reserva']
-            );
-
-            $stmt->bindValue(
-                ':id_medico',
-                $datos['id_medico'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            if ($stmt->fetch()) {
-
-                http_response_code(409);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "El médico ya tiene un horario registrado para esa fecha y hora"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-
-            /*  Crear horario */
-
-            $sql = "INSERT INTO tb_horarios
-                    (
-                        fecha,
-                        hora_reserva,
-                        disponibilidad,
-                        id_medico
-                    )
-                    VALUES
-                    (
-                        :fecha,
-                        :hora_reserva,
-                        :disponibilidad,
-                        :id_medico
-                    )";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':fecha',
-                $datos['fecha']
-            );
-
-            $stmt->bindValue(
-                ':hora_reserva',
-                $datos['hora_reserva']
-            );
-
-            $stmt->bindValue(
-                ':disponibilidad',
-                $datos['disponibilidad'] ?? 1,
-                PDO::PARAM_INT
-            );
-
-            $stmt->bindValue(
-                ':id_medico',
-                $datos['id_medico'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            $id = $conexion->lastInsertId();
-
-            http_response_code(201);
-
-            echo json_encode([
-                "success" => true,
-                "mensaje" => "Horario creado correctamente",
-                "id_horario" => $id
-            ], JSON_UNESCAPED_UNICODE);
-
-            break;
-
-
-       
-        /*  PUT  */
-
-        case 'PUT':
-
-            if (!isset($_GET['id'])) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Debe indicar el ID del horario"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-            $id = $_GET['id'];
-
-            $datos = json_decode(
-                file_get_contents("php://input"),
-                true
-            );
-
-            if (
-                !isset($datos['fecha']) ||
-                !isset($datos['hora_reserva']) ||
-                !isset($datos['id_medico']) ||
-                !isset($datos['disponibilidad'])
-            ) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Fecha, hora, disponibilidad y médico son obligatorios"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-
-            $sql = "UPDATE tb_horarios
-                    SET
-                        fecha = :fecha,
-                        hora_reserva = :hora_reserva,
-                        disponibilidad = :disponibilidad,
-                        id_medico = :id_medico
-                    WHERE id_horario = :id";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':fecha',
-                $datos['fecha']
-            );
-
-            $stmt->bindValue(
-                ':hora_reserva',
-                $datos['hora_reserva']
-            );
-
-            $stmt->bindValue(
-                ':disponibilidad',
-                $datos['disponibilidad'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->bindValue(
-                ':id_medico',
-                $datos['id_medico'],
-                PDO::PARAM_INT
-            );
-
-            $stmt->bindValue(
-                ':id',
-                $id,
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-
-                echo json_encode([
-                    "success" => true,
-                    "mensaje" => "Horario actualizado correctamente"
-                ]);
-
-            } else {
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "No se encontró el horario o no hubo cambios"
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            break;
-
-
-          /* DELETE */
-
-        case 'DELETE':
-
-            if (!isset($_GET['id'])) {
-
-                http_response_code(400);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Debe indicar el ID del horario"
-                ], JSON_UNESCAPED_UNICODE);
-
-                exit;
-            }
-
-            $id = $_GET['id'];
-
-            $sql = "DELETE FROM tb_horarios
-                    WHERE id_horario = :id";
-
-            $stmt = $conexion->prepare($sql);
-
-            $stmt->bindValue(
-                ':id',
-                $id,
-                PDO::PARAM_INT
-            );
-
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-
-                echo json_encode([
-                    "success" => true,
-                    "mensaje" => "Horario eliminado correctamente"
-                ], JSON_UNESCAPED_UNICODE);
-
-            } else {
-
-                http_response_code(404);
-
-                echo json_encode([
-                    "success" => false,
-                    "mensaje" => "Horario no encontrado"
-                ], JSON_UNESCAPED_UNICODE);
-            }
-
-            break;
-
-
-      /*  MÉTODO NO PERMITIDO  */
-
-        default:
-
-            http_response_code(405);
-
-            echo json_encode([
-                "success" => false,
-                "mensaje" => "Método no permitido"
-            ], JSON_UNESCAPED_UNICODE);
-
-            break;
-    }
-
-} catch (PDOException $e) {
-
-    http_response_code(500);
-
-    echo json_encode([
-        "success" => false,
-        "mensaje" => "Error en la API",
-        "error" => $e->getMessage()
-    ], JSON_UNESCAPED_UNICODE);
+require_once __DIR__ . '/config/api.php';
+require_once __DIR__ . '/config/conexion.php';
+require_once __DIR__ . '/config/jwt.php';
+
+$metodo = iniciarApi();
+
+function validarHorario(array $datos): array
+{
+    requerirCampos($datos, ['id_medico', 'dia_semana', 'hora_inicio', 'hora_fin']);
+    $dia = strtoupper(trim($datos['dia_semana']));
+    $inicio = substr($datos['hora_inicio'], 0, 8);
+    $fin = substr($datos['hora_fin'], 0, 8);
+    if (!in_array($dia, ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES'], true)) responderError('Los horarios solo pueden registrarse de lunes a viernes.');
+    if ($inicio < '08:00:00' || $fin > '17:00:00' || $inicio >= $fin) responderError('El horario debe estar entre 08:00 y 17:00 y tener una hora de inicio menor a la final.');
+    return [(int)$datos['id_medico'], $dia, $inicio, $fin];
 }
 
-$conexion = null;
+ejecutarApi(function () use ($conexion, $metodo): void {
+    $base = 'SELECT d.id_disponibilidad,d.id_medico,d.dia_semana,d.hora_inicio,d.hora_fin,CONCAT(m.nombre," ",m.apellido) medico FROM disponibilidades d JOIN medicos m ON m.id_medico=d.id_medico';
+    if ($metodo === 'GET') {
+        $parametros = [];
+        $sql = $base;
+        if (isset($_GET['id'])) {
+            $sql .= ' WHERE d.id_disponibilidad=:id';
+            $parametros[':id'] = idRequerido();
+        } elseif (isset($_GET['id_medico'])) {
+            $sql .= ' WHERE d.id_medico=:medico';
+            $parametros[':medico'] = (int)$_GET['id_medico'];
+        }
+        $consulta = $conexion->prepare($sql . ' ORDER BY FIELD(d.dia_semana,"LUNES","MARTES","MIERCOLES","JUEVES","VIERNES"),d.hora_inicio');
+        $consulta->execute($parametros);
+        $datos = isset($_GET['id']) ? $consulta->fetch() : $consulta->fetchAll();
+        if (isset($_GET['id']) && !$datos) responderError('Disponibilidad no encontrada.', 404);
+        responder(['success' => true, 'cantidad' => is_array($datos) ? count($datos) : 1, 'data' => $datos]);
+    }
 
-?>
+    verificarRol([1]);
+    if ($metodo === 'DELETE') {
+        $id = idRequerido();
+        $consulta = $conexion->prepare('SELECT id_medico FROM disponibilidades WHERE id_disponibilidad=:id');
+        $consulta->execute([':id' => $id]);
+        $idMedico = (int)$consulta->fetchColumn();
+        if (!$idMedico) responderError('Disponibilidad no encontrada.', 404);
+        $conexion->prepare('DELETE FROM disponibilidades WHERE id_disponibilidad=:id')->execute([':id' => $id]);
+        responder(['success' => true, 'mensaje' => 'Disponibilidad eliminada.']);
+    }
+
+    $datos = leerJson();
+    [$idMedico, $dia, $inicio, $fin] = validarHorario($datos);
+    if (!existe($conexion, 'medicos', 'id_medico', $idMedico)) responderError('El médico no existe.');
+    $idActual = $metodo === 'PUT' ? idRequerido() : 0;
+    $conflicto = $conexion->prepare('SELECT 1 FROM disponibilidades WHERE id_medico=:medico AND dia_semana=:dia AND hora_inicio<:fin AND hora_fin>:inicio AND id_disponibilidad<>:id');
+    $conflicto->execute([':medico' => $idMedico, ':dia' => $dia, ':inicio' => $inicio, ':fin' => $fin, ':id' => $idActual]);
+    if ($conflicto->fetchColumn()) responderError('Ese horario se cruza con una disponibilidad existente.', 409);
+
+    if ($metodo === 'POST') {
+        $consulta = $conexion->prepare('INSERT INTO disponibilidades (id_medico,dia_semana,hora_inicio,hora_fin) VALUES (:medico,:dia,:inicio,:fin)');
+        $consulta->execute([':medico' => $idMedico, ':dia' => $dia, ':inicio' => $inicio, ':fin' => $fin]);
+        responder(['success' => true, 'id_disponibilidad' => (int)$conexion->lastInsertId()], 201);
+    }
+    if ($metodo === 'PUT') {
+        $consulta = $conexion->prepare('UPDATE disponibilidades SET id_medico=:medico,dia_semana=:dia,hora_inicio=:inicio,hora_fin=:fin WHERE id_disponibilidad=:id');
+        $consulta->execute([':medico' => $idMedico, ':dia' => $dia, ':inicio' => $inicio, ':fin' => $fin, ':id' => $idActual]);
+        responder(['success' => true, 'mensaje' => 'Disponibilidad actualizada.']);
+    }
+    responderError('Método no permitido.', 405);
+});
