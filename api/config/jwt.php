@@ -15,9 +15,13 @@ function generarToken($usuario)
 
     $payload = [
         "iat" => $tiempoActual,
+
         "exp" => $tiempoActual + (60 * 60),
+
         "id_usuario" => $usuario["id_usuario"],
+
         "email" => $usuario["email"],
+
         "id_rol" => $usuario["id_rol"]
     ];
 
@@ -35,11 +39,11 @@ function validarToken()
     $headers = getallheaders();
 
     if (!isset($headers["Authorization"])) {
-
         http_response_code(401);
 
         echo json_encode([
             "success" => false,
+
             "mensaje" => "Token no proporcionado"
         ]);
 
@@ -49,11 +53,11 @@ function validarToken()
     $authorization = $headers["Authorization"];
 
     if (!preg_match('/Bearer\s(\S+)/', $authorization, $matches)) {
-
         http_response_code(401);
 
         echo json_encode([
             "success" => false,
+
             "mensaje" => "Formato de token inválido"
         ]);
 
@@ -63,20 +67,18 @@ function validarToken()
     $token = $matches[1];
 
     try {
-
         $datos = JWT::decode(
             $token,
             new Key($claveSecreta, "HS256")
         );
 
         return $datos;
-
     } catch (Exception $e) {
-
         http_response_code(401);
 
         echo json_encode([
             "success" => false,
+
             "mensaje" => "Token inválido o expirado"
         ]);
 
@@ -85,16 +87,17 @@ function validarToken()
 }
 
 /* VERIFICAR ROL */
+
 function verificarRol($rolesPermitidos)
 {
     $usuario = validarToken();
 
     if (!in_array($usuario->id_rol, $rolesPermitidos)) {
-
         http_response_code(403);
 
         echo json_encode([
             "success" => false,
+
             "mensaje" => "No tiene permisos para realizar esta acción"
         ]);
 

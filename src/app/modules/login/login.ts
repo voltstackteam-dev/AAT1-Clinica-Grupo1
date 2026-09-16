@@ -4,19 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
-
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrl: './login.css',
 })
 export class LoginComponent {
-  
   credenciales = {
     email: '',
-    contrasenia: ''
+    contrasenia: '',
   };
 
   errorAutenticacion: boolean = false;
@@ -26,113 +24,62 @@ export class LoginComponent {
 
   constructor(
     private router: Router,
-    private authService: AuthService
-  ){}
+    private authService: AuthService,
+  ) {}
 
-   ejecutarIngresar(): void {
-
+  ejecutarIngresar(): void {
     this.errorAutenticacion = false;
     this.mensajeError = '';
 
     this.cargando = true;
 
-
-    this.authService.login(
-      this.credenciales.email,
-      this.credenciales.contrasenia
-    ).subscribe({
-
+    this.authService.login(this.credenciales.email, this.credenciales.contrasenia).subscribe({
       next: (respuesta) => {
-
         this.cargando = false;
 
-        console.log(
-          'Respuesta del login:',
-          respuesta
-        );
-
+        console.log('Respuesta del login:', respuesta);
 
         if (respuesta.success) {
-
-          console.log(
-            'Login correcto'
-          );
-
+          console.log('Login correcto');
 
           const usuario = respuesta.usuario;
 
-          console.log(
-            'Usuario autenticado:',
-            usuario
-          );
-
+          console.log('Usuario autenticado:', usuario);
 
           /*  REDIRECCIÓN SEGÚN ROL  */
 
           if (usuario.id_rol === 1) {
-
             // PACIENTE
             this.router.navigate(['/admin/control-citas']);
-
-          }
-
-          else if (usuario.id_rol === 2) {
-
+          } else if (usuario.id_rol === 2) {
             // MÉDICO
             this.router.navigate(['/']);
-
-          }
-
-          else if (usuario.id_rol === 3) {
-
+          } else if (usuario.id_rol === 3) {
             // ADMINISTRADOR
             this.router.navigate(['/mis-citas']);
-
-          }
-
-          else {
-
+          } else {
             this.router.navigate(['/']);
-
           }
-
-        }
-
-        else {
-
+        } else {
           this.errorAutenticacion = true;
 
-          this.mensajeError =
-            respuesta.mensaje ||
-            'Usuario o contraseña incorrectos';
-
+          this.mensajeError = respuesta.mensaje || 'Usuario o contraseña incorrectos';
         }
-
       },
 
-
       error: (error) => {
-
         this.cargando = false;
 
-        console.error(
-          'Error conectando con la API:',
-          error
-        );
+        console.error('Error conectando con la API:', error);
 
         this.errorAutenticacion = true;
 
-        this.mensajeError =
-          'No se pudo conectar con el servidor';
-
-      }
-
+        this.mensajeError = 'No se pudo conectar con el servidor';
+      },
     });
-
   }
 
-
-/* 
+  /* 
   constructor(private router: Router) {}
 
   ejecutarIngresar(): void {
@@ -146,5 +93,4 @@ export class LoginComponent {
     }
   }
  */
-
 }

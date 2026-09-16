@@ -17,23 +17,25 @@ import { InfoHospitalesComponent } from './components/info-hospitales/info-hospi
     SeccionServicios,
     SeccionEspecialidades,
     ListadoMedicosComponent,
-    InfoHospitalesComponent
+    InfoHospitalesComponent,
   ],
   templateUrl: './portal-clinica.html',
-  styleUrl: './portal-clinica.css'
+  styleUrl: './portal-clinica.css',
 })
 export class PortalClinicaComponent implements OnInit {
-  
   // Controla cuál bloque se renderiza en la pantalla ('inicio', 'servicios', 'especialidades', 'medicos', 'hospitales')
   seccionActiva: string = 'inicio';
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     // Escucha activamente los cambios de parámetros de la URL para conmutar la vista
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.seccionActiva = params['vista'] || 'inicio';
-      
+
       // Forzar al navegador a subir al tope superior al cambiar de sección
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });

@@ -1,6 +1,8 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header(
+    "Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+);
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -15,7 +17,10 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 if (!isset($data['id_medicamento'])) {
     http_response_code(400);
-    echo json_encode(["status" => "error", "message" => "ID no proporcionado"]);
+    echo json_encode([
+        "status" => "error",
+        "message" => "ID no proporcionado"
+    ]);
     exit();
 }
 
@@ -31,13 +36,17 @@ try {
         $campos[] = "stock = :stock";
         $parametros[':stock'] = $nuevo_stock;
     }
+
     if ($nuevo_precio !== null) {
         $campos[] = "precio = :precio";
         $parametros[':precio'] = $nuevo_precio;
     }
 
     if (empty($campos)) {
-        echo json_encode(["status" => "warning", "message" => "Sin datos para actualizar"]);
+        echo json_encode([
+            "status" => "warning",
+            "message" => "Sin datos para actualizar"
+        ]);
         exit();
     }
 
@@ -47,11 +56,14 @@ try {
 
     echo json_encode([
         "status" => "success",
+
         "message" => "Medicamento actualizado exitosamente"
     ]);
-
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+    echo json_encode([
+        "status" => "error",
+        "message" => $e->getMessage()
+    ]);
 }
 ?>

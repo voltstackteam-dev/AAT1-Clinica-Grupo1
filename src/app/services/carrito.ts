@@ -10,7 +10,7 @@ export interface ItemCarrito {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CarritoService {
   // Usamos un "signal" de Angular para que cualquier pantalla se entere si el carrito cambia
@@ -21,7 +21,7 @@ export class CarritoService {
    */
   agregarProducto(producto: any) {
     const listadoActual = this.items();
-    const productoExistente = listadoActual.find(item => item.id === producto.id);
+    const productoExistente = listadoActual.find((item) => item.id === producto.id);
 
     if (productoExistente) {
       // Si ya está, le sumamos 1 a la cantidad
@@ -35,7 +35,7 @@ export class CarritoService {
         gramaje: producto.gramaje,
         precio: producto.precio,
         cantidad: 1,
-        requiere_receta: producto.requiere_receta
+        requiere_receta: producto.requiere_receta,
       };
       this.items.set([...listadoActual, nuevoItem]);
     }
@@ -45,14 +45,14 @@ export class CarritoService {
    * Calcula el costo total acumulado en el carrito
    */
   obtenerTotal(): number {
-    return this.items().reduce((suma, item) => suma + (item.precio * item.cantidad), 0);
+    return this.items().reduce((suma, item) => suma + item.precio * item.cantidad, 0);
   }
 
   /**
    * Verifica si alguno de los medicamentos agregados al carrito pide receta médica obligatoria
    */
   verificarSiRequiereReceta(): boolean {
-    return this.items().some(item => item.requiere_receta === true);
+    return this.items().some((item) => item.requiere_receta === true);
   }
 
   limpiarCarrito() {

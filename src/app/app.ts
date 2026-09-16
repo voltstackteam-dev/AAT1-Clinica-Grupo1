@@ -8,7 +8,7 @@ import { FooterComponent } from './shared/components/footer/footer';
   standalone: true,
   imports: [RouterOutlet, NavbarComponent, FooterComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class AppComponent {
   title = 'FarmaciaApp';

@@ -7,10 +7,9 @@ import { CarritoService } from '../../../services/carrito';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './carrito.html',
-  styleUrl: './carrito.css'
+  styleUrl: './carrito.css',
 })
 export class CarritoComponent {
-
   private carritoService = inject(CarritoService);
 
   items = computed(() => this.carritoService.items());
@@ -18,8 +17,7 @@ export class CarritoComponent {
   total = computed(() => this.carritoService.obtenerTotal());
 
   cantidad = computed(() =>
-    this.carritoService.items()
-      .reduce((total, item) => total + item.cantidad, 0)
+    this.carritoService.items().reduce((total, item) => total + item.cantidad, 0),
   );
 
   vaciarCarrito(): void {

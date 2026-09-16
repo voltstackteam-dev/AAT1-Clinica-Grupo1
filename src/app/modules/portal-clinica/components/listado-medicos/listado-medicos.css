@@ -49,7 +49,9 @@
   display: flex;
   flex-direction: column;
   border: 1px solid #e2e8f0;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .medico-card:hover {
@@ -100,7 +102,8 @@
   font-weight: 700;
 }
 
-.medico-telefono, .medico-equipo {
+.medico-telefono,
+.medico-equipo {
   font-size: 0.85rem;
   color: #64748b;
   margin: 0.2rem 0;

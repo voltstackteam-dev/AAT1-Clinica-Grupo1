@@ -124,6 +124,10 @@
 
 /* Adaptabilidad Celular */
 @media (max-width: 768px) {
-  .hospitales-section { padding: 40px 20px; }
-  .sede-card { padding: 25px 20px; }
+  .hospitales-section {
+    padding: 40px 20px;
+  }
+  .sede-card {
+    padding: 25px 20px;
+  }
 }

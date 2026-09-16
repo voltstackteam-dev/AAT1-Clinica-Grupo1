@@ -8,7 +8,7 @@ import { ClinicaService } from '../../../../services/clinica.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './listado-medicos.html',
-  styleUrl: './listado-medicos.css'
+  styleUrl: './listado-medicos.css',
 })
 export class ListadoMedicosComponent implements OnInit {
   private clinicaService = inject(ClinicaService);
@@ -27,7 +27,7 @@ export class ListadoMedicosComponent implements OnInit {
           this.medicos.set(res.data);
         }
       },
-      error: (err) => console.error('Error al obtener médicos:', err)
+      error: (err) => console.error('Error al obtener médicos:', err),
     });
   }
 

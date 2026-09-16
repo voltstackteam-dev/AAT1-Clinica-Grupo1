@@ -17,13 +17,13 @@ import { InfoHospitalesComponent } from './modules/portal-clinica/components/inf
 export const routes: Routes = [
   // Inicio / Home completo tradicional
   { path: '', component: PortalClinicaComponent },
-  
+
   // RUTAS FÍSICAS DEDICADAS (Funcionarán idéntico a la Farmacia)
   { path: 'servicios', component: SeccionServicios },
   { path: 'especialidades', component: SeccionEspecialidades },
   { path: 'medicos', component: ListadoMedicosComponent },
   { path: 'hospitales', component: InfoHospitalesComponent },
-  
+
   // Resto de módulos del sistema
   { path: 'farmacia', component: FarmaciaComponent },
   { path: 'agenda-citas', component: AgendaCitasComponent },
@@ -33,10 +33,8 @@ export const routes: Routes = [
   { path: 'registro', component: RegistroComponent },
   { path: 'login-personal', component: AdminLoginComponent },
   { path: 'admin/control-citas', component: AdminDashboardComponent },
-  
+
   { path: '**', redirectTo: '' },
 
   //Rutas: paciente, médico y admin. / //Ruta por defecto (Aun no estan porque hace falta crear la ruta de medico, admin)
-
-
 ];

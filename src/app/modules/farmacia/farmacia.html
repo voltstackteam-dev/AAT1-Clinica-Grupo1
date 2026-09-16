@@ -4,29 +4,31 @@
 
   <!-- Botones de Categorías -->
   <div class="filtros-categoria">
-    <button 
-      [class.active]="categoriaActual() === 'Todos'" 
-      (click)="cargarMedicamentos('Todos')">
+    <button [class.active]="categoriaActual() === 'Todos'" (click)="cargarMedicamentos('Todos')">
       Todos
     </button>
-    <button 
-      [class.active]="categoriaActual() === 'Analgésicos'" 
-      (click)="cargarMedicamentos('Analgésicos')">
+    <button
+      [class.active]="categoriaActual() === 'Analgésicos'"
+      (click)="cargarMedicamentos('Analgésicos')"
+    >
       Analgésicos
     </button>
-    <button 
-      [class.active]="categoriaActual() === 'Antibióticos'" 
-      (click)="cargarMedicamentos('Antibióticos')">
+    <button
+      [class.active]="categoriaActual() === 'Antibióticos'"
+      (click)="cargarMedicamentos('Antibióticos')"
+    >
       Antibióticos
     </button>
-    <button 
-      [class.active]="categoriaActual() === 'Antihistamínicos'" 
-      (click)="cargarMedicamentos('Antihistamínicos')">
+    <button
+      [class.active]="categoriaActual() === 'Antihistamínicos'"
+      (click)="cargarMedicamentos('Antihistamínicos')"
+    >
       Antihistamínicos
     </button>
-    <button 
-      [class.active]="categoriaActual() === 'Vitaminas'" 
-      (click)="cargarMedicamentos('Vitaminas')">
+    <button
+      [class.active]="categoriaActual() === 'Vitaminas'"
+      (click)="cargarMedicamentos('Vitaminas')"
+    >
       Vitaminas
     </button>
   </div>
@@ -46,7 +48,7 @@
         <!-- Indicador de Stock reactivo -->
         @if (med.stock > 0) {
           <p class="en-stock">● En Stock</p>
-          <button class="btn-carrito" (click)="agregarAlCarrito(med)">Añadir al Carrito </button>
+          <button class="btn-carrito" (click)="agregarAlCarrito(med)">Añadir al Carrito</button>
         } @else {
           <p class="agotado">⊘ Agotado</p>
           <button class="btn-agotado" disabled>Sin Existencias</button>
@@ -70,7 +72,6 @@ COMPONENTES DEL ASISTENTE VIRTUAL FLOTANTE
 
 <!-- 2. Ventana Emergente del Chat -->
 <div class="chat-ventana-emergente" *ngIf="chatAbierto">
-
   <!-- Encabezado del Asistente -->
   <div class="chat-header-institucional">
     <div class="chat-avatar-status">🤖</div>
@@ -82,10 +83,7 @@ COMPONENTES DEL ASISTENTE VIRTUAL FLOTANTE
 
   <!-- Cuerpo de Mensajes -->
   <div class="chat-cuerpo-mensajes">
-    <div
-      *ngFor="let msg of historialMensajes"
-      [ngClass]="['mensaje-bloque', msg.emisor]"
-    >
+    <div *ngFor="let msg of historialMensajes" [ngClass]="['mensaje-bloque', msg.emisor]">
       <div class="mensaje-burbuja">
         {{ msg.texto }}
       </div>
@@ -103,5 +101,4 @@ COMPONENTES DEL ASISTENTE VIRTUAL FLOTANTE
 
     <button (click)="enviarMensajeChat()">➤</button>
   </div>
-
 </div>

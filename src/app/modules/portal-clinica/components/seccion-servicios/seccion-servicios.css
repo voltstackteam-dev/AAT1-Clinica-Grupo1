@@ -71,7 +71,7 @@
   font-size: 3rem;
   display: block;
   margin-bottom: 15px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .card-frontal h3 {
@@ -126,8 +126,12 @@
 
 /* Adaptabilidad Celular */
 @media (max-width: 768px) {
-  .servicios-section { padding: 40px 20px; }
-  .servicio-card-3d { height: 340px; }
+  .servicios-section {
+    padding: 40px 20px;
+  }
+  .servicio-card-3d {
+    height: 340px;
+  }
 }
 /* ==========================================================================
    ESTILOS INSTITUCIONALES PARA EL ENCABEZADO DE SERVICIOS

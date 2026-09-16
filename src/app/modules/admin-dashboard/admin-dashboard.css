@@ -108,11 +108,15 @@
 .cita-card {
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -2px rgba(0, 0, 0, 0.02);
   padding: 1.8rem;
   border: 1px solid #e2e8f0;
   border-left: 6px solid #94a3b8;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .cita-card:hover {
@@ -366,7 +370,10 @@
   border-radius: 8px;
 }
 
-.selector-medico { max-width: 360px; margin-bottom: 1rem; }
+.selector-medico {
+  max-width: 360px;
+  margin-bottom: 1rem;
+}
 
 .formulario-horario {
   display: grid;
@@ -377,7 +384,9 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.lista-horarios { margin-top: 1rem; }
+.lista-horarios {
+  margin-top: 1rem;
+}
 
 .horario-item {
   display: flex;
@@ -387,9 +396,17 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
-.horario-item span { color: #64748b; }
-.horario-item button { margin-left: auto; padding: 0.45rem 0.8rem; }
-.mensaje-panel { color: #1e3a8a; font-weight: 600; }
+.horario-item span {
+  color: #64748b;
+}
+.horario-item button {
+  margin-left: auto;
+  padding: 0.45rem 0.8rem;
+}
+.mensaje-panel {
+  color: #1e3a8a;
+  font-weight: 600;
+}
 
 .cita-actions button:disabled {
   cursor: wait;

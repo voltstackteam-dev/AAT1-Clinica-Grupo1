@@ -2,16 +2,40 @@
   <div class="header-admin">
     <div>
       <h2>{{ esMedico ? 'Panel Médico' : 'Panel de Control Clínico' }}</h2>
-      <p>{{ esMedico ? 'Gestiona tus reservas y horarios de atención.' : 'Gestiona reservas y horarios del hospital.' }}</p>
+      <p>
+        {{
+          esMedico
+            ? 'Gestiona tus reservas y horarios de atención.'
+            : 'Gestiona reservas y horarios del hospital.'
+        }}
+      </p>
     </div>
-    @if (vistaActiva() === 'citas') { <div class="badge-total">Citas: <strong>{{ citas().length }}</strong></div> }
+    @if (vistaActiva() === 'citas') {
+      <div class="badge-total">
+        Citas: <strong>{{ citas().length }}</strong>
+      </div>
+    }
   </div>
 
-  @if (mensaje()) { <p class="mensaje-panel">{{ mensaje() }}</p> }
+  @if (mensaje()) {
+    <p class="mensaje-panel">{{ mensaje() }}</p>
+  }
 
   <div class="pestanas-principales">
-    <button class="btn-pestana" [class.active]="vistaActiva() === 'citas'" (click)="cambiarVista('citas')">Citas</button>
-    <button class="btn-pestana" [class.active]="vistaActiva() === 'horarios'" (click)="cambiarVista('horarios')">Horarios</button>
+    <button
+      class="btn-pestana"
+      [class.active]="vistaActiva() === 'citas'"
+      (click)="cambiarVista('citas')"
+    >
+      Citas
+    </button>
+    <button
+      class="btn-pestana"
+      [class.active]="vistaActiva() === 'horarios'"
+      (click)="cambiarVista('horarios')"
+    >
+      Horarios
+    </button>
   </div>
 
   @if (vistaActiva() === 'citas') {
@@ -21,55 +45,195 @@
       <button (click)="setFiltro('CONFIRMADA')" class="btn-tab">Confirmadas</button>
       <button (click)="setFiltro('COMPLETADA')" class="btn-tab">Completadas</button>
     </div>
-    @if (cargando()) { <p>Cargando citas...</p> } @else {
+    @if (cargando()) {
+      <p>Cargando citas...</p>
+    } @else {
       <div class="citas-grid">
         @for (cita of citasFiltradas(); track cita.id_cita) {
           <div class="cita-card">
-            <div class="cita-header"><strong>Cita #{{ cita.id_cita }}</strong><span [class]="'status-pill ' + cita.estado.toLowerCase()">{{ cita.estado }}</span></div>
-            <div class="cita-body">
-              <div class="info-col"><small>PACIENTE</small><h4>{{ cita.paciente }}</h4></div>
-              <div class="info-col"><small>MÉDICO Y SALA</small><h4>{{ cita.medico }}</h4><p>{{ cita.nombre_especialidad }}</p><p>{{ cita.nombre_sala }}</p></div>
-              <div class="info-col"><small>FECHA Y HORA</small><p>{{ cita.fecha_hora | date:'medium' }}</p><p>{{ cita.motivo_consulta || 'Sin motivo' }}</p></div>
+            <div class="cita-header">
+              <strong>Cita #{{ cita.id_cita }}</strong
+              ><span [class]="'status-pill ' + cita.estado.toLowerCase()">{{ cita.estado }}</span>
             </div>
-            @if (puedeConfirmar(cita) || puedeCancelar(cita) || puedeCompletar(cita) || puedeReprogramar(cita)) {
+            <div class="cita-body">
+              <div class="info-col">
+                <small>PACIENTE</small>
+                <h4>{{ cita.paciente }}</h4>
+              </div>
+              <div class="info-col">
+                <small>MÉDICO Y SALA</small>
+                <h4>{{ cita.medico }}</h4>
+                <p>{{ cita.nombre_especialidad }}</p>
+                <p>{{ cita.nombre_sala }}</p>
+              </div>
+              <div class="info-col">
+                <small>FECHA Y HORA</small>
+                <p>{{ cita.fecha_hora | date: 'medium' }}</p>
+                <p>{{ cita.motivo_consulta || 'Sin motivo' }}</p>
+              </div>
+            </div>
+            @if (
+              puedeConfirmar(cita) ||
+              puedeCancelar(cita) ||
+              puedeCompletar(cita) ||
+              puedeReprogramar(cita)
+            ) {
               <div class="cita-actions">
-                @if (puedeConfirmar(cita)) { <button class="btn-autorizar" [disabled]="actualizandoCita() === cita.id_cita" (click)="actualizarEstado(cita, 'CONFIRMADA')">Confirmar</button> }
-                @if (puedeCancelar(cita)) { <button class="btn-denegar" [disabled]="actualizandoCita() === cita.id_cita" (click)="actualizarEstado(cita, 'CANCELADA')">{{ esMedico ? 'Rechazar' : 'Cancelar' }}</button> }
-                @if (puedeCompletar(cita)) { <button class="btn-completar" [disabled]="actualizandoCita() === cita.id_cita" (click)="actualizarEstado(cita, 'COMPLETADA')">Completar</button> }
-                @if (puedeReprogramar(cita)) { <button class="btn-editar-cita" [disabled]="actualizandoCita() === cita.id_cita" (click)="prepararReprogramacion(cita)">Reprogramar</button> }
+                @if (puedeConfirmar(cita)) {
+                  <button
+                    class="btn-autorizar"
+                    [disabled]="actualizandoCita() === cita.id_cita"
+                    (click)="actualizarEstado(cita, 'CONFIRMADA')"
+                  >
+                    Confirmar
+                  </button>
+                }
+                @if (puedeCancelar(cita)) {
+                  <button
+                    class="btn-denegar"
+                    [disabled]="actualizandoCita() === cita.id_cita"
+                    (click)="actualizarEstado(cita, 'CANCELADA')"
+                  >
+                    {{ esMedico ? 'Rechazar' : 'Cancelar' }}
+                  </button>
+                }
+                @if (puedeCompletar(cita)) {
+                  <button
+                    class="btn-completar"
+                    [disabled]="actualizandoCita() === cita.id_cita"
+                    (click)="actualizarEstado(cita, 'COMPLETADA')"
+                  >
+                    Completar
+                  </button>
+                }
+                @if (puedeReprogramar(cita)) {
+                  <button
+                    class="btn-editar-cita"
+                    [disabled]="actualizandoCita() === cita.id_cita"
+                    (click)="prepararReprogramacion(cita)"
+                  >
+                    Reprogramar
+                  </button>
+                }
               </div>
             }
             @if (editandoCita() === cita.id_cita) {
               <div class="editar-cita">
-                <label>Nueva fecha <input type="date" [min]="hoy" [ngModel]="fechaNueva()" (ngModelChange)="fechaNueva.set($event)"></label>
-                <label>Nueva hora <select [ngModel]="horaNueva()" (ngModelChange)="horaNueva.set($event)"><option value="">Selecciona una hora</option>@for (hora of horas; track hora) { <option [value]="hora">{{ hora }}</option> }</select></label>
-                <button class="btn-editar-cita" [disabled]="actualizandoCita() === cita.id_cita" (click)="reprogramar(cita)">Guardar cambio</button>
-                <button class="btn-secundario" type="button" (click)="editandoCita.set(null)">Cerrar</button>
+                <label
+                  >Nueva fecha
+                  <input
+                    type="date"
+                    [min]="hoy"
+                    [ngModel]="fechaNueva()"
+                    (ngModelChange)="fechaNueva.set($event)"
+                /></label>
+                <label
+                  >Nueva hora
+                  <select [ngModel]="horaNueva()" (ngModelChange)="horaNueva.set($event)">
+                    <option value="">Selecciona una hora</option>
+                    @for (hora of horas; track hora) {
+                      <option [value]="hora">{{ hora }}</option>
+                    }
+                  </select></label
+                >
+                <button
+                  class="btn-editar-cita"
+                  [disabled]="actualizandoCita() === cita.id_cita"
+                  (click)="reprogramar(cita)"
+                >
+                  Guardar cambio
+                </button>
+                <button class="btn-secundario" type="button" (click)="editandoCita.set(null)">
+                  Cerrar
+                </button>
               </div>
             }
           </div>
         }
-        @if (!citasFiltradas().length) { <p>No hay citas para este filtro.</p> }
+        @if (!citasFiltradas().length) {
+          <p>No hay citas para este filtro.</p>
+        }
       </div>
     }
   } @else {
     <section class="seccion-horarios">
-      <div class="header-subseccion"><h3>Horarios de atención</h3><p>{{ esAdministrador ? 'Registra bloques de disponibilidad de lunes a viernes, entre 08:00 y 17:00.' : 'Consulta los horarios asignados por administración.' }}</p></div>
+      <div class="header-subseccion">
+        <h3>Horarios de atención</h3>
+        <p>
+          {{
+            esAdministrador
+              ? 'Registra bloques de disponibilidad de lunes a viernes, entre 08:00 y 17:00.'
+              : 'Consulta los horarios asignados por administración.'
+          }}
+        </p>
+      </div>
       @if (esAdministrador) {
-        <label class="selector-medico">Médico <select [ngModel]="medicoActual()" (ngModelChange)="seleccionarMedico($event)"><option [value]="0">Selecciona un médico</option>@for (medico of medicos(); track medico.id_medico) { <option [value]="medico.id_medico">{{ medico.nombre }} {{ medico.apellido }}</option> }</select></label>
+        <label class="selector-medico"
+          >Médico
+          <select [ngModel]="medicoActual()" (ngModelChange)="seleccionarMedico($event)">
+            <option [value]="0">Selecciona un médico</option>
+            @for (medico of medicos(); track medico.id_medico) {
+              <option [value]="medico.id_medico">{{ medico.nombre }} {{ medico.apellido }}</option>
+            }
+          </select></label
+        >
       }
       @if (medicoActual()) {
-        @if (esAdministrador) { <div class="formulario-horario">
-          <label>Día <select [ngModel]="diaHorario()" (ngModelChange)="diaHorario.set($event)"><option value="LUNES">Lunes</option><option value="MARTES">Martes</option><option value="MIERCOLES">Miércoles</option><option value="JUEVES">Jueves</option><option value="VIERNES">Viernes</option></select></label>
-          <label>Inicio <input type="time" min="08:00" max="16:00" [ngModel]="inicioHorario()" (ngModelChange)="inicioHorario.set($event)"></label>
-          <label>Fin <input type="time" min="09:00" max="17:00" [ngModel]="finHorario()" (ngModelChange)="finHorario.set($event)"></label>
-          <button class="btn-autorizar" (click)="guardarHorario()">{{ editandoHorario() ? 'Guardar horario' : 'Agregar horario' }}</button>
-        </div> }
+        @if (esAdministrador) {
+          <div class="formulario-horario">
+            <label
+              >Día
+              <select [ngModel]="diaHorario()" (ngModelChange)="diaHorario.set($event)">
+                <option value="LUNES">Lunes</option>
+                <option value="MARTES">Martes</option>
+                <option value="MIERCOLES">Miércoles</option>
+                <option value="JUEVES">Jueves</option>
+                <option value="VIERNES">Viernes</option>
+              </select></label
+            >
+            <label
+              >Inicio
+              <input
+                type="time"
+                min="08:00"
+                max="16:00"
+                [ngModel]="inicioHorario()"
+                (ngModelChange)="inicioHorario.set($event)"
+            /></label>
+            <label
+              >Fin
+              <input
+                type="time"
+                min="09:00"
+                max="17:00"
+                [ngModel]="finHorario()"
+                (ngModelChange)="finHorario.set($event)"
+            /></label>
+            <button class="btn-autorizar" (click)="guardarHorario()">
+              {{ editandoHorario() ? 'Guardar horario' : 'Agregar horario' }}
+            </button>
+          </div>
+        }
         <div class="lista-horarios">
-          @for (horario of horarios(); track horario.id_disponibilidad) { <div class="horario-item"><strong>{{ horario.dia_semana }}</strong><span>{{ horario.hora_inicio.slice(0, 5) }} - {{ horario.hora_fin.slice(0, 5) }}</span>@if (esAdministrador) { <button class="btn-editar-cita" (click)="editarHorario(horario)">Editar</button><button class="btn-denegar" (click)="eliminarHorario(horario)">Eliminar</button> }</div> }
-          @if (!horarios().length) { <p>No hay horarios registrados.</p> }
+          @for (horario of horarios(); track horario.id_disponibilidad) {
+            <div class="horario-item">
+              <strong>{{ horario.dia_semana }}</strong
+              ><span
+                >{{ horario.hora_inicio.slice(0, 5) }} - {{ horario.hora_fin.slice(0, 5) }}</span
+              >
+              @if (esAdministrador) {
+                <button class="btn-editar-cita" (click)="editarHorario(horario)">Editar</button
+                ><button class="btn-denegar" (click)="eliminarHorario(horario)">Eliminar</button>
+              }
+            </div>
+          }
+          @if (!horarios().length) {
+            <p>No hay horarios registrados.</p>
+          }
         </div>
-      } @else { <p>Selecciona un médico para gestionar sus horarios.</p> }
+      } @else {
+        <p>Selecciona un médico para gestionar sus horarios.</p>
+      }
     </section>
   }
 </div>

@@ -10,17 +10,15 @@ import { AuthService } from '../../../services/auth.service';
   standalone: true,
   imports: [CommonModule, NgClass, RouterLink, RouterLinkActive, CarritoComponent],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css'
+  styleUrl: './navbar.css',
 })
 export class NavbarComponent {
-
   private carritoService = inject(CarritoService);
   private authService = inject(AuthService);
   usuario = this.authService.usuario;
 
   cantidadItems = computed(() =>
-    this.carritoService.items()
-      .reduce((total, item) => total + item.cantidad, 0)
+    this.carritoService.items().reduce((total, item) => total + item.cantidad, 0),
   );
 
   menuAbierto: boolean = false;

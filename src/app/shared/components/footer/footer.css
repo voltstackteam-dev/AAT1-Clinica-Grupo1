@@ -80,7 +80,14 @@
 
 /* Hover Instagram */
 .enlace-social.ig:hover {
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
   color: #ffffff;
   transform: translateY(-4px);
   box-shadow: 0 5px 12px rgba(220, 39, 67, 0.4);

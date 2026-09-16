@@ -96,8 +96,14 @@
   margin-top: 10px;
 }
 
-.btn-admin-login-submit:hover { background-color: #2c5282; }
-.btn-admin-login-submit:disabled { background-color: #cbd5e0; color: #718096; cursor: not-allowed; }
+.btn-admin-login-submit:hover {
+  background-color: #2c5282;
+}
+.btn-admin-login-submit:disabled {
+  background-color: #cbd5e0;
+  color: #718096;
+  cursor: not-allowed;
+}
 
 .alerta-error-admin {
   background-color: #fff5f5;

@@ -3,7 +3,9 @@
   <div class="especialidades-encabezado">
     <h2 class="titulo-especialidades">Nuestras Especialidades</h2>
     <div class="linea-decorativa-azul"></div>
-    <p class="subtitulo-especialidades">Contamos con unidades médicas altamente capacitadas para tu cuidado integral</p>
+    <p class="subtitulo-especialidades">
+      Contamos con unidades médicas altamente capacitadas para tu cuidado integral
+    </p>
   </div>
 
   <!-- CUADRÍCULA DINÁMICA CONECTADA A LA API -->
@@ -11,11 +13,18 @@
     @for (esp of especialidades(); track esp.id_especialidad) {
       <div class="cuadrula-card">
         <div class="cuadrula-imagen-portada">
-          <img 
-            [src]="'/' + esp.nombre_especialidad.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') + '1.png'" 
-            [alt]="esp.nombre_especialidad" 
+          <img
+            [src]="
+              '/' +
+              esp.nombre_especialidad
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '') +
+              '1.png'
+            "
+            [alt]="esp.nombre_especialidad"
             class="img-especialidad-src"
-            onerror="this.src='/cardiologia1.png'" 
+            onerror="this.src = '/cardiologia1.png'"
           />
         </div>
         <div class="cuadrula-info">
@@ -25,7 +34,7 @@
         </div>
       </div>
     } @empty {
-      <div style="grid-column: span 2; text-align: center; padding: 2rem;">
+      <div style="grid-column: span 2; text-align: center; padding: 2rem">
         <p>Cargando especialidades desde la base de datos...</p>
       </div>
     }

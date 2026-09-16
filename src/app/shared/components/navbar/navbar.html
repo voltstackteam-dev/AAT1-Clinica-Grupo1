@@ -1,25 +1,25 @@
 <header class="header-hospital">
   <!-- Barra Superior Blanca (Logotipo y Acciones de Cuenta) -->
   <div class="top-bar">
-    
     <!-- ACTUALIZADO: El logotipo ahora redirige al Home principal de forma nativa -->
-    <div class="logo-container" routerLink="/" style="cursor: pointer;">
+    <div class="logo-container" routerLink="/" style="cursor: pointer">
       <img src="LogoClinica1.png" alt="Logo Voltstack" class="logo-imagen-src" />
       <div class="logo-placeholder">
         <span class="logo-texto-principal">VOLTSTACK</span>
         <span class="logo-texto-secundario">GRUPO HOSPITALARIO</span>
       </div>
     </div>
-    
+
     <div class="top-acciones">
       <button class="btn-carrito-nav" (click)="alternarCarrito()">
-  Carrito @if (cantidadItems() > 0) {
-    <span class="badge-carrito">{{ cantidadItems() }}</span>
-  }
-</button>
+        Carrito
+        @if (cantidadItems() > 0) {
+          <span class="badge-carrito">{{ cantidadItems() }}</span>
+        }
+      </button>
       <button class="btn-top btn-contacto">CONTÁCTANOS</button>
       <button class="btn-top btn-cita" routerLink="/agenda-citas">AGENDA TU CITA</button>
-      
+
       <div class="usuario-menu">
         <div class="avatar-icon"></div>
         @if (usuario()) {
@@ -32,30 +32,46 @@
           }
           <button class="btn-top" (click)="cerrarSesion()">SALIR</button>
         } @else {
-        <select class="select-sesion" (change)="manejarNavegacionSesion($event)">
-          <option value="" disabled selected hidden>CUENTA</option>
-          <option value="/login">👤 Mi Perfil (Citas)</option>
-          <option value="/login-personal">👨‍⚕️ Panel Médico / Admin</option>
-        </select>
+          <select class="select-sesion" (change)="manejarNavegacionSesion($event)">
+            <option value="" disabled selected hidden>CUENTA</option>
+            <option value="/login">👤 Mi Perfil (Citas)</option>
+            <option value="/login-personal">👨‍⚕️ Panel Médico / Admin</option>
+          </select>
         }
       </div>
     </div>
 
     <!-- Botón de Hamburguesa para Celulares -->
-    <button class="menu-hamburguesa" (click)="alternarMenu()">
-      ☰
-    </button>
+    <button class="menu-hamburguesa" (click)="alternarMenu()">☰</button>
   </div>
 
   <!-- BARRA DE NAVEGACIÓN INFERIOR AZUL ENLAZADA POR RUTAS FÍSICAS FLUIDAS -->
-  <nav class="nav-bar" [ngClass]="{ 'abierto': menuAbierto }">
+  <nav class="nav-bar" [ngClass]="{ abierto: menuAbierto }">
     <ul class="nav-links">
-      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Inicio</a></li>
-      <li><a routerLink="/servicios" routerLinkActive="active" (click)="cerrarMenu()">Servicios</a></li>
-      <li><a routerLink="/especialidades" routerLinkActive="active" (click)="cerrarMenu()">Especialidades</a></li>
+      <li>
+        <a
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="cerrarMenu()"
+          >Inicio</a
+        >
+      </li>
+      <li>
+        <a routerLink="/servicios" routerLinkActive="active" (click)="cerrarMenu()">Servicios</a>
+      </li>
+      <li>
+        <a routerLink="/especialidades" routerLinkActive="active" (click)="cerrarMenu()"
+          >Especialidades</a
+        >
+      </li>
       <li><a routerLink="/medicos" routerLinkActive="active" (click)="cerrarMenu()">Médicos</a></li>
-      <li><a routerLink="/hospitales" routerLinkActive="active" (click)="cerrarMenu()">Hospitales</a></li>
-      <li><a routerLink="/farmacia" routerLinkActive="active" (click)="cerrarMenu()">Farmacia</a></li>
+      <li>
+        <a routerLink="/hospitales" routerLinkActive="active" (click)="cerrarMenu()">Hospitales</a>
+      </li>
+      <li>
+        <a routerLink="/farmacia" routerLinkActive="active" (click)="cerrarMenu()">Farmacia</a>
+      </li>
     </ul>
 
     <div class="buscador-container">
@@ -65,8 +81,8 @@
   </nav>
 
   @if (carritoAbierto) {
-  <div class="carrito-dropdown">
-    <app-carrito></app-carrito>
-  </div>
-}
+    <div class="carrito-dropdown">
+      <app-carrito></app-carrito>
+    </div>
+  }
 </header>

@@ -6,10 +6,9 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './info-hospitales.html',
-  styleUrl: './info-hospitales.css'
+  styleUrl: './info-hospitales.css',
 })
 export class InfoHospitalesComponent {
-  
   // Listado oficial de sedes con URLs universales de Google Maps por coordenadas
   sedesHospital = [
     {
@@ -20,7 +19,7 @@ export class InfoHospitalesComponent {
       telefono: '📞 +502 2300-1000',
       horario: '⏱️ Emergencias: 24/7 | Consulta: 7:00 AM - 7:00 PM',
       // Coordenadas reales Zona 10, Guatemala
-      urlMaps: 'https://google.com' 
+      urlMaps: 'https://google.com',
     },
     {
       id: 2,
@@ -30,8 +29,8 @@ export class InfoHospitalesComponent {
       telefono: '📞 +502 2300-2000',
       horario: '⏱️ Emergencias: 24/7 | Consulta: 8:00 AM - 6:00 PM',
       // Coordenadas reales Roosevelt Zona 11, Guatemala
-      urlMaps: 'https://google.com' 
-    }
+      urlMaps: 'https://google.com',
+    },
   ];
 
   // Función de apertura limpia que rompe el bloqueo preventivo del navegador

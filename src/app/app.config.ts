@@ -9,19 +9,15 @@ export const appConfig: ApplicationConfig = {
     // Activa el motor asíncrono nativo por señales estable
     provideZonelessChangeDetection(),
 
-    provideHttpClient(
-      withInterceptors([
-        authInterceptor
-      ])
-    ),
-    
+    provideHttpClient(withInterceptors([authInterceptor])),
+
     // Registramos el enrutador con el scroll por fragmentos activo
     provideRouter(
-      routes, 
+      routes,
       withInMemoryScrolling({
         anchorScrolling: 'enabled',
-        scrollPositionRestoration: 'enabled'
-      })
-    )
-  ]
+        scrollPositionRestoration: 'enabled',
+      }),
+    ),
+  ],
 };
