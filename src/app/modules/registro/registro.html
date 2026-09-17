@@ -1,14 +1,11 @@
 <div class="registro-modulo-container">
-  <div class="alerta-exito-registro" *ngIf="exitoRegistro">
-    <h3>Cuenta creada</h3>
-    <p>Redirigiendo al inicio de sesión.</p>
-  </div>
   <div class="registro-card-box" *ngIf="!exitoRegistro">
     <div class="registro-header"><h2>Registro de Paciente</h2></div>
-    <p *ngIf="mensajeError" class="alerta-error-login">{{ mensajeError }}</p>
+
     <form #formRegistro="ngForm" (ngSubmit)="ejecutarRegistro()">
       <div class="campo-grupo">
-        <label>Nombre</label><input name="nombre" [(ngModel)]="nuevoUsuario.nombre" required />
+        <label>Nombre</label
+        ><input name="nombre" [(ngModel)]="nuevoUsuario.nombre" required />
       </div>
       <div class="campo-grupo">
         <label>Apellido</label
@@ -28,11 +25,17 @@
         ><input name="telefono" [(ngModel)]="nuevoUsuario.telefono" required />
       </div>
       <div class="campo-grupo">
-        <label>Dirección</label><input name="direccion" [(ngModel)]="nuevoUsuario.direccion" />
+        <label>Dirección</label
+        ><input name="direccion" [(ngModel)]="nuevoUsuario.direccion" />
       </div>
       <div class="campo-grupo">
         <label>Correo electrónico</label
-        ><input type="email" name="email" [(ngModel)]="nuevoUsuario.email" required />
+        ><input
+          type="email"
+          name="email"
+          [(ngModel)]="nuevoUsuario.email"
+          required
+        />
       </div>
       <div class="campo-grupo">
         <label>Contraseña</label
@@ -43,7 +46,11 @@
           required
         />
       </div>
-      <button type="submit" class="btn-registro-enviar" [disabled]="!formRegistro.form.valid">
+      <button
+        type="submit"
+        class="btn-registro-enviar"
+        [disabled]="!formRegistro.form.valid"
+      >
         Crear cuenta médica
       </button>
     </form>

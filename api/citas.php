@@ -202,11 +202,18 @@ ejecutarApi(function () use ($conexion, $metodo): void {
         autorizarGestionCita($conexion, $usuario, $cita);
 
         if (isset($d['fecha_hora'])) {
-            if ($cita['estado'] !== 'PENDIENTE') {
+            $esPaciente = (int) $usuario->id_rol === 3;
+            $estadosPermitidos = $esPaciente
+                ? ['PENDIENTE']
+                : ['PENDIENTE', 'CONFIRMADA'];
+
+            if (!in_array($cita['estado'], $estadosPermitidos, true)) {
                 responderError(
-                    'La cita ya fue confirmada por el médico y no puede reprogramarse.', 
+                    $esPaciente
+                        ? 'Solo puede reprogramar una cita pendiente de confirmación médica.'
+                        : 'Solo pueden reprogramarse citas pendientes o confirmadas.',
                     409
-                    );
+                );
             }
 
             $fecha = str_replace('T', ' ', $d['fecha_hora']);
@@ -270,9 +277,9 @@ ejecutarApi(function () use ($conexion, $metodo): void {
         } elseif ((int) $usuario->id_rol === 2) {
             if (
                 $cita['estado'] !== 'PENDIENTE'
-                || !in_array($nuevoEstado, ['CONFIRMADA', 'CANCELADA'], true)
+                || $nuevoEstado !== 'CONFIRMADA'
             ) {
-                responderError('Un médico solo puede confirmar o rechazar una cita pendiente.', 403);
+                responderError('Un médico solo puede confirmar una cita pendiente.', 403);
             }
         } else {
             $transiciones = [

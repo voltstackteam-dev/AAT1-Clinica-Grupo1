@@ -4,9 +4,7 @@
       <h2>Agenda tu Cita Médica</h2>
       <p>Selecciona una franja disponible del médico.</p>
     </div>
-    @if (mensaje()) {
-      <div class="mensaje-cita" [class.mensaje-error]="error()">{{ mensaje() }}</div>
-    }
+
     @if (!sesionActiva()) {
       <div class="aviso-sesion">
         <p>Necesitas iniciar sesión para agendar una cita médica.</p>
@@ -32,7 +30,11 @@
           </div>
           <div class="form-group">
             <label>Sala *</label
-            ><select [ngModel]="idSala()" (ngModelChange)="idSala.set(+$event)" name="sala">
+            ><select
+              [ngModel]="idSala()"
+              (ngModelChange)="idSala.set(+$event)"
+              name="sala"
+            >
               <option [value]="0">Selecciona una sala</option>
               @for (sala of salas(); track sala.id_sala) {
                 <option [value]="sala.id_sala">{{ sala.nombre_sala }}</option>
@@ -75,7 +77,7 @@
         </div>
         <div class="form-actions">
           <button type="submit" class="btn-confirmar" [disabled]="cargando()">
-            {{ cargando() ? 'Guardando...' : 'Confirmar cita' }}
+            {{ cargando() ? "Guardando..." : "Confirmar cita" }}
           </button>
         </div>
       </form>

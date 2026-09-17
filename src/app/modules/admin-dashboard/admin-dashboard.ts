@@ -1,3 +1,4 @@
+import { notificar, confirmar } from '../../services/avisos';
 import { RegistroEspecialidadComponent } from './registro-especialidad';
 import { RegistroMedicoComponent } from './registro-medico';
 import { Component, OnInit, inject, signal } from '@angular/core';
@@ -68,11 +69,15 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     const usuario = this.auth.obtenerUsuario();
-    if (!usuario) return;
+    if (!usuario) {
+      return;
+    }
     this.esMedico = Number(usuario.id_rol) === 2;
     this.esAdministrador = Number(usuario.id_rol) === 1;
     if (!this.esMedico && !this.esAdministrador) {
-      this.mensaje.set('No tiene permisos para acceder a este panel.');
+      this.mensaje.set(
+        notificar('No tiene permisos para acceder a este panel.', 'error'),
+      );
       return;
     }
     if (this.esAdministrador) {
@@ -86,14 +91,22 @@ export class AdminDashboardComponent implements OnInit {
           (item: any) => Number(item.id_usuario) === Number(usuario.id_usuario),
         );
         if (!medico) {
-          this.mensaje.set('No hay un perfil médico vinculado a esta cuenta.');
+          this.mensaje.set(
+            notificar(
+              'No hay un perfil médico vinculado a esta cuenta.',
+              'error',
+            ),
+          );
           return;
         }
         this.medicoActual.set(Number(medico.id_medico));
         this.cargarCitas();
         this.cargarHorarios();
       },
-      error: () => this.mensaje.set('No se pudo cargar el perfil del médico.'),
+      error: () =>
+        this.mensaje.set(
+          notificar('No se pudo cargar el perfil del médico.', 'error'),
+        ),
     });
   }
 
@@ -108,7 +121,9 @@ export class AdminDashboardComponent implements OnInit {
         this.cargando.set(false);
       },
       error: () => {
-        this.mensaje.set('No se pudieron cargar las citas.');
+        this.mensaje.set(
+          notificar('No se pudieron cargar las citas.', 'error'),
+        );
         this.cargando.set(false);
       },
     });
@@ -116,7 +131,10 @@ export class AdminDashboardComponent implements OnInit {
   cargarMedicos(): void {
     this.http.get<any>(`${this.api}/medicos.php`).subscribe({
       next: (respuesta) => this.medicos.set(respuesta.data || []),
-      error: () => this.mensaje.set('No se pudieron cargar los médicos.'),
+      error: () =>
+        this.mensaje.set(
+          notificar('No se pudieron cargar los médicos.', 'error'),
+        ),
     });
   }
   cargarHorarios(): void {
@@ -128,7 +146,10 @@ export class AdminDashboardComponent implements OnInit {
       .get<any>(`${this.api}/horarios.php?id_medico=${this.medicoActual()}`)
       .subscribe({
         next: (respuesta) => this.horarios.set(respuesta.data || []),
-        error: () => this.mensaje.set('No se pudieron cargar los horarios.'),
+        error: () =>
+          this.mensaje.set(
+            notificar('No se pudieron cargar los horarios.', 'error'),
+          ),
       });
   }
   cambiarVista(
@@ -169,9 +190,10 @@ export class AdminDashboardComponent implements OnInit {
     );
   }
   puedeCancelar(cita: any): boolean {
-    return this.esAdministrador
-      ? ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado)
-      : this.esMedico && cita.estado === 'PENDIENTE';
+    return (
+      this.esAdministrador &&
+      ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado)
+    );
   }
   puedeCompletar(cita: any): boolean {
     return this.esAdministrador && cita.estado === 'CONFIRMADA';
@@ -182,12 +204,13 @@ export class AdminDashboardComponent implements OnInit {
       ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado)
     );
   }
-  actualizarEstado(cita: any, estado: string): void {
+  async actualizarEstado(cita: any, estado: string): Promise<void> {
     if (
       estado === 'CANCELADA' &&
-      !confirm(`¿Desea rechazar o cancelar la cita #${cita.id_cita}?`)
-    )
+      !(await confirmar(`¿Desea rechazar o cancelar la cita #${cita.id_cita}?`))
+    ) {
       return;
+    }
     this.actualizandoCita.set(cita.id_cita);
     this.http
       .put<any>(`${this.api}/citas.php`, { id_cita: cita.id_cita, estado })
@@ -201,11 +224,18 @@ export class AdminDashboardComponent implements OnInit {
             ),
           );
           this.actualizandoCita.set(null);
+          notificar(
+            'El estado de la cita se actualizó correctamente.',
+            'success',
+          );
         },
         error: (error) => {
           this.mensaje.set(
-            error.error?.mensaje ||
-              'No se pudo actualizar el estado de la cita.',
+            notificar(
+              error.error?.mensaje ||
+                'No se pudo actualizar el estado de la cita.',
+              'error',
+            ),
           );
           this.actualizandoCita.set(null);
         },
@@ -219,7 +249,12 @@ export class AdminDashboardComponent implements OnInit {
   }
   reprogramar(cita: any): void {
     if (!this.fechaNueva() || !this.horaNueva()) {
-      this.mensaje.set('Selecciona fecha y hora para reprogramar la cita.');
+      this.mensaje.set(
+        notificar(
+          'Selecciona fecha y hora para reprogramar la cita.',
+          'warning',
+        ),
+      );
       return;
     }
     this.actualizandoCita.set(cita.id_cita);
@@ -243,11 +278,14 @@ export class AdminDashboardComponent implements OnInit {
           );
           this.editandoCita.set(null);
           this.actualizandoCita.set(null);
-          this.mensaje.set(respuesta.mensaje);
+          this.mensaje.set(notificar(respuesta.mensaje, 'success'));
         },
         error: (error) => {
           this.mensaje.set(
-            error.error?.mensaje || 'No se pudo reprogramar la cita.',
+            notificar(
+              error.error?.mensaje || 'No se pudo reprogramar la cita.',
+              'error',
+            ),
           );
           this.actualizandoCita.set(null);
         },
@@ -255,7 +293,12 @@ export class AdminDashboardComponent implements OnInit {
   }
   guardarHorario(): void {
     if (!this.medicoActual()) {
-      this.mensaje.set('Selecciona un médico antes de agregar un horario.');
+      this.mensaje.set(
+        notificar(
+          'Selecciona un médico antes de agregar un horario.',
+          'warning',
+        ),
+      );
       return;
     }
     const datos = {
@@ -271,16 +314,22 @@ export class AdminDashboardComponent implements OnInit {
     solicitud.subscribe({
       next: () => {
         this.mensaje.set(
-          id
-            ? 'Horario actualizado correctamente.'
-            : 'Horario guardado correctamente.',
+          notificar(
+            id
+              ? 'Horario actualizado correctamente.'
+              : 'Horario guardado correctamente.',
+            'success',
+          ),
         );
         this.editandoHorario.set(null);
         this.cargarHorarios();
       },
       error: (error) =>
         this.mensaje.set(
-          error.error?.mensaje || 'No se pudo guardar el horario.',
+          notificar(
+            error.error?.mensaje || 'No se pudo guardar el horario.',
+            'error',
+          ),
         ),
     });
   }
@@ -290,19 +339,27 @@ export class AdminDashboardComponent implements OnInit {
     this.inicioHorario.set(horario.hora_inicio.slice(0, 5));
     this.finHorario.set(horario.hora_fin.slice(0, 5));
   }
-  eliminarHorario(horario: any): void {
-    if (!confirm(`¿Desea eliminar el horario del ${horario.dia_semana}?`))
+  async eliminarHorario(horario: any): Promise<void> {
+    if (
+      !(await confirmar(
+        `¿Desea eliminar el horario del ${horario.dia_semana}?`,
+      ))
+    ) {
       return;
+    }
     this.http
       .delete<any>(`${this.api}/horarios.php?id=${horario.id_disponibilidad}`)
       .subscribe({
         next: () => {
-          this.mensaje.set('Horario eliminado.');
+          this.mensaje.set(notificar('Horario eliminado.', 'success'));
           this.cargarHorarios();
         },
         error: (error) =>
           this.mensaje.set(
-            error.error?.mensaje || 'No se pudo eliminar el horario.',
+            notificar(
+              error.error?.mensaje || 'No se pudo eliminar el horario.',
+              'error',
+            ),
           ),
       });
   }
@@ -324,16 +381,22 @@ export class AdminDashboardComponent implements OnInit {
           this.medicamentos.set(respuesta.data || []);
         } else {
           this.errorMedicamentos.set(
-            respuesta.message || 'No se pudieron cargar los medicamentos.',
+            notificar(
+              respuesta.message || 'No se pudieron cargar los medicamentos.',
+              'error',
+            ),
           );
         }
       },
       error: (error) => {
         this.cargandoMedicamentos.set(false);
         this.errorMedicamentos.set(
-          error.error?.message ||
-            error.error?.mensaje ||
-            'No se pudieron cargar los medicamentos.',
+          notificar(
+            error.error?.message ||
+              error.error?.mensaje ||
+              'No se pudieron cargar los medicamentos.',
+            'error',
+          ),
         );
       },
     });
@@ -358,7 +421,10 @@ export class AdminDashboardComponent implements OnInit {
       precio < 0
     ) {
       this.errorMedicamentos.set(
-        'Introduce un stock entero y un precio válidos, ambos mayores o iguales a cero.',
+        notificar(
+          'Introduce un stock entero y un precio válidos, ambos mayores o iguales a cero.',
+          'error',
+        ),
       );
       return;
     }
@@ -376,20 +442,29 @@ export class AdminDashboardComponent implements OnInit {
 
         if (respuesta.status === 'success') {
           this.mensajeExitoMed.set(
-            '¡' + med.nombre + ' actualizado en Farmacia!',
+            notificar(
+              '¡' + med.nombre + ' actualizado en Farmacia!',
+              'success',
+            ),
           );
         } else {
           this.errorMedicamentos.set(
-            respuesta.message || 'No se pudo actualizar el medicamento.',
+            notificar(
+              respuesta.message || 'No se pudo actualizar el medicamento.',
+              'error',
+            ),
           );
         }
       },
       error: (error) => {
         this.guardandoMedicamento.set(null);
         this.errorMedicamentos.set(
-          error.error?.message ||
-            error.error?.mensaje ||
-            'No se pudo actualizar el medicamento.',
+          notificar(
+            error.error?.message ||
+              error.error?.mensaje ||
+              'No se pudo actualizar el medicamento.',
+            'error',
+          ),
         );
       },
     });

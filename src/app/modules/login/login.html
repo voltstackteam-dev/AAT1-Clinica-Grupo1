@@ -4,16 +4,13 @@
     <div class="login-header">
       <div style="font-size: 2.5rem; margin-bottom: 10px">🔐</div>
       <h2>Portal del Paciente</h2>
-      <p>Área de autenticación para afiliados de la red hospitalaria Voltstack</p>
+      <p>
+        Área de autenticación para afiliados de la red hospitalaria Voltstack
+      </p>
       <div class="linea-azul"></div>
     </div>
 
     <!-- Alerta de Error -->
-    <div class="alerta-error-login" *ngIf="errorAutenticacion">❌ {{ mensajeError }}</div>
-    <!--  <div class="alerta-error-login" *ngIf="errorAutenticacion">
-      ❌ Acceso Denegado. Verifique su correo o contraseña de paciente.
-      <br><span style="font-size: 0.78rem; font-weight: normal;">Prueba con: paciente@voltstack.com / 123456</span>
-    </div> -->
 
     <!-- Formulario de Acceso Controlado -->
     <form #formLogin="ngForm" (ngSubmit)="ejecutarIngresar()">
@@ -41,14 +38,21 @@
         <!-- <input type="password" name="contrasena" [(ngModel)]="credenciales.contrasena" required placeholder="••••••••" /> -->
       </div>
 
-      <button type="submit" class="btn-login-enviar" [disabled]="!formLogin.form.valid || cargando">
-        {{ cargando ? 'Verificando...' : 'Iniciar sesión' }}
+      <button
+        type="submit"
+        class="btn-login-enviar"
+        [disabled]="!formLogin.form.valid || cargando"
+      >
+        {{ cargando ? "Verificando..." : "Iniciar sesión" }}
       </button>
     </form>
 
     <!-- Enlace de desvío al Registro de Nuevos Clientes -->
     <div class="login-footer-enlaces">
-      <p>¿No tienes una cuenta médica? <a routerLink="/registro">Regístrate aquí</a></p>
+      <p>
+        ¿No tienes una cuenta médica?
+        <a routerLink="/registro">Regístrate aquí</a>
+      </p>
     </div>
   </div>
 </div>

@@ -1,3 +1,4 @@
+import { notificar, mostrarAviso } from '../../services/avisos';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -26,16 +27,28 @@ export class RegistroComponent {
   mensajeError = '';
   ejecutarRegistro(): void {
     this.mensajeError = '';
-    this.http.post<any>('http://localhost:8000/api/pacientes.php', this.nuevoUsuario).subscribe({
-      next: (r) => {
-        if (!r.success) {
-          this.mensajeError = r.mensaje || 'No se pudo crear la cuenta.';
-          return;
-        }
-        this.exitoRegistro = true;
-        setTimeout(() => this.router.navigate(['/login']), 1500);
-      },
-      error: (e) => (this.mensajeError = e.error?.mensaje || 'No se pudo crear la cuenta.'),
-    });
+    this.http
+      .post<any>('http://localhost:8000/api/pacientes.php', this.nuevoUsuario)
+      .subscribe({
+        next: (r) => {
+          if (!r.success) {
+            this.mensajeError = notificar(
+              r.mensaje || 'No se pudo crear la cuenta.',
+              'error',
+            );
+            return;
+          }
+          this.exitoRegistro = true;
+          void mostrarAviso(
+            'Tu cuenta se registró correctamente. Ya puedes iniciar sesión.',
+            'success',
+          ).then(() => this.router.navigate(['/login']));
+        },
+        error: (e) =>
+          (this.mensajeError = notificar(
+            e.error?.mensaje || 'No se pudo crear la cuenta.',
+            'error',
+          )),
+      });
   }
 }

@@ -17,10 +17,6 @@
     }
   </div>
 
-  @if (mensaje()) {
-    <p class="mensaje-panel">{{ mensaje() }}</p>
-  }
-
   <div class="pestanas-principales">
     <button
       class="btn-pestana"
@@ -309,11 +305,7 @@
         </div>
       </div>
 
-      @if (mensajeExitoMed()) {
-        <div class="alerta-exito-med">✓ {{ mensajeExitoMed() }}</div>
-      }
       @if (errorMedicamentos()) {
-        <p role="alert">{{ errorMedicamentos() }}</p>
         <button
           type="button"
           class="btn-editar-cita"

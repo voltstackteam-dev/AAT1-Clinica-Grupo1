@@ -6,9 +6,7 @@
       <p>Acceso para médicos y personal administrativo.</p>
       <div class="linea-decorativa-roja"></div>
     </div>
-    @if (errorAutenticacion) {
-      <div class="alerta-error-admin">{{ mensajeError }}</div>
-    }
+
     <form #formAdminAuth="ngForm" (ngSubmit)="ejecutarLoginAdmin()">
       <div class="campo-admin-grupo">
         <label>Correo de empleado</label
@@ -34,7 +32,7 @@
         class="btn-admin-login-submit"
         [disabled]="!formAdminAuth.form.valid || cargando"
       >
-        {{ cargando ? 'Verificando...' : 'Ingresar al portal' }}
+        {{ cargando ? "Verificando..." : "Ingresar al portal" }}
       </button>
     </form>
   </div>

@@ -1,16 +1,22 @@
-import { Component, inject, computed } from '@angular/core';
-import { CommonModule, NgClass } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { CarritoService } from '../../../services/carrito';
-import { CarritoComponent } from '../carrito/carrito';
-import { AuthService } from '../../../services/auth.service';
+import { Component, inject, computed } from "@angular/core";
+import { CommonModule, NgClass } from "@angular/common";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { CarritoService } from "../../../services/carrito";
+import { CarritoComponent } from "../carrito/carrito";
+import { AuthService } from "../../../services/auth.service";
 
 @Component({
-  selector: 'app-navbar',
+  selector: "app-navbar",
   standalone: true,
-  imports: [CommonModule, NgClass, RouterLink, RouterLinkActive, CarritoComponent],
-  templateUrl: './navbar.html',
-  styleUrl: './navbar.css',
+  imports: [
+    CommonModule,
+    NgClass,
+    RouterLink,
+    RouterLinkActive,
+    CarritoComponent,
+  ],
+  templateUrl: "./navbar.html",
+  styleUrl: "./navbar.css",
 })
 export class NavbarComponent {
   private carritoService = inject(CarritoService);
@@ -18,7 +24,9 @@ export class NavbarComponent {
   usuario = this.authService.usuario;
 
   cantidadItems = computed(() =>
-    this.carritoService.items().reduce((total, item) => total + item.cantidad, 0),
+    this.carritoService
+      .items()
+      .reduce((total, item) => total + item.cantidad, 0),
   );
 
   menuAbierto: boolean = false;
@@ -35,6 +43,7 @@ export class NavbarComponent {
   }
 
   alternarCarrito(): void {
+    this.cerrarMenu();
     this.carritoAbierto = !this.carritoAbierto;
   }
 
@@ -43,13 +52,15 @@ export class NavbarComponent {
     const rutaDestino = elementoSelect.value;
 
     if (rutaDestino) {
+      this.cerrarMenu();
       this.router.navigate([rutaDestino]);
-      elementoSelect.value = '';
+      elementoSelect.value = "";
     }
   }
 
   cerrarSesion(): void {
+    this.cerrarMenu();
     this.authService.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(["/"]);
   }
 }

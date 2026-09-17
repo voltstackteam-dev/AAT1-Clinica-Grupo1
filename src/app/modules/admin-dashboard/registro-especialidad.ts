@@ -1,3 +1,4 @@
+import { notificar } from '../../services/avisos';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -25,6 +26,32 @@ export class RegistroEspecialidadComponent implements OnInit {
   error = signal('');
   exito = signal('');
   datos = { nombre_especialidad: '', descripcion: '' };
+  editando = signal<number | null>(null);
+
+  editar(especialidad: Especialidad): void {
+    if (this.guardando()) {
+      return;
+    }
+
+    this.editando.set(especialidad.id_especialidad);
+    this.datos = {
+      nombre_especialidad: especialidad.nombre_especialidad,
+      descripcion: especialidad.descripcion || '',
+    };
+    document
+      .getElementById('formulario-especialidad')
+      ?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  cancelarEdicion(formulario: NgForm): void {
+    if (this.guardando()) {
+      return;
+    }
+
+    this.editando.set(null);
+    this.datos = { nombre_especialidad: '', descripcion: '' };
+    formulario.resetForm(this.datos);
+  }
 
   ngOnInit(): void {
     this.cargar();
@@ -40,7 +67,9 @@ export class RegistroEspecialidadComponent implements OnInit {
         this.cargando.set(false);
       },
       error: () => {
-        this.error.set('No se pudieron cargar las especialidades.');
+        this.error.set(
+          notificar('No se pudieron cargar las especialidades.', 'error'),
+        );
         this.cargando.set(false);
       },
     });
@@ -56,7 +85,9 @@ export class RegistroEspecialidadComponent implements OnInit {
     this.exito.set('');
 
     if (!nombre) {
-      this.error.set('Introduce el nombre de la especialidad.');
+      this.error.set(
+        notificar('Introduce el nombre de la especialidad.', 'error'),
+      );
       return;
     }
 
@@ -66,20 +97,34 @@ export class RegistroEspecialidadComponent implements OnInit {
       descripcion: this.datos.descripcion.trim(),
     };
 
-    this.http.post(this.url, datos).subscribe({
+    const id = this.editando();
+    const solicitud = id
+      ? this.http.put(`${this.url}?id=${id}`, datos)
+      : this.http.post(this.url, datos);
+
+    solicitud.subscribe({
       next: () => {
         this.guardando.set(false);
+        this.editando.set(null);
         this.datos = { nombre_especialidad: '', descripcion: '' };
         formulario.resetForm(this.datos);
         this.exito.set(
-          'Especialidad registrada. Ya puedes seleccionarla al registrar un médico.',
+          notificar(
+            id
+              ? 'Especialidad actualizada correctamente.'
+              : 'Especialidad registrada. Ya puedes seleccionarla al registrar un médico.',
+            'success',
+          ),
         );
         this.cargar();
       },
       error: (error) => {
         this.guardando.set(false);
         this.error.set(
-          error.error?.mensaje || 'No se pudo registrar la especialidad.',
+          notificar(
+            error.error?.mensaje || 'No se pudo guardar la especialidad.',
+            'error',
+          ),
         );
       },
     });

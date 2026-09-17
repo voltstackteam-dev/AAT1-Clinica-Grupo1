@@ -78,6 +78,38 @@ textarea {
   resize: vertical;
 }
 li {
-  padding: 0.75rem 0;
+  padding: 1.5rem 0;
   border-bottom: 1px solid #e2e8f0;
+}
+
+form {
+  margin-bottom: 2.5rem;
+}
+
+form button {
+  margin: 0.5rem 0.75rem 0 0;
+}
+
+h3 {
+  margin-bottom: 1rem;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li strong {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+li p {
+  margin: 0 0 1rem;
+  line-height: 1.6;
+}
+
+li button {
+  margin-top: 0.25rem;
 }

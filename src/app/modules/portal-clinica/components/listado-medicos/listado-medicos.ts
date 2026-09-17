@@ -1,3 +1,4 @@
+import { notificar } from '../../../../services/avisos';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -27,19 +28,25 @@ export class ListadoMedicosComponent implements OnInit {
           this.medicos.set(res.data);
         }
       },
-      error: (err) => console.error('Error al obtener médicos:', err),
+      error: (err) => notificar('Error al obtener médicos:', 'error'),
     });
   }
 
   seleccionar(idMedico: number): void {
-    this.router.navigate(['/agenda-citas'], { queryParams: { medico: idMedico } });
+    this.router.navigate(['/agenda-citas'], {
+      queryParams: { medico: idMedico },
+    });
   }
 
   // Mapea el nombre de la BD con las fotos existentes en /public/
   getFotoMedico(nombre: string, apellido: string): string {
     const nombreCompleto = `${nombre} ${apellido}`.toLowerCase();
-    if (nombreCompleto.includes('pedro')) return '/DrPedroGonzalez.png';
-    if (nombreCompleto.includes('carlos')) return '/DrCarlosLopez.png';
+    if (nombreCompleto.includes('pedro')) {
+      return '/DrPedroGonzalez.png';
+    }
+    if (nombreCompleto.includes('carlos')) {
+      return '/DrCarlosLopez.png';
+    }
     return '/DraAnaMartinez.png';
   }
 }

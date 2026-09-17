@@ -1,3 +1,4 @@
+import { notificar } from '../../services/avisos';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -45,7 +46,7 @@ export class FarmaciaComponent implements OnInit {
           this.medicamentos.set(res.data);
         }
       },
-      error: (err) => console.error('Error al cargar medicamentos:', err),
+      error: (err) => notificar('Error al cargar medicamentos:', 'error'),
     });
   }
 
@@ -58,7 +59,7 @@ export class FarmaciaComponent implements OnInit {
       requiere_receta: false,
     });
 
-    console.log('Producto agregado al carrito:', medicamento.nombre);
+    notificar(medicamento.nombre + ' agregado al carrito.', 'success');
   }
 
   // --- ASISTENTE VIRTUAL VOLTY ---
@@ -78,7 +79,9 @@ export class FarmaciaComponent implements OnInit {
   }
 
   enviarMensajeChat(): void {
-    if (!this.mensajeUsuario.trim()) return;
+    if (!this.mensajeUsuario.trim()) {
+      return;
+    }
 
     this.historialMensajes.push({
       emisor: 'usuario',

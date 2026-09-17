@@ -10,7 +10,7 @@
   max-width: 1050px;
   margin: 0 auto;
   padding: 2.5rem 1.5rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Cabecera */
@@ -581,4 +581,16 @@
   background-color: #1e3a8a;
   color: #ffffff;
   box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.25);
+}
+
+.pestanas-principales {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .btn-pestana {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 }

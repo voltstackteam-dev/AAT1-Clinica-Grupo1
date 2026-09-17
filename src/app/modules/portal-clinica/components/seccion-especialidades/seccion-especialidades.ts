@@ -1,3 +1,4 @@
+import { notificar } from '../../../../services/avisos';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClinicaService } from '../../../../services/clinica.service';
@@ -37,13 +38,14 @@ export class SeccionEspecialidades implements OnInit {
           this.especialidades.set(res.data);
         }
       },
-      error: (err) => console.error('Error al obtener especialidades:', err),
+      error: (err) => notificar('Error al obtener especialidades:', 'error'),
     });
   }
 
   getDescripcion(nombre: string): string {
     return (
-      this.descripciones[nombre] || `Atención médica especializada y cuidado integral en ${nombre}.`
+      this.descripciones[nombre] ||
+      `Atención médica especializada y cuidado integral en ${nombre}.`
     );
   }
 }

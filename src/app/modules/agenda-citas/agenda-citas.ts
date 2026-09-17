@@ -1,3 +1,4 @@
+import { notificar } from '../../services/avisos';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +13,6 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './agenda-citas.html',
   styleUrl: './agenda-citas.css',
 })
-
 export class AgendaCitasComponent implements OnInit {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
@@ -37,12 +37,16 @@ export class AgendaCitasComponent implements OnInit {
   ngOnInit() {
     const usuario = this.auth.obtenerUsuario();
     if (!usuario) {
-      this.mostrarError('Para agendar una cita, por favor inicia sesión primero.');
+      this.mostrarError(
+        'Para agendar una cita, por favor inicia sesión primero.',
+      );
       return;
     }
     this.sesionActiva.set(true);
     if (Number(usuario.id_rol) !== 3) {
-      this.mostrarError('La agenda pública está disponible únicamente para cuentas de paciente.');
+      this.mostrarError(
+        'La agenda pública está disponible únicamente para cuentas de paciente.',
+      );
       return;
     }
     this.esPaciente.set(true);
@@ -59,45 +63,73 @@ export class AgendaCitasComponent implements OnInit {
     this.disponibilidades.set([]);
     this.horas.set([]);
     this.hora.set('');
-    if (this.idMedico())
-      this.http.get<any>(`${this.api}/horarios.php?id_medico=${this.idMedico()}`).subscribe({
-        next: (r) => {
-          this.disponibilidades.set(r.data || []);
-          this.actualizarHoras();
-        },
-        error: () => this.mostrarError('No se pudieron cargar los horarios del médico.'),
-      });
+    if (this.idMedico()) {
+      this.http
+        .get<any>(`${this.api}/horarios.php?id_medico=${this.idMedico()}`)
+        .subscribe({
+          next: (r) => {
+            this.disponibilidades.set(r.data || []);
+            this.actualizarHoras();
+          },
+          error: () =>
+            this.mostrarError('No se pudieron cargar los horarios del médico.'),
+        });
+    }
   }
   actualizarHoras() {
     this.hora.set('');
     const fecha = this.fecha();
-    if (!fecha) return;
-    const dia = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'][
-      new Date(`${fecha}T12:00:00`).getDay()
-    ];
+    if (!fecha) {
+      return;
+    }
+    const dia = [
+      'DOMINGO',
+      'LUNES',
+      'MARTES',
+      'MIERCOLES',
+      'JUEVES',
+      'VIERNES',
+      'SABADO',
+    ][new Date(`${fecha}T12:00:00`).getDay()];
     if (!['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES'].includes(dia)) {
       this.horas.set([]);
       this.mostrarError('Solo puedes seleccionar de lunes a viernes.');
       return;
     }
-    const horarios = this.disponibilidades().filter((d) => d.dia_semana === dia);
+    const horarios = this.disponibilidades().filter(
+      (d) => d.dia_semana === dia,
+    );
     const horas: string[] = [];
     for (let h = 8; h < 17; h++) {
       const valor = `${String(h).padStart(2, '0')}:00`;
       if (
-        horarios.some((d) => valor >= d.hora_inicio.slice(0, 5) && valor < d.hora_fin.slice(0, 5))
-      )
+        horarios.some(
+          (d) =>
+            valor >= d.hora_inicio.slice(0, 5) &&
+            valor < d.hora_fin.slice(0, 5),
+        )
+      ) {
         horas.push(valor);
+      }
     }
     this.horas.set(horas);
-    if (!horas.length) this.mostrarError('El médico no tiene horarios disponibles para este día.');
-    else {
+    if (!horas.length) {
+      this.mostrarError(
+        'El médico no tiene horarios disponibles para este día.',
+      );
+    } else {
       this.error.set(false);
       this.mensaje.set('');
     }
   }
   confirmarCita() {
-    if (!this.esPaciente() || !this.idMedico() || !this.idSala() || !this.fecha() || !this.hora()) {
+    if (
+      !this.esPaciente() ||
+      !this.idMedico() ||
+      !this.idSala() ||
+      !this.fecha() ||
+      !this.hora()
+    ) {
       this.mostrarError('Completa todos los campos obligatorios.');
       return;
     }
@@ -113,7 +145,12 @@ export class AgendaCitasComponent implements OnInit {
         next: (r) => {
           this.cargando.set(false);
           this.error.set(!r.success);
-          this.mensaje.set(r.success ? `Cita creada correctamente` : r.mensaje);
+          this.mensaje.set(
+            notificar(
+              r.success ? `Cita creada correctamente` : r.mensaje,
+              this.error() ? 'error' : 'success',
+            ),
+          );
           if (r.success) {
             this.hora.set('');
             this.motivoConsulta.set('');
@@ -130,6 +167,6 @@ export class AgendaCitasComponent implements OnInit {
   }
   private mostrarError(mensaje: string) {
     this.error.set(true);
-    this.mensaje.set(mensaje);
+    this.mensaje.set(notificar(mensaje, this.error() ? 'error' : 'success'));
   }
 }

@@ -5,13 +5,8 @@
     <div class="linea-decorativa-perfil"></div>
   </div>
 
-  @if (mensaje()) {
-    <p class="mensaje-gestion">{{ mensaje() }}</p>
-  }
   @if (cargando()) {
     <p>Cargando citas...</p>
-  } @else if (mensaje()) {
-    <p>{{ mensaje() }}</p>
   } @else if (!misCitas().length) {
     <div class="citas-vacias-alerta">
       <h3>No tienes citas programadas</h3>
@@ -23,15 +18,20 @@
           <div class="cita-card-top">
             <span class="cita-codigo">Cita #{{ cita.id_cita }}</span>
             <span [class]="'badge-estado estado-' + cita.estado.toLowerCase()">
+              {{ cita.estado | titlecase }}
             </span>
           </div>
           <div class="cita-card-cuerpo">
             <h3>{{ cita.medico }}</h3>
-            <span class="cita-especialidad-tag">{{ cita.nombre_especialidad }}</span>
+            <span class="cita-especialidad-tag">{{
+              cita.nombre_especialidad
+            }}</span>
             <div class="cita-detalles-logistica">
-              <p><span>Fecha:</span> {{ cita.fecha_hora | date: 'medium' }}</p>
+              <p><span>Fecha:</span> {{ cita.fecha_hora | date: "medium" }}</p>
               <p><span>Lugar:</span> {{ cita.nombre_sala }}</p>
-              <p><span>Motivo:</span> {{ cita.motivo_consulta || 'No indicado' }}</p>
+              <p>
+                <span>Motivo:</span> {{ cita.motivo_consulta || "No indicado" }}
+              </p>
             </div>
           </div>
           @if (puedeGestionar(cita)) {
@@ -64,7 +64,10 @@
               /></label>
               <label
                 >Nueva hora
-                <select [ngModel]="horaNueva()" (ngModelChange)="horaNueva.set($event)">
+                <select
+                  [ngModel]="horaNueva()"
+                  (ngModelChange)="horaNueva.set($event)"
+                >
                   <option value="">Selecciona una hora</option>
                   @for (hora of horas; track hora) {
                     <option [value]="hora">{{ hora }}</option>
@@ -78,7 +81,11 @@
               >
                 Guardar cambio
               </button>
-              <button class="btn-secundario" type="button" (click)="editando.set(null)">
+              <button
+                class="btn-secundario"
+                type="button"
+                (click)="editando.set(null)"
+              >
                 Cerrar
               </button>
             </div>

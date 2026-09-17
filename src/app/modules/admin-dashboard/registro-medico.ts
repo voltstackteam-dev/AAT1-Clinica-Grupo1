@@ -1,3 +1,5 @@
+import { notificar } from '../../services/avisos';
+
 import { Component, OnInit, inject, output, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -9,6 +11,8 @@ interface Especialidad {
 
 interface Medico {
   id_medico: number;
+  id_usuario: number;
+  id_especialidad: number;
   nombre: string;
   apellido: string;
   nombre_especialidad: string;
@@ -38,6 +42,37 @@ export class RegistroMedicoComponent implements OnInit {
   error = signal('');
   exito = signal('');
   datos = this.formularioVacio();
+  editando = signal<Medico | null>(null);
+
+  editar(medico: Medico): void {
+    if (this.guardando()) {
+      return;
+    }
+
+    this.editando.set(medico);
+    this.datos = {
+      nombre: medico.nombre,
+      apellido: medico.apellido,
+      telefono: medico.telefono,
+      id_especialidad: String(medico.id_especialidad),
+      colegiado_num: medico.colegiado_num || '',
+      email: medico.email,
+      contrasenia: '',
+    };
+    document
+      .getElementById('formulario-medico')
+      ?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  cancelarEdicion(formulario: NgForm): void {
+    if (this.guardando()) {
+      return;
+    }
+
+    this.editando.set(null);
+    this.datos = this.formularioVacio();
+    formulario.resetForm(this.datos);
+  }
 
   ngOnInit(): void {
     this.cargarEspecialidades();
@@ -59,7 +94,10 @@ export class RegistroMedicoComponent implements OnInit {
       },
       error: () => {
         this.errorMedicos.set(
-          'No se pudieron cargar los médicos. Vuelve a intentarlo.',
+          notificar(
+            'No se pudieron cargar los médicos. Vuelve a intentarlo.',
+            'error',
+          ),
         );
         this.cargandoMedicos.set(false);
       },
@@ -79,7 +117,10 @@ export class RegistroMedicoComponent implements OnInit {
         },
         error: () => {
           this.error.set(
-            'No se pudieron cargar las especialidades. Intenta recargarlas.',
+            notificar(
+              'No se pudieron cargar las especialidades. Intenta recargarlas.',
+              'error',
+            ),
           );
           this.cargando.set(false);
         },
@@ -94,27 +135,55 @@ export class RegistroMedicoComponent implements OnInit {
 
     this.error.set('');
     this.exito.set('');
-    this.guardando.set(true);
+    const medico = this.editando();
+    const perfil = {
+      nombre: this.datos.nombre.trim(),
+      apellido: this.datos.apellido.trim(),
+      telefono: this.datos.telefono.trim(),
+      id_especialidad: Number(this.datos.id_especialidad),
+      colegiado_num: this.datos.colegiado_num.trim() || null,
+    };
 
-    this.http
-      .post<{ mensaje: string }>(`${this.api}/registrar_medico.php`, this.datos)
-      .subscribe({
-        next: (respuesta) => {
-          this.guardando.set(false);
-          this.datos = this.formularioVacio();
-          formulario.resetForm(this.datos);
-          this.exito.set(respuesta.mensaje);
-          this.registrado.emit();
-          this.cargarMedicos();
-        },
-        error: (error) => {
-          this.guardando.set(false);
-          this.error.set(
+    if (!perfil.nombre || !perfil.apellido || !perfil.telefono) {
+      notificar('Completa nombre, apellido y teléfono.', 'warning');
+      return;
+    }
+
+    this.guardando.set(true);
+    const solicitud = medico
+      ? this.http.put<{ mensaje: string }>(
+          `${this.api}/medicos.php?id=${medico.id_medico}`,
+          {
+            ...perfil,
+            id_usuario: medico.id_usuario,
+          },
+        )
+      : this.http.post<{ mensaje: string }>(
+          `${this.api}/registrar_medico.php`,
+          this.datos,
+        );
+
+    solicitud.subscribe({
+      next: (respuesta) => {
+        this.guardando.set(false);
+        this.editando.set(null);
+        this.datos = this.formularioVacio();
+        formulario.resetForm(this.datos);
+        this.exito.set(notificar(respuesta.mensaje, 'success'));
+        this.registrado.emit();
+        this.cargarMedicos();
+      },
+      error: (error) => {
+        this.guardando.set(false);
+        this.error.set(
+          notificar(
             error.error?.mensaje ||
-              'No se pudo registrar el médico. Intenta nuevamente.',
-          );
-        },
-      });
+              'No se pudieron guardar los datos del médico. Intenta nuevamente.',
+            'error',
+          ),
+        );
+      },
+    });
   }
 
   private formularioVacio() {

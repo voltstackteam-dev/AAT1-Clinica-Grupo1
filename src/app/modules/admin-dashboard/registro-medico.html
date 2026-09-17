@@ -13,7 +13,7 @@
   @if (cargandoMedicos()) {
     <p role="status">Cargando médicos...</p>
   } @else if (errorMedicos()) {
-    <p class="error" role="alert">{{ errorMedicos() }}</p>
+    <button type="button" (click)="cargarMedicos()">Reintentar</button>
   } @else if (!medicos().length) {
     <p>
       No hay médicos registrados. Puedes agregar el primero en el formulario
@@ -38,6 +38,7 @@
             <th scope="col">Teléfono</th>
             <th scope="col">Correo electrónico</th>
             <th scope="col">Colegiado</th>
+            <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -48,6 +49,15 @@
               <td>{{ medico.telefono }}</td>
               <td>{{ medico.email }}</td>
               <td>{{ medico.colegiado_num || "No registrado" }}</td>
+              <td>
+                <button
+                  type="button"
+                  [disabled]="guardando()"
+                  (click)="editar(medico)"
+                >
+                  Editar
+                </button>
+              </td>
             </tr>
           }
         </tbody>
@@ -57,15 +67,15 @@
 </section>
 
 <section class="registro-medico">
-  <h3>Registrar médico</h3>
-  <p>Crea el perfil profesional y su cuenta de acceso con rol de médico.</p>
+  <h3>{{ editando() ? "Editar médico" : "Registrar médico" }}</h3>
+  <p>
+    {{
+      editando()
+        ? "Actualiza los datos profesionales del médico."
+        : "Crea el perfil profesional y su cuenta de acceso con rol de médico."
+    }}
+  </p>
 
-  @if (error()) {
-    <p class="error" role="alert">{{ error() }}</p>
-  }
-  @if (exito()) {
-    <p class="exito" role="status">{{ exito() }}</p>
-  }
   @if (cargando()) {
     <p role="status">Cargando especialidades...</p>
   } @else if (!especialidades().length) {
@@ -75,7 +85,11 @@
     </button>
   }
 
-  <form #formulario="ngForm" (ngSubmit)="registrar(formulario)">
+  <form
+    id="formulario-medico"
+    #formulario="ngForm"
+    (ngSubmit)="registrar(formulario)"
+  >
     <fieldset [disabled]="guardando()">
       <legend>Datos del médico</legend>
       <div class="campos">
@@ -139,36 +153,38 @@
       </div>
     </fieldset>
 
-    <fieldset [disabled]="guardando()">
-      <legend>Cuenta de acceso</legend>
-      <div class="campos">
-        <label
-          >Correo electrónico *
-          <input
-            type="email"
-            email
-            name="email"
-            [(ngModel)]="datos.email"
-            required
-            maxlength="100"
-            autocomplete="off"
-          />
-        </label>
-        <label
-          >Contraseña *
-          <input
-            type="password"
-            name="contrasenia"
-            [(ngModel)]="datos.contrasenia"
-            required
-            minlength="8"
-            maxlength="72"
-            autocomplete="new-password"
-          />
-          <small>Mínimo 8 caracteres.</small>
-        </label>
-      </div>
-    </fieldset>
+    @if (!editando()) {
+      <fieldset [disabled]="guardando()">
+        <legend>Cuenta de acceso</legend>
+        <div class="campos">
+          <label
+            >Correo electrónico *
+            <input
+              type="email"
+              email
+              name="email"
+              [(ngModel)]="datos.email"
+              required
+              maxlength="100"
+              autocomplete="off"
+            />
+          </label>
+          <label
+            >Contraseña *
+            <input
+              type="password"
+              name="contrasenia"
+              [(ngModel)]="datos.contrasenia"
+              required
+              minlength="8"
+              maxlength="72"
+              autocomplete="new-password"
+            />
+            <small>Mínimo 8 caracteres.</small>
+          </label>
+        </div>
+      </fieldset>
+    }
 
     <p>Los campos marcados con * son obligatorios.</p>
     <button
@@ -180,7 +196,22 @@
         !especialidades().length
       "
     >
-      {{ guardando() ? "Registrando..." : "Registrar médico" }}
+      {{
+        guardando()
+          ? "Guardando..."
+          : editando()
+            ? "Guardar cambios"
+            : "Registrar médico"
+      }}
     </button>
+    @if (editando()) {
+      <button
+        type="button"
+        [disabled]="guardando()"
+        (click)="cancelarEdicion(formulario)"
+      >
+        Cancelar edición
+      </button>
+    }
   </form>
 </section>

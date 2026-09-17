@@ -1,3 +1,4 @@
+import { notificar } from '../../services/avisos';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -33,25 +34,45 @@ export class LoginComponent {
 
     this.cargando = true;
 
-    this.authService.login(this.credenciales.email, this.credenciales.contrasenia).subscribe({
-      next: (respuesta) => {
-        this.cargando = false;
+    this.authService
+      .login(this.credenciales.email, this.credenciales.contrasenia)
+      .subscribe({
+        next: (respuesta) => {
+          this.cargando = false;
 
-        console.log('Respuesta del login:', respuesta);
+          console.log('Respuesta del login:', respuesta);
 
-        if (respuesta.success) {
-          console.log('Login correcto');
+          if (respuesta.success) {
+            console.log('Login correcto');
 
-          const usuario = respuesta.usuario;
+            const usuario = respuesta.usuario;
 
-          console.log('Usuario autenticado:', usuario);
+            console.log('Usuario autenticado:', usuario);
 
-          /*  REDIRECCIÓN SEGÚN ROL  */
+            /*  LOGIN EXCLUSIVO PARA PACIENTES  */
 
-          if (usuario.id_rol === 1) {
-            // PACIENTE
-            this.router.navigate(['/admin/control-citas']);
-          } else if (usuario.id_rol === 2) {
+            if (Number(usuario.id_rol) !== 3) {
+              this.authService.logout();
+
+              this.errorAutenticacion = true;
+              this.mensajeError = notificar(
+                'Esta cuenta pertenece a administracion. Utiliza el acceso administrativo',
+                'error',
+              );
+
+              return;
+            }
+
+            //Paciente
+            this.router.navigate(['/mis-citas']);
+          } else {
+            this.errorAutenticacion = true;
+            this.mensajeError = notificar(
+              respuesta.mensaje || 'Usuario o contraseña incorrecta',
+              'error',
+            );
+          }
+          /*   else if (usuario.id_rol === 2) {
             // MÉDICO
             this.router.navigate(['/']);
           } else if (usuario.id_rol === 3) {
@@ -59,24 +80,27 @@ export class LoginComponent {
             this.router.navigate(['/mis-citas']);
           } else {
             this.router.navigate(['/']);
-          }
-        } else {
+          } */
+          /*  } else {
           this.errorAutenticacion = true;
 
           this.mensajeError = respuesta.mensaje || 'Usuario o contraseña incorrectos';
-        }
-      },
+        }, */
+        },
 
-      error: (error) => {
-        this.cargando = false;
+        error: (error) => {
+          this.cargando = false;
 
-        console.error('Error conectando con la API:', error);
+          console.error('Error conectando con la API:', error);
 
-        this.errorAutenticacion = true;
+          this.errorAutenticacion = true;
 
-        this.mensajeError = 'No se pudo conectar con el servidor';
-      },
-    });
+          this.mensajeError = notificar(
+            error.error?.mensaje || 'No se pudo conectar con el servidor',
+            'error',
+          );
+        },
+      });
   }
 
   /* 

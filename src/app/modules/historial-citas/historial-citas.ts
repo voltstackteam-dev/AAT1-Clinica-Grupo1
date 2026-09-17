@@ -1,3 +1,4 @@
+import { notificar, confirmar } from '../../services/avisos';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -25,7 +26,10 @@ export class HistorialCitasComponent implements OnInit {
   fechaNueva = signal('');
   horaNueva = signal('');
   hoy = new Date().toISOString().slice(0, 10);
-  horas = Array.from({ length: 9 }, (_, indice) => `${String(indice + 8).padStart(2, '0')}:00`);
+  horas = Array.from(
+    { length: 9 },
+    (_, indice) => `${String(indice + 8).padStart(2, '0')}:00`,
+  );
 
   ngOnInit(): void {
     const usuario = this.auth.obtenerUsuario();
@@ -37,24 +41,30 @@ export class HistorialCitasComponent implements OnInit {
   }
   cargarCitas(): void {
     const usuario = this.auth.obtenerUsuario();
-    this.http.get<any>(`${this.api}?id_usuario=${usuario.id_usuario}`).subscribe({
-      next: (r) => {
-        this.misCitas.set(r.data || []);
-        this.cargando.set(false);
-      },
-      error: () => {
-        this.mensaje.set('No se pudieron cargar tus citas.');
-        this.cargando.set(false);
-      },
-    });
+    this.http
+      .get<any>(`${this.api}?id_usuario=${usuario.id_usuario}`)
+      .subscribe({
+        next: (r) => {
+          this.misCitas.set(r.data || []);
+          this.cargando.set(false);
+        },
+        error: () => {
+          this.mensaje.set(
+            notificar('No se pudieron cargar tus citas.', 'error'),
+          );
+          this.cargando.set(false);
+        },
+      });
   }
-  
+
   puedeGestionar(cita: any): boolean {
     return cita.estado === 'PENDIENTE';
   }
 
-  cancelar(cita: any): void {
-    if (!confirm(`¿Deseas cancelar la cita #${cita.id_cita}?`)) return;
+  async cancelar(cita: any): Promise<void> {
+    if (!(await confirmar(`¿Deseas cancelar la cita #${cita.id_cita}?`))) {
+      return;
+    }
     this.actualizarEstado(cita, 'CANCELADA');
   }
   prepararReprogramacion(cita: any): void {
@@ -66,7 +76,12 @@ export class HistorialCitasComponent implements OnInit {
   }
   reprogramar(cita: any): void {
     if (!this.fechaNueva() || !this.horaNueva()) {
-      this.mensaje.set('Selecciona una fecha y hora para reprogramar la cita.');
+      this.mensaje.set(
+        notificar(
+          'Selecciona una fecha y hora para reprogramar la cita.',
+          'warning',
+        ),
+      );
       return;
     }
     this.actualizando.set(cita.id_cita);
@@ -80,17 +95,26 @@ export class HistorialCitasComponent implements OnInit {
           this.misCitas.update((citas) =>
             citas.map((item) =>
               item.id_cita === cita.id_cita
-                ? { ...item, estado: respuesta.estado, fecha_hora: respuesta.fecha_hora }
+                ? {
+                    ...item,
+                    estado: respuesta.estado,
+                    fecha_hora: respuesta.fecha_hora,
+                  }
                 : item,
             ),
           );
           this.editando.set(null);
           this.actualizando.set(null);
-          this.mensaje.set(respuesta.mensaje);
+          this.mensaje.set(notificar(respuesta.mensaje, 'success'));
         },
         error: (error) => {
           this.actualizando.set(null);
-          this.mensaje.set(error.error?.mensaje || 'No se pudo reprogramar la cita.');
+          this.mensaje.set(
+            notificar(
+              error.error?.mensaje || 'No se pudo reprogramar la cita.',
+              'error',
+            ),
+          );
         },
       });
   }
@@ -100,15 +124,22 @@ export class HistorialCitasComponent implements OnInit {
       next: (respuesta) => {
         this.misCitas.update((citas) =>
           citas.map((item) =>
-            item.id_cita === cita.id_cita ? { ...item, estado: respuesta.estado } : item,
+            item.id_cita === cita.id_cita
+              ? { ...item, estado: respuesta.estado }
+              : item,
           ),
         );
         this.actualizando.set(null);
-        this.mensaje.set('La cita fue cancelada.');
+        this.mensaje.set(notificar('La cita fue cancelada.', 'success'));
       },
       error: (error) => {
         this.actualizando.set(null);
-        this.mensaje.set(error.error?.mensaje || 'No se pudo actualizar la cita.');
+        this.mensaje.set(
+          notificar(
+            error.error?.mensaje || 'No se pudo actualizar la cita.',
+            'error',
+          ),
+        );
       },
     });
   }

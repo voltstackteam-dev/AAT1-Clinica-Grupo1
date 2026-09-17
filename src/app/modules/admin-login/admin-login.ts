@@ -1,3 +1,4 @@
+import { notificar } from '../../services/avisos';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -22,26 +23,40 @@ export class AdminLoginComponent {
   ejecutarLoginAdmin(): void {
     this.errorAutenticacion = false;
     this.cargando = true;
-    this.auth.login(this.credencialesAdmin.email, this.credencialesAdmin.contrasenia).subscribe({
-      next: (respuesta) => {
-        this.cargando = false;
-        if (!respuesta.success)
-          return this.mostrarError(respuesta.mensaje || 'Credenciales incorrectas.');
-        const rol = respuesta.usuario.id_rol;
-        if (rol !== 1 && rol !== 2) {
-          this.auth.logout();
-          return this.mostrarError('Esta cuenta no pertenece al personal médico o administrativo.');
-        }
-        this.router.navigate(['/admin/control-citas']);
-      },
-      error: (error) => {
-        this.cargando = false;
-        this.mostrarError(error.error?.mensaje || 'No se pudo iniciar sesión.');
-      },
-    });
+    this.auth
+      .login(this.credencialesAdmin.email, this.credencialesAdmin.contrasenia)
+      .subscribe({
+        next: (respuesta) => {
+          this.cargando = false;
+          if (!respuesta.success) {
+            return this.mostrarError(
+              respuesta.mensaje || 'Credenciales incorrectas.',
+            );
+          }
+
+          const rol = Number(respuesta.usuario.id_rol);
+
+          if (rol !== 1 && rol !== 2) {
+            this.auth.logout();
+
+            return this.mostrarError(
+              'Esta cuenta pertenece a un paciente. Utiliza el acceso de pacientes.',
+            );
+          }
+
+          this.router.navigate(['/admin/control-citas']);
+        },
+
+        error: (error) => {
+          this.cargando = false;
+          this.mostrarError(
+            error.error?.mensaje || 'No se pudo iniciar sesión.',
+          );
+        },
+      });
   }
   private mostrarError(mensaje: string): void {
     this.errorAutenticacion = true;
-    this.mensajeError = mensaje;
+    this.mensajeError = notificar(mensaje, 'error');
   }
 }

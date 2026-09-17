@@ -3,16 +3,18 @@
   <p>Registra las especialidades que podrás asignar a los médicos.</p>
 
   @if (error()) {
-    <p class="error" role="alert">{{ error() }}</p>
     <button type="button" (click)="cargar()">Recargar listado</button>
   }
-  @if (exito()) {
-    <p class="exito" role="status">{{ exito() }}</p>
-  }
 
-  <form #formulario="ngForm" (ngSubmit)="registrar(formulario)">
+  <form
+    id="formulario-especialidad"
+    #formulario="ngForm"
+    (ngSubmit)="registrar(formulario)"
+  >
     <fieldset [disabled]="guardando()">
-      <legend>Nueva especialidad</legend>
+      <legend>
+        {{ editando() ? "Editar especialidad" : "Nueva especialidad" }}
+      </legend>
       <div class="campos">
         <label
           >Nombre de la especialidad *
@@ -35,8 +37,23 @@
       </div>
     </fieldset>
     <button type="submit" [disabled]="formulario.invalid || guardando()">
-      {{ guardando() ? "Guardando..." : "Registrar especialidad" }}
+      {{
+        guardando()
+          ? "Guardando..."
+          : editando()
+            ? "Guardar cambios"
+            : "Registrar especialidad"
+      }}
     </button>
+    @if (editando()) {
+      <button
+        type="button"
+        [disabled]="guardando()"
+        (click)="cancelarEdicion(formulario)"
+      >
+        Cancelar edición
+      </button>
+    }
   </form>
 
   <h3>Especialidades registradas</h3>
@@ -51,6 +68,13 @@
         <li>
           <strong>{{ especialidad.nombre_especialidad }}</strong>
           <p>{{ especialidad.descripcion || "Sin descripción" }}</p>
+          <button
+            type="button"
+            [disabled]="guardando()"
+            (click)="editar(especialidad)"
+          >
+            Editar
+          </button>
         </li>
       } @empty {
         <li>No hay especialidades registradas.</li>
