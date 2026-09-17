@@ -22,9 +22,8 @@
         <div class="cita-historial-card">
           <div class="cita-card-top">
             <span class="cita-codigo">Cita #{{ cita.id_cita }}</span>
-            <span [class]="'badge-estado estado-' + cita.estado.toLowerCase()">{{
-              cita.estado
-            }}</span>
+            <span [class]="'badge-estado estado-' + cita.estado.toLowerCase()">
+            </span>
           </div>
           <div class="cita-card-cuerpo">
             <h3>{{ cita.medico }}</h3>
