@@ -1,0 +1,60 @@
+<section class="registro-medico">
+  <h3>Especialidades médicas</h3>
+  <p>Registra las especialidades que podrás asignar a los médicos.</p>
+
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+    <button type="button" (click)="cargar()">Recargar listado</button>
+  }
+  @if (exito()) {
+    <p class="exito" role="status">{{ exito() }}</p>
+  }
+
+  <form #formulario="ngForm" (ngSubmit)="registrar(formulario)">
+    <fieldset [disabled]="guardando()">
+      <legend>Nueva especialidad</legend>
+      <div class="campos">
+        <label
+          >Nombre de la especialidad *
+          <input
+            name="nombre"
+            [(ngModel)]="datos.nombre_especialidad"
+            required
+            maxlength="100"
+          />
+        </label>
+        <label
+          >Descripción (opcional)
+          <textarea
+            name="descripcion"
+            [(ngModel)]="datos.descripcion"
+            rows="3"
+            maxlength="10000"
+          ></textarea>
+        </label>
+      </div>
+    </fieldset>
+    <button type="submit" [disabled]="formulario.invalid || guardando()">
+      {{ guardando() ? "Guardando..." : "Registrar especialidad" }}
+    </button>
+  </form>
+
+  <h3>Especialidades registradas</h3>
+  @if (cargando()) {
+    <p role="status">Cargando especialidades...</p>
+  } @else {
+    <ul>
+      @for (
+        especialidad of especialidades();
+        track especialidad.id_especialidad
+      ) {
+        <li>
+          <strong>{{ especialidad.nombre_especialidad }}</strong>
+          <p>{{ especialidad.descripcion || "Sin descripción" }}</p>
+        </li>
+      } @empty {
+        <li>No hay especialidades registradas.</li>
+      }
+    </ul>
+  }
+</section>

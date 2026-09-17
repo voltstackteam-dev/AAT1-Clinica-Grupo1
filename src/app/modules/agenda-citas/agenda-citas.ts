@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './agenda-citas.html',
   styleUrl: './agenda-citas.css',
 })
+
 export class AgendaCitasComponent implements OnInit {
   private http = inject(HttpClient);
   private auth = inject(AuthService);
@@ -32,6 +33,7 @@ export class AgendaCitasComponent implements OnInit {
   error = signal(false);
   sesionActiva = signal(false);
   esPaciente = signal(false);
+
   ngOnInit() {
     const usuario = this.auth.obtenerUsuario();
     if (!usuario) {
@@ -111,7 +113,7 @@ export class AgendaCitasComponent implements OnInit {
         next: (r) => {
           this.cargando.set(false);
           this.error.set(!r.success);
-          this.mensaje.set(r.success ? `Cita creada correctamente. ID: ${r.id_cita}` : r.mensaje);
+          this.mensaje.set(r.success ? `Cita creada correctamente` : r.mensaje);
           if (r.success) {
             this.hora.set('');
             this.motivoConsulta.set('');

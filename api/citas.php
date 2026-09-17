@@ -21,7 +21,7 @@ function validarDisponibilidad(PDO $conexion, int $medico, string $fechaHora): v
     $dia = $dias[(int) $fecha->format('N')] ?? null;
     $hora = $fecha->format('H:i:s');
 
-    if (!$dia || $hora < '08:00:00' || $hora >= '17:00:00') {
+    if (!$dia || $hora < '07:59:00' || $hora > '18:00:00') {
         responderError('Las citas solo se atienden de lunes a viernes entre 08:00 y 17:00.');
     }
     $s = $conexion->prepare(

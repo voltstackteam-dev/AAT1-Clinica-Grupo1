@@ -5,12 +5,24 @@ require_once __DIR__ . '/config/jwt.php';
 
 $metodo = iniciarApi();
 
+function normalizarHoraHorario($hora): string
+{
+    if (
+        !is_string($hora) ||
+        !preg_match('/\A(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?\z/', $hora)
+    ) {
+        responderError('La hora debe tener el formato HH:MM o HH:MM:SS.');
+    }
+
+    return strlen($hora) === 5 ? $hora . ':00' : $hora;
+}
+
 function validarHorario(array $datos): array
 {
     requerirCampos($datos, ['id_medico', 'dia_semana', 'hora_inicio', 'hora_fin']);
     $dia = strtoupper(trim($datos['dia_semana']));
-    $inicio = substr($datos['hora_inicio'], 0, 8);
-    $fin = substr($datos['hora_fin'], 0, 8);
+    $inicio = normalizarHoraHorario($datos['hora_inicio']);
+    $fin = normalizarHoraHorario($datos['hora_fin']);
 
     if (!in_array($dia, ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES'], true)) {
         responderError('Los horarios solo pueden registrarse de lunes a viernes.');
