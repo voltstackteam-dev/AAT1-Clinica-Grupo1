@@ -191,7 +191,9 @@ ejecutarApi(function () use ($conexion, $metodo): void {
                 FROM citas
                 WHERE id_cita = :id'
         );
+
         $consulta->execute([':id' => $idCita]);
+
         $cita = $consulta->fetch();
 
         if (!$cita) {
@@ -200,11 +202,22 @@ ejecutarApi(function () use ($conexion, $metodo): void {
         autorizarGestionCita($conexion, $usuario, $cita);
 
         if (isset($d['fecha_hora'])) {
-            if (!in_array($cita['estado'], ['PENDIENTE', 'CONFIRMADA'], true)) {
-                responderError('Solo se pueden reprogramar citas pendientes o confirmadas.', 409);
+            if ($cita['estado'] !== 'PENDIENTE') {
+                responderError(
+                    'La cita ya fue confirmada por el médico y no puede reprogramarse.', 
+                    409
+                    );
             }
+
             $fecha = str_replace('T', ' ', $d['fecha_hora']);
-            validarDisponibilidad($conexion, (int) $cita['id_medico'], $fecha);
+
+            validarDisponibilidad(
+                $conexion, 
+                (int) $cita['id_medico'], 
+                $fecha
+            );
+
+
             $conflicto = $conexion->prepare(
                 "SELECT
                         1
@@ -249,10 +262,10 @@ ejecutarApi(function () use ($conexion, $metodo): void {
 
         if ((int) $usuario->id_rol === 3) {
             if (
-                !in_array($cita['estado'], ['PENDIENTE', 'CONFIRMADA'], true)
+                $cita['estado'] !== 'PENDIENTE'
                 || $nuevoEstado !== 'CANCELADA'
             ) {
-                responderError('Solo puede cancelar citas pendientes o confirmadas.', 403);
+                responderError('La cita ya fue confirmada y no puede cancelarse o reprogramar', 403);
             }
         } elseif ((int) $usuario->id_rol === 2) {
             if (

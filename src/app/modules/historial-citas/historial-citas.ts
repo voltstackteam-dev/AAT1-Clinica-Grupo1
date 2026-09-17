@@ -48,9 +48,11 @@ export class HistorialCitasComponent implements OnInit {
       },
     });
   }
+  
   puedeGestionar(cita: any): boolean {
-    return ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado);
+    return cita.estado === 'PENDIENTE';
   }
+
   cancelar(cita: any): void {
     if (!confirm(`¿Deseas cancelar la cita #${cita.id_cita}?`)) return;
     this.actualizarEstado(cita, 'CANCELADA');
