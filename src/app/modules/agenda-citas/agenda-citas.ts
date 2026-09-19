@@ -37,16 +37,12 @@ export class AgendaCitasComponent implements OnInit {
   ngOnInit() {
     const usuario = this.auth.obtenerUsuario();
     if (!usuario) {
-      this.mostrarError(
-        'Para agendar una cita, por favor inicia sesión primero.',
-      );
+      this.mostrarError('Para agendar una cita, por favor inicia sesión primero.');
       return;
     }
     this.sesionActiva.set(true);
     if (Number(usuario.id_rol) !== 3) {
-      this.mostrarError(
-        'La agenda pública está disponible únicamente para cuentas de paciente.',
-      );
+      this.mostrarError('La agenda pública está disponible únicamente para cuentas de paciente.');
       return;
     }
     this.esPaciente.set(true);
@@ -59,71 +55,50 @@ export class AgendaCitasComponent implements OnInit {
       error: () => this.mostrarError(`No se pudo cargar ${recurso}.`),
     });
   }
+  private consultaHoras = 0;
+  cargandoHoras = signal(false);
+
   cambiarMedico() {
-    this.disponibilidades.set([]);
-    this.horas.set([]);
-    this.hora.set('');
-    if (this.idMedico()) {
-      this.http
-        .get<any>(`${this.api}/horarios.php?id_medico=${this.idMedico()}`)
-        .subscribe({
-          next: (r) => {
-            this.disponibilidades.set(r.data || []);
-            this.actualizarHoras();
-          },
-          error: () =>
-            this.mostrarError('No se pudieron cargar los horarios del médico.'),
-        });
-    }
+    this.actualizarHoras();
   }
+
   actualizarHoras() {
+    const consulta = ++this.consultaHoras;
     this.hora.set('');
-    const fecha = this.fecha();
-    if (!fecha) {
+    this.horas.set([]);
+    this.cargandoHoras.set(false);
+
+    if (!this.idMedico() || !this.idSala() || !this.fecha()) {
       return;
     }
-    const dia = [
-      'DOMINGO',
-      'LUNES',
-      'MARTES',
-      'MIERCOLES',
-      'JUEVES',
-      'VIERNES',
-      'SABADO',
-    ][new Date(`${fecha}T12:00:00`).getDay()];
-    if (!['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES'].includes(dia)) {
-      this.horas.set([]);
-      this.mostrarError('Solo puedes seleccionar de lunes a viernes.');
-      return;
-    }
-    const horarios = this.disponibilidades().filter(
-      (d) => d.dia_semana === dia,
-    );
-    const horas: string[] = [];
-    for (let h = 8; h < 17; h++) {
-      const valor = `${String(h).padStart(2, '0')}:00`;
-      if (
-        horarios.some(
-          (d) =>
-            valor >= d.hora_inicio.slice(0, 5) &&
-            valor < d.hora_fin.slice(0, 5),
-        )
-      ) {
-        horas.push(valor);
-      }
-    }
-    this.horas.set(horas);
-    if (!horas.length) {
-      this.mostrarError(
-        'El médico no tiene horarios disponibles para este día.',
-      );
-    } else {
-      this.error.set(false);
-      this.mensaje.set('');
-    }
+
+    this.cargandoHoras.set(true);
+    this.http
+      .get<{ success: boolean; data: string[] }>(this.api + '/horas_disponibles.php', {
+        params: {
+          id_medico: this.idMedico(),
+          id_sala: this.idSala(),
+          fecha: this.fecha(),
+        },
+      })
+      .subscribe({
+        next: (respuesta) => {
+          if (consulta !== this.consultaHoras) return;
+          this.horas.set(respuesta.data || []);
+          this.cargandoHoras.set(false);
+        },
+        error: () => {
+          if (consulta !== this.consultaHoras) return;
+          this.cargandoHoras.set(false);
+          this.mostrarError('No se pudieron consultar los horarios. Intenta de nuevo.');
+        },
+      });
   }
+
   confirmarCita() {
     if (
+      this.cargandoHoras() ||
+      !this.horas().includes(this.hora()) ||
       !this.esPaciente() ||
       !this.idMedico() ||
       !this.idSala() ||
@@ -152,12 +127,16 @@ export class AgendaCitasComponent implements OnInit {
             ),
           );
           if (r.success) {
-            this.hora.set('');
+            this.actualizarHoras();
             this.motivoConsulta.set('');
           }
         },
         error: (e) => {
           this.cargando.set(false);
+          if (e.status === 409) {
+            this.actualizarHoras();
+            return;
+          }
           this.mostrarError(e.error?.mensaje || 'No se pudo crear la cita.');
         },
       });

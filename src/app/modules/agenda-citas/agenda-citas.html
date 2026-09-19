@@ -32,7 +32,7 @@
             <label>Sala *</label
             ><select
               [ngModel]="idSala()"
-              (ngModelChange)="idSala.set(+$event)"
+              (ngModelChange)="idSala.set(+$event); actualizarHoras()"
               name="sala"
             >
               <option [value]="0">Selecciona una sala</option>
@@ -57,9 +57,19 @@
               [ngModel]="hora()"
               (ngModelChange)="hora.set($event)"
               name="hora"
-              [disabled]="!horas().length"
+              [disabled]="cargandoHoras() || !horas().length"
             >
-              <option value="">Selecciona una hora</option>
+              <option value="">
+                {{
+                  cargandoHoras()
+                    ? 'Consultando horarios...'
+                    : !idMedico() || !idSala() || !fecha()
+                      ? 'Selecciona médico, sala y fecha'
+                      : horas().length
+                        ? 'Selecciona una hora'
+                        : 'Sin horarios disponibles'
+                }}
+              </option>
               @for (horaDisponible of horas(); track horaDisponible) {
                 <option [value]="horaDisponible">{{ horaDisponible }}</option>
               }
@@ -76,8 +86,12 @@
           </div>
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn-confirmar" [disabled]="cargando()">
-            {{ cargando() ? "Guardando..." : "Confirmar cita" }}
+          <button
+            type="submit"
+            class="btn-confirmar"
+            [disabled]="cargando() || cargandoHoras() || !hora()"
+          >
+            {{ cargando() ? 'Guardando...' : 'Confirmar cita' }}
           </button>
         </div>
       </form>
