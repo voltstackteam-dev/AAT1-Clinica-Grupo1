@@ -1,0 +1,84 @@
+<section class="registro-medico">
+  <h3>Especialidades médicas</h3>
+  <p>Registra las especialidades que podrás asignar a los médicos.</p>
+
+  @if (error()) {
+    <button type="button" (click)="cargar()">Recargar listado</button>
+  }
+
+  <form
+    id="formulario-especialidad"
+    #formulario="ngForm"
+    (ngSubmit)="registrar(formulario)"
+  >
+    <fieldset [disabled]="guardando()">
+      <legend>
+        {{ editando() ? "Editar especialidad" : "Nueva especialidad" }}
+      </legend>
+      <div class="campos">
+        <label
+          >Nombre de la especialidad *
+          <input
+            name="nombre"
+            [(ngModel)]="datos.nombre_especialidad"
+            required
+            maxlength="100"
+          />
+        </label>
+        <label
+          >Descripción (opcional)
+          <textarea
+            name="descripcion"
+            [(ngModel)]="datos.descripcion"
+            rows="3"
+            maxlength="10000"
+          ></textarea>
+        </label>
+      </div>
+    </fieldset>
+    <button type="submit" [disabled]="formulario.invalid || guardando()">
+      {{
+        guardando()
+          ? "Guardando..."
+          : editando()
+            ? "Guardar cambios"
+            : "Registrar especialidad"
+      }}
+    </button>
+    @if (editando()) {
+      <button
+        type="button"
+        [disabled]="guardando()"
+        (click)="cancelarEdicion(formulario)"
+      >
+        Cancelar edición
+      </button>
+    }
+  </form>
+
+  <h3>Especialidades registradas</h3>
+  @if (cargando()) {
+    <p role="status">Cargando especialidades...</p>
+  } @else {
+    <ul>
+      @for (
+        especialidad of especialidades();
+        track especialidad.id_especialidad
+      ) {
+        <li>
+          <strong>{{ especialidad.nombre_especialidad }}</strong>
+          <p>{{ especialidad.descripcion || "Sin descripción" }}</p>
+          <button
+            type="button"
+            [disabled]="guardando()"
+            (click)="editar(especialidad)"
+          >
+            Editar
+          </button>
+        </li>
+      } @empty {
+        <li>No hay especialidades registradas.</li>
+      }
+    </ul>
+  }
+</section>

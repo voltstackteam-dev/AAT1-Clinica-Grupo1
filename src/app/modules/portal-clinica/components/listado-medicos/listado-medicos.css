@@ -1,0 +1,127 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.medicos-section {
+  padding: 3rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.medicos-encabezado {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.medicos-encabezado h2 {
+  font-size: 2rem;
+  color: #1e3a8a;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.linea-decorativa-azul {
+  width: 60px;
+  height: 4px;
+  background-color: #0284c7;
+  margin: 0.5rem auto 1rem auto;
+  border-radius: 2px;
+}
+
+.medicos-encabezado p {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.medicos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+  justify-content: center;
+  gap: 2rem;
+}
+
+.medico-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e2e8f0;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.medico-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.medico-foto-container {
+  width: 100%;
+  height: 220px;
+  max-height: 220px;
+  overflow: hidden;
+  background-color: #f8fafc;
+}
+
+.medico-foto {
+  width: 100%;
+  height: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.medico-info {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.medico-especialidad {
+  display: inline-block;
+  align-self: flex-start;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  margin-bottom: 0.5rem;
+}
+
+.medico-info h3 {
+  font-size: 1.15rem;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.medico-telefono,
+.medico-equipo {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0.2rem 0;
+}
+
+.btn-agendar-cita {
+  margin-top: 1rem;
+  background-color: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.btn-agendar-cita:hover {
+  background-color: #0369a1;
+}

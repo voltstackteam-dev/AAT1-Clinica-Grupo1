@@ -8,7 +8,7 @@
   --bg-light: #f8fafc !important;
   --text-dark: #1e293b !important;
   --text-muted: #64748b !important;
-  --shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
 * {

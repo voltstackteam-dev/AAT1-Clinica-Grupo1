@@ -1,0 +1,104 @@
+<section class="farmacia-header">
+  <h2>Farmacia Voltstack</h2>
+  <p>Medicamentos certificados con entrega inmediata y total seguridad</p>
+
+  <!-- Botones de Categorías -->
+  <div class="filtros-categoria">
+    <button [class.active]="categoriaActual() === 'Todos'" (click)="cargarMedicamentos('Todos')">
+      Todos
+    </button>
+    <button
+      [class.active]="categoriaActual() === 'Analgésicos'"
+      (click)="cargarMedicamentos('Analgésicos')"
+    >
+      Analgésicos
+    </button>
+    <button
+      [class.active]="categoriaActual() === 'Antibióticos'"
+      (click)="cargarMedicamentos('Antibióticos')"
+    >
+      Antibióticos
+    </button>
+    <button
+      [class.active]="categoriaActual() === 'Antihistamínicos'"
+      (click)="cargarMedicamentos('Antihistamínicos')"
+    >
+      Antihistamínicos
+    </button>
+    <button
+      [class.active]="categoriaActual() === 'Vitaminas'"
+      (click)="cargarMedicamentos('Vitaminas')"
+    >
+      Vitaminas
+    </button>
+  </div>
+</section>
+
+<!-- Grilla de Tarjetas Dinámicas -->
+<div class="medicamentos-grid">
+  @for (med of medicamentos(); track med.id_medicamento) {
+    <div class="card-medicamento">
+      <span class="badge-cat">{{ med.categoria }}</span>
+      <img [src]="med.imagen_url || 'paracetamol.png'" [alt]="med.nombre" />
+
+      <div class="card-body">
+        <h3>{{ med.nombre }}</h3>
+        <p class="precio">Q {{ med.precio }}</p>
+
+        <!-- Indicador de Stock reactivo -->
+        @if (med.stock > 0) {
+          <p class="en-stock">● En Stock</p>
+          <button class="btn-carrito" (click)="agregarAlCarrito(med)">Añadir al Carrito</button>
+        } @else {
+          <p class="agotado">⊘ Agotado</p>
+          <button class="btn-agotado" disabled>Sin Existencias</button>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<!--
+==========================================================================
+COMPONENTES DEL ASISTENTE VIRTUAL FLOTANTE
+==========================================================================
+-->
+
+<!-- 1. Botón Disparador Circular -->
+<button class="btn-asistente-flotante" (click)="alternarChat()">
+  <span *ngIf="!chatAbierto">💬 Asistente IA</span>
+  <span *ngIf="chatAbierto">✖ Cerrar</span>
+</button>
+
+<!-- 2. Ventana Emergente del Chat -->
+<div class="chat-ventana-emergente" *ngIf="chatAbierto">
+  <!-- Encabezado del Asistente -->
+  <div class="chat-header-institucional">
+    <div class="chat-avatar-status">🤖</div>
+    <div>
+      <h4>Volty - Farmacia</h4>
+      <span class="status-en-linea">● En línea ahora</span>
+    </div>
+  </div>
+
+  <!-- Cuerpo de Mensajes -->
+  <div class="chat-cuerpo-mensajes">
+    <div *ngFor="let msg of historialMensajes" [ngClass]="['mensaje-bloque', msg.emisor]">
+      <div class="mensaje-burbuja">
+        {{ msg.texto }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra Inferior de Entrada -->
+  <div class="chat-barra-entrada">
+    <input
+      type="text"
+      placeholder="Escribe tu consulta médica..."
+      [(ngModel)]="mensajeUsuario"
+      (keyup.enter)="enviarMensajeChat()"
+    />
+
+    <button (click)="enviarMensajeChat()">➤</button>
+  </div>
+</div>

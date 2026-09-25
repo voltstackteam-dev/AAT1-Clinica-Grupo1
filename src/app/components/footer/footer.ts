@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common'; // ◄ 1. Importación obligator
   standalone: true,
   imports: [CommonModule], // ◄ 2. Le damos permisos de leer directivas como *ngIf
   templateUrl: './footer.html',
-  styleUrls: ['./footer.css']
+  styleUrls: ['./footer.css'],
 })
 export class FooterComponent {
   @Input() seccionActual: string = 'inicio';
