@@ -55,6 +55,8 @@
   flex-wrap: wrap;
 }
 
+/* Botones de Pestañas */
+
 .btn-tab {
   padding: 0.7rem 1.3rem;
   border-radius: 8px;
@@ -113,7 +115,7 @@
     0 4px 6px -2px rgba(0, 0, 0, 0.02);
   padding: 1.8rem;
   border: 1px solid #e2e8f0;
-  border-left: 6px solid #94a3b8;
+  border-left: 10px solid #94a3b8;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -134,6 +136,10 @@
 
 .cita-card:has(.status-pill.cancelada) {
   border-left-color: #ef4444;
+}
+
+.cita-card:has(.status-pill.en_proceso) {
+  border-left-color: #2b6cb0;
 }
 
 .cita-header {
@@ -178,12 +184,23 @@
   color: #475569;
 }
 
+.status-pill.en_proceso {
+  background-color: #2b6bb067;
+  color: #2b6cb0;
+}
+
 /* Columnas de información */
 .cita-body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1.5rem;
   margin-bottom: 1.4rem;
+
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #b2b2b2;
+  
 }
 
 .info-col small {
@@ -275,6 +292,8 @@
   transition: background-color 0.2s;
 }
 
+
+
 .btn-autorizar:hover {
   background-color: #16a34a;
 }
@@ -295,6 +314,65 @@
   background-color: #fee2e2;
 }
 
+
+.no-receta {
+  display: flex !important;
+  align-items: center !important;
+  margin: 10px 0 18px !important;
+}
+
+.checkbox-receta {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+  cursor: pointer;
+  color: #334155;
+}
+
+.checkbox-receta input[type="checkbox"] {
+  display: inline-block !important;
+  position: static !important;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  cursor: pointer;
+  accent-color: #234293;
+}
+
+.medicamentos-receta h5{
+  color: #1e3a8a;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0.5rem 0 0.8rem 0;
+  
+}
+.medicamento-receta-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.medicamento-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+
+
 .btn-completar {
   background-color: #1e3a8a;
   color: #ffffff;
@@ -304,6 +382,33 @@
   font-weight: 600;
   cursor: pointer;
   font-size: 0.9rem;
+  
+}
+
+.btn-agregar-medicamento {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  
+}
+
+.btn-eliminar-medicamento {
+  background-color: #ef4444;
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin: 0;
+  
 }
 
 .btn-editar-cita {
@@ -317,6 +422,16 @@
   font-size: 0.9rem;
 }
 
+.btn-iniciar-cita{
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
 .btn-secundario {
   background-color: #ffffff;
   color: #475569;
@@ -532,6 +647,58 @@
   background-color: #1d4ed8;
 }
 
+.consulta-medica-form {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #b8b4b4;
+  margin-bottom: 20px;
+}
+
+.consulta-medica-form h4 {
+  margin-bottom: 12px;
+  color: #ffffff;
+  background-color: #1e3a8a;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.consulta-medica-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.consulta-medica-form textarea,
+.consulta-medica-form input,
+.consulta-medica-form select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.consulta-medica-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.consulta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+@media (max-width: 700px) {
+  .consulta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 @media (max-width: 768px) {
   .header-admin {
     flex-direction: column;
@@ -593,4 +760,194 @@
     white-space: normal;
     overflow-wrap: anywhere;
   }
+}
+
+
+.btn-seccion,
+.btn-tab {
+  transition: all 0.2s ease;
+}
+
+.btn-seccion.active,
+.btn-tab.active {
+  background-color: #234293;
+  color: white;
+  border-color: #234293;
+}
+
+.btn-seccion:hover,
+.btn-tab:hover {
+  background-color: #234293;
+  color: white;
+  border-color: #234293;
+}
+
+
+/* =========================================================
+   HISTORIAL MÉDICO - ADMINISTRADOR
+   Mismo estilo que el historial del paciente
+========================================================= */
+
+.historial-medico-seccion {
+  margin-top: 40px;
+}
+
+/* Contenedor de la tabla */
+
+.tabla-historial-contenedor {
+  width: 90%;
+  margin: 0 auto 50px;
+  overflow-x: auto;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* Tabla */
+
+.tabla-historial {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 750px;
+}
+
+/* Encabezado */
+
+.tabla-historial thead {
+  background-color: #1a365d;
+}
+
+.tabla-historial th {
+  padding: 16px 18px;
+  text-align: left;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Filas */
+
+.tabla-historial td {
+  padding: 18px;
+  color: #4a5568;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #edf2f7;
+  vertical-align: middle;
+}
+
+/* Filas alternadas */
+
+.tabla-historial tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.tabla-historial tbody tr:nth-child(even) {
+  background-color: #eef7ff;
+}
+
+/* Efecto al pasar el mouse */
+
+.tabla-historial tbody tr:not(.fila-detalles) {
+  transition: background-color 0.2s ease;
+}
+
+.tabla-historial tbody tr:not(.fila-detalles):hover {
+  background-color: #e1f0fc;
+}
+
+/* Diagnóstico */
+
+.tabla-historial td:nth-child(5) {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+/* Botón Ver detalles */
+
+.btn-ver-detalles {
+  padding: 8px 14px;
+  background-color: #2b6cb0;
+  color: #ffffff;
+  border: 1px solid #bee3f8;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-ver-detalles:hover {
+  background-color: #1a365d;
+  color: #ffffff;
+}
+
+/* Fila de detalles */
+
+.fila-detalles {
+  background-color: #f8fafc !important;
+}
+
+.fila-detalles > td {
+  padding: 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Detalles */
+
+.detalle-historial {
+  padding: 25px 30px;
+  border-left: 4px solid #4299e1;
+}
+
+.detalle-historial p {
+  margin: 0 0 12px;
+  color: #4a5568;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.detalle-historial strong {
+  color: #2c5282;
+}
+
+/* Receta */
+
+.receta-historial {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #bee3f8;
+  border-radius: 10px;
+}
+
+.receta-historial h4 {
+  margin: 0 0 15px;
+  color: #1a365d;
+}
+
+.receta-historial h5 {
+  margin: 20px 0 10px;
+  color: #2c5282;
+}
+
+.medicamento-receta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px;
+  margin-bottom: 10px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.medicamento-receta-item strong {
+  color: #1a365d;
+}
+
+.medicamento-receta-item span {
+  color: #4a5568;
+  font-size: 0.88rem;
 }

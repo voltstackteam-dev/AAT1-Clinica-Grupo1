@@ -100,7 +100,9 @@ ejecutarApi(function () use ($conexion, $metodo): void {
         if ((int) $usuario->id_rol === 3) {
             $sql .= ' WHERE p.id_usuario=:usuario';
             $p[':usuario'] = (int) $usuario->id_usuario;
-        } elseif ((int) $usuario->id_rol === 2) {
+        } 
+        
+        elseif ((int) $usuario->id_rol === 2) {
             $perfil = $conexion->prepare('SELECT id_medico FROM medicos WHERE id_usuario=:usuario');
             $perfil->execute([':usuario' => (int) $usuario->id_usuario]);
             $idMedico = (int) $perfil->fetchColumn();
@@ -274,25 +276,79 @@ ejecutarApi(function () use ($conexion, $metodo): void {
             ) {
                 responderError('La cita ya fue confirmada y no puede cancelarse o reprogramar', 403);
             }
-        } elseif ((int) $usuario->id_rol === 2) {
+
+            
+
+
+
+        /*} elseif ((int) $usuario->id_rol === 2) {
             if (
                 $cita['estado'] !== 'PENDIENTE'
                 || $nuevoEstado !== 'CONFIRMADA'
             ) {
                 responderError('Un médico solo puede confirmar una cita pendiente.', 403);
             }
-        } else {
-            $transiciones = [
+        } */
+
+
+            } elseif ((int) $usuario->id_rol === 2) {
+
+    $transicionesMedico = [
+        'PENDIENTE' => ['CONFIRMADA'],
+        'CONFIRMADA' => ['EN_PROCESO'],
+        'EN_PROCESO' => ['COMPLETADA']
+    ];
+
+    if (!in_array(
+        $nuevoEstado,
+        $transicionesMedico[$cita['estado']] ?? [],
+        true
+    )) {
+        responderError(
+            'El médico no puede realizar ese cambio de estado.',
+            403
+        );
+    }
+}
+        
+        else {
+           
+        
+        
+        /*$transiciones = [
                 'PENDIENTE' => ['CONFIRMADA', 'CANCELADA'],
 
                 'CONFIRMADA' => ['COMPLETADA', 'CANCELADA']
-            ];
+            ];*/
+
+
+$transiciones = [
+    'PENDIENTE' => ['CONFIRMADA', 'CANCELADA'],
+    'CONFIRMADA' => ['EN_PROCESO', 'CANCELADA'],
+    'EN_PROCESO' => ['COMPLETADA']
+];
+
+
 
             if (!in_array($nuevoEstado, $transiciones[$cita['estado']] ?? [], true)) {
                 responderError('No se puede realizar ese cambio de estado para esta cita.', 409);
             }
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         $actualizar = $conexion->prepare(
             'UPDATE citas
                 SET estado = :estado,

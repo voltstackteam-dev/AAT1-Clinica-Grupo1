@@ -22,3 +22,157 @@ body {
   margin: 0;
   font-family: 'Segoe UI', Roboto, sans-serif;
 }
+
+
+
+
+
+@media print {
+
+  @page {
+    size: letter portrait;
+    margin: 8mm;
+  }
+
+  /* ================================
+     OCULTAR NAVBAR / HEADER
+  ================================= */
+
+  .header-hospital {
+    display: none !important;
+  }
+
+  /* ================================
+     OCULTAR CONTENIDO DEL PORTAL
+  ================================= */
+
+  .historial-contenedor {
+    display: none !important;
+  }
+
+  .historial-medico-seccion {
+    display: none !important;
+  }
+
+  /* ================================
+     MOSTRAR RECETA
+  ================================= */
+
+  .receta-modal-overlay {
+    position: static !important;
+    display: block !important;
+
+    width: 100% !important;
+    height: auto !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: yellow !important;
+  }
+
+  .receta-modal {
+    position: static !important;
+
+    width: 100% !important;
+    max-width: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: #ffffff !important;
+
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+
+    overflow: visible !important;
+  }
+
+  /* ================================
+     OCULTAR BOTONES
+  ================================= */
+
+  .receta-modal-acciones {
+    display: none !important;
+  }
+
+  /* ================================
+     DOCUMENTO
+  ================================= */
+
+  .receta-documento {
+    display: block !important;
+
+    width: 100% !important;
+    height: auto !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+
+    overflow: visfible !important;
+  }
+
+  /* ================================
+     MEDICAMENTOS
+  ================================= */
+
+  .receta-medicamentos {
+    display: block !important;
+  }
+
+  .medicamento-receta {
+    display: block !important;
+
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* ================================
+     DIAGNÓSTICO
+  ================================= */
+
+  .receta-diagnostico {
+    display: block !important;
+
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* ================================
+     OBSERVACIONES
+  ================================================ */
+
+  .receta-observaciones {
+    display: block !important;
+
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* ================================
+     FIRMA
+  ================================================ */
+
+  .receta-firma {
+    display: flex !important;
+
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  
+   footer {
+    display: none !important;
+  }
+
+
+
+ 
+}
+
+
+

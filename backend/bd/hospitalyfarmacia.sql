@@ -1,233 +1,194 @@
--- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: hospitalyfarmacia
--- ------------------------------------------------------
--- Server version	5.5.5-10.4.32-MariaDB
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 29-09-2026 a las 06:08:06
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Table structure for table `administradores`
+-- Base de datos: `hospitalyfarmacia`
 --
 
-DROP TABLE IF EXISTS `administradores`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `administradores`
+--
+
 CREATE TABLE `administradores` (
-  `id_administrador` int(11) NOT NULL AUTO_INCREMENT,
+  `id_administrador` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(100) NOT NULL,
-  `telefono` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`id_administrador`),
-  UNIQUE KEY `id_usuario_UNIQUE` (`id_usuario`),
-  CONSTRAINT `fk_administradores_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `telefono` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `administradores`
+-- Volcado de datos para la tabla `administradores`
 --
 
-LOCK TABLES `administradores` WRITE;
-/*!40000 ALTER TABLE `administradores` DISABLE KEYS */;
-INSERT INTO `administradores` VALUES (1,5,'Roberto','Sánchez','22360001'),(2,6,'Laura','Gomez','22360002');
-/*!40000 ALTER TABLE `administradores` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `administradores` (`id_administrador`, `id_usuario`, `nombre`, `apellido`, `telefono`) VALUES
+(1, 5, 'Roberto', 'Sánchez', '22360001'),
+(2, 6, 'Laura', 'Gomez', '22360002');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `categorias_medicamentos`
+-- Estructura de tabla para la tabla `categorias_medicamentos`
 --
 
-DROP TABLE IF EXISTS `categorias_medicamentos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `categorias_medicamentos` (
-  `id_categoria` int(11) NOT NULL AUTO_INCREMENT,
+  `id_categoria` int(11) NOT NULL,
   `nombre_categoria` varchar(100) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  PRIMARY KEY (`id_categoria`),
-  UNIQUE KEY `nombre_categoria_UNIQUE` (`nombre_categoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `descripcion` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `categorias_medicamentos`
+-- Volcado de datos para la tabla `categorias_medicamentos`
 --
 
-LOCK TABLES `categorias_medicamentos` WRITE;
-/*!40000 ALTER TABLE `categorias_medicamentos` DISABLE KEYS */;
-INSERT INTO `categorias_medicamentos` VALUES (1,'Analgésicos','Alivia el dolor'),(2,'Antiinflamatorios','Reduce la inflamación y alivia el dolor'),(3,'Antipireticos','Para reducir la fiebre'),(4,'Antibióticos','Para tratar infecciones bacterianas'),(5,'Antihipertensivos','Controlan la presión arterial'),(6,'Antidiabéticos','Regulan los niveles de glucosa en la sangre'),(7,'Antihistamínico','Para las alergias'),(8,'Vitaminas','Vitaminas varios');
-/*!40000 ALTER TABLE `categorias_medicamentos` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `categorias_medicamentos` (`id_categoria`, `nombre_categoria`, `descripcion`) VALUES
+(1, 'Analgésicos', 'Alivia el dolor'),
+(2, 'Antiinflamatorios', 'Reduce la inflamación y alivia el dolor'),
+(3, 'Antipireticos', 'Para reducir la fiebre'),
+(4, 'Antibióticos', 'Para tratar infecciones bacterianas'),
+(5, 'Antihipertensivos', 'Controlan la presión arterial'),
+(6, 'Antidiabéticos', 'Regulan los niveles de glucosa en la sangre'),
+(7, 'Antihistamínico', 'Para las alergias'),
+(8, 'Vitaminas', 'Vitaminas varios');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `citas`
+-- Estructura de tabla para la tabla `citas`
 --
 
-DROP TABLE IF EXISTS `citas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `citas` (
-  `id_cita` int(11) NOT NULL AUTO_INCREMENT,
+  `id_cita` int(11) NOT NULL,
   `id_paciente` int(11) NOT NULL,
   `id_medico` int(11) NOT NULL,
   `id_sala` int(11) NOT NULL,
   `fecha_hora` datetime NOT NULL,
   `motivo_consulta` text DEFAULT NULL,
-  `estado` enum('PENDIENTE','CONFIRMADA','CANCELADA','COMPLETADA') NOT NULL DEFAULT 'PENDIENTE',
+  `estado` enum('PENDIENTE','CONFIRMADA','EN_PROCESO','CANCELADA','COMPLETADA') NOT NULL DEFAULT 'PENDIENTE',
   `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id_cita`),
-  KEY `fk_citas_pacientes_idx` (`id_paciente`),
-  KEY `fk_citas_medicos_idx` (`id_medico`),
-  KEY `fk_citas_salas_idx` (`id_sala`),
-  KEY `idx_fecha_hora` (`fecha_hora`),
-  CONSTRAINT `fk_citas_medicos` FOREIGN KEY (`id_medico`) REFERENCES `medicos` (`id_medico`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_citas_pacientes` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id_paciente`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_citas_salas` FOREIGN KEY (`id_sala`) REFERENCES `salas` (`id_sala`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `citas`
+-- Volcado de datos para la tabla `citas`
 --
 
-LOCK TABLES `citas` WRITE;
-/*!40000 ALTER TABLE `citas` DISABLE KEYS */;
-INSERT INTO `citas` VALUES (1,1,1,1,'2026-09-11 11:00:00','Consulta General','CONFIRMADA','2026-09-10 06:32:43','2026-09-11 00:03:48');
-/*!40000 ALTER TABLE `citas` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `citas` (`id_cita`, `id_paciente`, `id_medico`, `id_sala`, `fecha_hora`, `motivo_consulta`, `estado`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, '2026-09-11 11:00:00', 'Consulta General', 'COMPLETADA', '2026-09-10 06:32:43', '2026-09-26 06:08:06'),
+(2, 4, 1, 1, '2026-09-30 13:00:00', 'Gripe', 'COMPLETADA', '2026-09-26 00:14:19', '2026-09-26 07:19:09'),
+(3, 4, 1, 1, '2026-09-29 14:00:00', 'Seguimiento a la consulta de la migraña', 'COMPLETADA', '2026-09-28 20:57:00', '2026-09-28 22:02:08'),
+(4, 3, 1, 1, '2026-10-01 16:00:00', 'Dolor de estomado', 'COMPLETADA', '2026-09-28 23:12:02', '2026-09-29 02:19:11'),
+(5, 4, 1, 2, '2026-10-02 10:00:00', 'Dolores musculares y fiebres altas', 'CONFIRMADA', '2026-09-28 23:49:15', '2026-09-29 00:35:22');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `disponibilidades`
+-- Estructura de tabla para la tabla `disponibilidades`
 --
 
-DROP TABLE IF EXISTS `disponibilidades`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `disponibilidades` (
-  `id_disponibilidad` int(11) NOT NULL AUTO_INCREMENT,
+  `id_disponibilidad` int(11) NOT NULL,
   `id_medico` int(11) NOT NULL,
   `dia_semana` enum('LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO','DOMINGO') NOT NULL,
   `hora_inicio` time NOT NULL,
-  `hora_fin` time NOT NULL,
-  PRIMARY KEY (`id_disponibilidad`),
-  KEY `fk_disponibilidades_medicos_idx` (`id_medico`),
-  CONSTRAINT `fk_disponibilidades_medicos` FOREIGN KEY (`id_medico`) REFERENCES `medicos` (`id_medico`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `hora_fin` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `disponibilidades`
+-- Volcado de datos para la tabla `disponibilidades`
 --
 
-LOCK TABLES `disponibilidades` WRITE;
-/*!40000 ALTER TABLE `disponibilidades` DISABLE KEYS */;
-INSERT INTO `disponibilidades` VALUES (1,1,'LUNES','08:00:00','12:00:00'),(2,1,'MARTES','13:00:00','17:00:00'),(3,1,'MIERCOLES','08:00:00','17:00:00'),(4,1,'JUEVES','13:00:00','17:00:00'),(5,1,'VIERNES','08:00:00','12:00:00');
-/*!40000 ALTER TABLE `disponibilidades` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `disponibilidades` (`id_disponibilidad`, `id_medico`, `dia_semana`, `hora_inicio`, `hora_fin`) VALUES
+(1, 1, 'LUNES', '08:00:00', '12:00:00'),
+(2, 1, 'MARTES', '13:00:00', '17:00:00'),
+(3, 1, 'MIERCOLES', '08:00:00', '17:00:00'),
+(4, 1, 'JUEVES', '13:00:00', '17:00:00'),
+(5, 1, 'VIERNES', '08:00:00', '12:00:00');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `equipos`
+-- Estructura de tabla para la tabla `equipos`
 --
 
-DROP TABLE IF EXISTS `equipos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `equipos` (
-  `id_equipo` int(11) NOT NULL AUTO_INCREMENT,
+  `id_equipo` int(11) NOT NULL,
   `nombre_equipo` varchar(100) NOT NULL,
   `id_sala` int(11) DEFAULT NULL,
-  `cantidad` int(11) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id_equipo`),
-  KEY `fk_equipos_salas_idx` (`id_sala`),
-  CONSTRAINT `fk_equipos_salas` FOREIGN KEY (`id_sala`) REFERENCES `salas` (`id_sala`) ON DELETE SET NULL ON UPDATE CASCADE
+  `cantidad` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `equipos`
+-- Estructura de tabla para la tabla `especialidades`
 --
 
-LOCK TABLES `equipos` WRITE;
-/*!40000 ALTER TABLE `equipos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `equipos` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `especialidades`
---
-
-DROP TABLE IF EXISTS `especialidades`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `especialidades` (
-  `id_especialidad` int(11) NOT NULL AUTO_INCREMENT,
+  `id_especialidad` int(11) NOT NULL,
   `nombre_especialidad` varchar(100) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  PRIMARY KEY (`id_especialidad`),
-  UNIQUE KEY `nombre_especialidad_UNIQUE` (`nombre_especialidad`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `descripcion` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `especialidades`
+-- Volcado de datos para la tabla `especialidades`
 --
 
-LOCK TABLES `especialidades` WRITE;
-/*!40000 ALTER TABLE `especialidades` DISABLE KEYS */;
-INSERT INTO `especialidades` VALUES (1,'Medicina General','Atención médica primaria'),(2,'Pediatría','Atención médica infantil'),(3,'Cardiología','Enfermedades del corazón');
-/*!40000 ALTER TABLE `especialidades` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `especialidades` (`id_especialidad`, `nombre_especialidad`, `descripcion`) VALUES
+(1, 'Medicina General', 'Atención médica primaria'),
+(2, 'Pediatría', 'Atención médica infantil'),
+(3, 'Cardiología', 'Enfermedades del corazón');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `historial_medico`
+-- Estructura de tabla para la tabla `historial_medico`
 --
 
-DROP TABLE IF EXISTS `historial_medico`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `historial_medico` (
-  `id_historial` int(11) NOT NULL AUTO_INCREMENT,
+  `id_historial` int(11) NOT NULL,
   `id_cita` int(11) NOT NULL,
   `diagnostico` text NOT NULL,
   `receta` text DEFAULT NULL,
   `observaciones` text DEFAULT NULL,
-  `fecha_atencion` timestamp NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id_historial`),
-  UNIQUE KEY `id_cita_UNIQUE` (`id_cita`),
-  CONSTRAINT `fk_historial_citas` FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`) ON UPDATE CASCADE
+  `fecha_atencion` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `historial_medico`
+-- Volcado de datos para la tabla `historial_medico`
 --
 
-LOCK TABLES `historial_medico` WRITE;
-/*!40000 ALTER TABLE `historial_medico` DISABLE KEYS */;
-/*!40000 ALTER TABLE `historial_medico` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `historial_medico` (`id_historial`, `id_cita`, `diagnostico`, `receta`, `observaciones`, `fecha_atencion`) VALUES
+(1, 2, 'migraña', NULL, 'cada dos días', '2026-09-26 07:19:09'),
+(2, 3, 'Gripe', NULL, 'Mantenerse hidratado y reposo', '2026-09-28 22:02:08'),
+(3, 4, 'Amebas', NULL, 'Dieta de comida blanda', '2026-09-29 02:19:11');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `lotes_inventario`
+-- Estructura de tabla para la tabla `lotes_inventario`
 --
 
-DROP TABLE IF EXISTS `lotes_inventario`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lotes_inventario` (
-  `id_lote` int(11) NOT NULL AUTO_INCREMENT,
+  `id_lote` int(11) NOT NULL,
   `id_medicamento` int(11) NOT NULL,
   `id_proveedor` int(11) DEFAULT NULL,
   `numero_lote` varchar(50) NOT NULL,
@@ -235,243 +196,173 @@ CREATE TABLE `lotes_inventario` (
   `cantidad_inicial` int(11) NOT NULL,
   `cantidad_actual` int(11) NOT NULL,
   `precio_compra` decimal(10,2) NOT NULL,
-  `fecha_ingreso` timestamp NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id_lote`),
-  KEY `fk_lotes_medicamentos_idx` (`id_medicamento`),
-  KEY `fk_lotes_proveedores_idx` (`id_proveedor`),
-  CONSTRAINT `fk_lotes_medicamentos` FOREIGN KEY (`id_medicamento`) REFERENCES `tb_medicamentos` (`id_medicamento`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_lotes_proveedores` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedores` (`id_proveedor`) ON DELETE SET NULL ON UPDATE CASCADE
+  `fecha_ingreso` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `lotes_inventario`
+-- Estructura de tabla para la tabla `medicos`
 --
 
-LOCK TABLES `lotes_inventario` WRITE;
-/*!40000 ALTER TABLE `lotes_inventario` DISABLE KEYS */;
-/*!40000 ALTER TABLE `lotes_inventario` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `medicos`
---
-
-DROP TABLE IF EXISTS `medicos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `medicos` (
-  `id_medico` int(11) NOT NULL AUTO_INCREMENT,
+  `id_medico` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `id_especialidad` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(100) NOT NULL,
   `colegiado_num` varchar(45) DEFAULT NULL,
-  `telefono` varchar(20) NOT NULL,
-  PRIMARY KEY (`id_medico`),
-  UNIQUE KEY `id_usuario_UNIQUE` (`id_usuario`),
-  KEY `fk_medicos_especialidades_idx` (`id_especialidad`),
-  CONSTRAINT `fk_medicos_especialidades` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidades` (`id_especialidad`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_medicos_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `telefono` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `medicos`
+-- Volcado de datos para la tabla `medicos`
 --
 
-LOCK TABLES `medicos` WRITE;
-/*!40000 ALTER TABLE `medicos` DISABLE KEYS */;
-INSERT INTO `medicos` VALUES (1,3,1,'Carlos','López','14205','3214-5678'),(2,4,2,'Ana','Martinez','18340','5555-0202');
-/*!40000 ALTER TABLE `medicos` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `medicos` (`id_medico`, `id_usuario`, `id_especialidad`, `nombre`, `apellido`, `colegiado_num`, `telefono`) VALUES
+(1, 3, 1, 'Carlos', 'López', '14205', '3214-5678'),
+(2, 4, 2, 'Ana', 'Martinez', '18340', '5555-0202');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `pacientes`
+-- Estructura de tabla para la tabla `pacientes`
 --
 
-DROP TABLE IF EXISTS `pacientes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pacientes` (
-  `id_paciente` int(11) NOT NULL AUTO_INCREMENT,
+  `id_paciente` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(100) NOT NULL,
   `fecha_nacimiento` date NOT NULL,
   `telefono` varchar(20) NOT NULL,
   `direccion` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id_paciente`),
-  UNIQUE KEY `id_usuario_UNIQUE` (`id_usuario`),
-  CONSTRAINT `fk_pacientes_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `pacientes`
+-- Volcado de datos para la tabla `pacientes`
 --
 
-LOCK TABLES `pacientes` WRITE;
-/*!40000 ALTER TABLE `pacientes` DISABLE KEYS */;
-INSERT INTO `pacientes` VALUES (1,1,'Juan Manuel','Chica','1995-04-12','4123-5678','Guatemala','2026-09-10 05:04:40'),(3,2,'Maria','Garcia','1990-11-20','5987-1234','Guatemala','2026-09-10 05:05:48');
-/*!40000 ALTER TABLE `pacientes` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `pacientes` (`id_paciente`, `id_usuario`, `nombre`, `apellido`, `fecha_nacimiento`, `telefono`, `direccion`, `created_at`) VALUES
+(1, 1, 'Juan Manuel', 'Chica', '1995-04-12', '4123-5678', 'Guatemala', '2026-09-10 05:04:40'),
+(3, 2, 'Maria', 'Garcia', '1990-11-20', '5987-1234', 'Guatemala', '2026-09-10 05:05:48'),
+(4, 7, 'Andrea', 'Marroquin', '1996-06-20', '55951893', 'Ciudad', '2026-09-25 18:29:04');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `proveedores`
+-- Estructura de tabla para la tabla `proveedores`
 --
 
-DROP TABLE IF EXISTS `proveedores`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `proveedores` (
-  `id_proveedor` int(11) NOT NULL AUTO_INCREMENT,
+  `id_proveedor` int(11) NOT NULL,
   `nombre_empresa` varchar(100) NOT NULL,
   `nit_runc` varchar(20) DEFAULT NULL,
   `contacto_nombre` varchar(100) DEFAULT NULL,
   `telefono` varchar(20) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id_proveedor`)
+  `email` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `proveedores`
+-- Estructura de tabla para la tabla `recetas`
 --
 
-LOCK TABLES `proveedores` WRITE;
-/*!40000 ALTER TABLE `proveedores` DISABLE KEYS */;
-/*!40000 ALTER TABLE `proveedores` ENABLE KEYS */;
-UNLOCK TABLES;
+CREATE TABLE `recetas` (
+  `id_receta` int(11) NOT NULL,
+  `id_historial` int(11) NOT NULL,
+  `id_paciente` int(11) NOT NULL,
+  `id_medico` int(11) NOT NULL,
+  `fecha_emision` timestamp NULL DEFAULT current_timestamp(),
+  `estado` enum('EMITIDA','DESPACHADA_PARCIAL','DESPACHADA_TOTAL','CANCELADA') NOT NULL DEFAULT 'EMITIDA'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Table structure for table `receta_detalles`
+-- Volcado de datos para la tabla `recetas`
 --
 
-DROP TABLE IF EXISTS `receta_detalles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+INSERT INTO `recetas` (`id_receta`, `id_historial`, `id_paciente`, `id_medico`, `fecha_emision`, `estado`) VALUES
+(1, 1, 4, 1, '2026-09-26 07:19:09', 'EMITIDA'),
+(2, 2, 4, 1, '2026-09-28 22:02:08', 'EMITIDA'),
+(3, 3, 3, 1, '2026-09-29 02:19:11', 'EMITIDA');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `receta_detalles`
+--
+
 CREATE TABLE `receta_detalles` (
-  `id_receta_detalle` int(11) NOT NULL AUTO_INCREMENT,
+  `id_receta_detalle` int(11) NOT NULL,
   `id_receta` int(11) NOT NULL,
   `id_medicamento` int(11) NOT NULL,
   `dosis` varchar(100) NOT NULL,
   `frecuencia` varchar(100) NOT NULL,
   `duracion_dias` int(11) NOT NULL,
-  `cantidad_prescrita` int(11) NOT NULL,
-  PRIMARY KEY (`id_receta_detalle`),
-  KEY `fk_recetadetalles_recetas_idx` (`id_receta`),
-  KEY `fk_recetadetalles_medicamentos_idx` (`id_medicamento`),
-  CONSTRAINT `fk_recetadetalles_medicamentos` FOREIGN KEY (`id_medicamento`) REFERENCES `tb_medicamentos` (`id_medicamento`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_recetadetalles_recetas` FOREIGN KEY (`id_receta`) REFERENCES `recetas` (`id_receta`) ON DELETE CASCADE ON UPDATE CASCADE
+  `cantidad_prescrita` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `receta_detalles`
+-- Volcado de datos para la tabla `receta_detalles`
 --
 
-LOCK TABLES `receta_detalles` WRITE;
-/*!40000 ALTER TABLE `receta_detalles` DISABLE KEYS */;
-/*!40000 ALTER TABLE `receta_detalles` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `receta_detalles` (`id_receta_detalle`, `id_receta`, `id_medicamento`, `dosis`, `frecuencia`, `duracion_dias`, `cantidad_prescrita`) VALUES
+(1, 1, 5, '1', '8', 1, 1),
+(2, 2, 1, '1 tableta(s)', 'Cada 24 horas', 5, 5),
+(3, 2, 2, '1 tableta(s)', 'Cada 12 horas', 5, 10),
+(4, 3, 1, '1 tableta(s)', 'Cada 6 horas', 5, 20);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `recetas`
+-- Estructura de tabla para la tabla `roles`
 --
 
-DROP TABLE IF EXISTS `recetas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `recetas` (
-  `id_receta` int(11) NOT NULL AUTO_INCREMENT,
-  `id_historial` int(11) NOT NULL,
-  `id_paciente` int(11) NOT NULL,
-  `id_medico` int(11) NOT NULL,
-  `fecha_emision` timestamp NULL DEFAULT current_timestamp(),
-  `estado` enum('EMITIDA','DESPACHADA_PARCIAL','DESPACHADA_TOTAL','CANCELADA') NOT NULL DEFAULT 'EMITIDA',
-  PRIMARY KEY (`id_receta`),
-  KEY `fk_recetas_historial_idx` (`id_historial`),
-  KEY `fk_recetas_pacientes_idx` (`id_paciente`),
-  KEY `fk_recetas_medicos_idx` (`id_medico`),
-  CONSTRAINT `fk_recetas_historial` FOREIGN KEY (`id_historial`) REFERENCES `historial_medico` (`id_historial`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_recetas_medicos` FOREIGN KEY (`id_medico`) REFERENCES `medicos` (`id_medico`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_recetas_pacientes` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id_paciente`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `recetas`
---
-
-LOCK TABLES `recetas` WRITE;
-/*!40000 ALTER TABLE `recetas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `recetas` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `roles`
---
-
-DROP TABLE IF EXISTS `roles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `roles` (
-  `id_rol` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre_rol` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_rol`),
-  UNIQUE KEY `nombre_rol_UNIQUE` (`nombre_rol`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `id_rol` int(11) NOT NULL,
+  `nombre_rol` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `roles`
+-- Volcado de datos para la tabla `roles`
 --
 
-LOCK TABLES `roles` WRITE;
-/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'administrador'),(2,'medico'),(3,'paciente');
-/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `roles` (`id_rol`, `nombre_rol`) VALUES
+(1, 'administrador'),
+(2, 'medico'),
+(3, 'paciente');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `salas`
+-- Estructura de tabla para la tabla `salas`
 --
 
-DROP TABLE IF EXISTS `salas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `salas` (
-  `id_sala` int(11) NOT NULL AUTO_INCREMENT,
+  `id_sala` int(11) NOT NULL,
   `nombre_sala` varchar(50) NOT NULL,
   `ubicacion` varchar(100) DEFAULT NULL,
-  `id_especialidad` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_sala`),
-  KEY `fk_salas_especialidades_idx` (`id_especialidad`),
-  CONSTRAINT `fk_salas_especialidades` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidades` (`id_especialidad`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `id_especialidad` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `salas`
+-- Volcado de datos para la tabla `salas`
 --
 
-LOCK TABLES `salas` WRITE;
-/*!40000 ALTER TABLE `salas` DISABLE KEYS */;
-INSERT INTO `salas` VALUES (1,'Consultorio A1','Sección A',1),(2,'Consultorio B2','Sección B',2);
-/*!40000 ALTER TABLE `salas` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `salas` (`id_sala`, `nombre_sala`, `ubicacion`, `id_especialidad`) VALUES
+(1, 'Consultorio A1', 'Sección A', 1),
+(2, 'Consultorio B2', 'Sección B', 2);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `tb_medicamentos`
+-- Estructura de tabla para la tabla `tb_medicamentos`
 --
 
-DROP TABLE IF EXISTS `tb_medicamentos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tb_medicamentos` (
-  `id_medicamento` int(11) NOT NULL AUTO_INCREMENT,
+  `id_medicamento` int(11) NOT NULL,
   `id_categoria` int(11) NOT NULL,
   `nombre` varchar(120) NOT NULL,
   `categoria` varchar(60) NOT NULL,
@@ -480,95 +371,414 @@ CREATE TABLE `tb_medicamentos` (
   `principio_activo` varchar(150) NOT NULL,
   `requiere_receta` tinyint(1) NOT NULL DEFAULT 0,
   `presentacion` varchar(50) NOT NULL,
-  `imagen_url` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_medicamento`),
-  KEY `fk_medicamentos_categorias_idx` (`id_categoria`),
-  CONSTRAINT `fk_medicamentos_categorias` FOREIGN KEY (`id_categoria`) REFERENCES `categorias_medicamentos` (`id_categoria`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `imagen_url` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tb_medicamentos`
+-- Volcado de datos para la tabla `tb_medicamentos`
 --
 
-LOCK TABLES `tb_medicamentos` WRITE;
-/*!40000 ALTER TABLE `tb_medicamentos` DISABLE KEYS */;
-INSERT INTO `tb_medicamentos` VALUES (1,1,'Paracetamol 500 mg','Analgésicos',12.50,25,'',0,'',NULL),(2,1,'Ibuprofeno 400 mg','Analgésicos',18.00,18,'',0,'',NULL),(3,1,'Amoxicilina 500 mg','Antibióticos',42.00,10,'',0,'',NULL),(4,7,'Loratadina 10 mg','Antihistamínicos',24.50,20,'',0,'',NULL),(5,8,'Vitamina C 1000 mg','Vitaminas',35.00,30,'',0,'',NULL);
-/*!40000 ALTER TABLE `tb_medicamentos` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `tb_medicamentos` (`id_medicamento`, `id_categoria`, `nombre`, `categoria`, `precio`, `stock`, `principio_activo`, `requiere_receta`, `presentacion`, `imagen_url`) VALUES
+(1, 1, 'Paracetamol 500 mg', 'Analgésicos', 12.50, 25, '', 0, '', NULL),
+(2, 1, 'Ibuprofeno 400 mg', 'Analgésicos', 18.00, 18, '', 0, '', NULL),
+(3, 1, 'Amoxicilina 500 mg', 'Antibióticos', 42.00, 10, '', 0, '', NULL),
+(4, 7, 'Loratadina 10 mg', 'Antihistamínicos', 24.50, 20, '', 0, '', NULL),
+(5, 8, 'Vitamina C 1000 mg', 'Vitaminas', 35.00, 30, '', 0, '', NULL);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `usuarios`
+-- Estructura de tabla para la tabla `usuarios`
 --
 
-DROP TABLE IF EXISTS `usuarios`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuarios` (
-  `id_usuario` int(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario` int(11) NOT NULL,
   `email` varchar(100) NOT NULL,
   `contrasenia` varchar(255) NOT NULL,
   `id_rol` int(11) NOT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id_usuario`),
-  UNIQUE KEY `email_UNIQUE` (`email`),
-  KEY `fk_usuarios_roles_idx` (`id_rol`),
-  CONSTRAINT `fk_usuarios_roles` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id_rol`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `usuarios`
+-- Volcado de datos para la tabla `usuarios`
 --
 
-LOCK TABLES `usuarios` WRITE;
-/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'paciente_juan@gmail.com','clave123',3,1,'2026-09-10 01:18:41'),(2,'paciente_maria@gmail.com','clave123',3,1,'2026-09-10 04:52:06'),(3,'dr_carlos@gmail.com','clave123',2,1,'2026-09-10 04:52:59'),(4,'dra_ana@gmail.com','clave123',2,1,'2026-09-10 04:53:21'),(5,'admin_roberto@gmail.com','clave123',1,1,'2026-09-10 04:53:52'),(6,'admin_laura@gmail.com','clave123',1,1,'2026-09-10 04:54:15');
-/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `usuarios` (`id_usuario`, `email`, `contrasenia`, `id_rol`, `activo`, `created_at`) VALUES
+(1, 'paciente_juan@gmail.com', 'clave123', 3, 1, '2026-09-10 01:18:41'),
+(2, 'paciente_maria@gmail.com', 'clave123', 3, 1, '2026-09-10 04:52:06'),
+(3, 'dr_carlos@gmail.com', 'clave123', 2, 1, '2026-09-10 04:52:59'),
+(4, 'dra_ana@gmail.com', 'clave123', 2, 1, '2026-09-10 04:53:21'),
+(5, 'admin_roberto@gmail.com', 'clave123', 1, 1, '2026-09-10 04:53:52'),
+(6, 'admin_laura@gmail.com', 'clave123', 1, 1, '2026-09-10 04:54:15'),
+(7, 'andrealissa1996@gmail.com', '$2y$10$3FwMwzZNDvkJdqIMWyw4feAFyiQcoXGsCSuas7AcUc2KSQdfupKsW', 3, 1, '2026-09-25 18:29:04');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `ventas_farmacia`
+-- Estructura de tabla para la tabla `ventas_farmacia`
 --
 
-DROP TABLE IF EXISTS `ventas_farmacia`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ventas_farmacia` (
-  `id_venta` int(11) NOT NULL AUTO_INCREMENT,
+  `id_venta` int(11) NOT NULL,
   `id_paciente` int(11) DEFAULT NULL,
   `id_receta` int(11) DEFAULT NULL,
   `id_usuario_cajero` int(11) NOT NULL,
   `fecha_venta` timestamp NULL DEFAULT current_timestamp(),
   `total` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `metodo_pago` enum('EFECTIVO','TARJETA','TRANSFERENCIA') NOT NULL DEFAULT 'EFECTIVO',
-  PRIMARY KEY (`id_venta`),
-  KEY `fk_ventas_pacientes_idx` (`id_paciente`),
-  KEY `fk_ventas_recetas_idx` (`id_receta`),
-  KEY `fk_ventas_usuarios_idx` (`id_usuario_cajero`),
-  CONSTRAINT `fk_ventas_pacientes` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id_paciente`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk_ventas_recetas` FOREIGN KEY (`id_receta`) REFERENCES `recetas` (`id_receta`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk_ventas_usuarios` FOREIGN KEY (`id_usuario_cajero`) REFERENCES `usuarios` (`id_usuario`) ON UPDATE CASCADE
+  `metodo_pago` enum('EFECTIVO','TARJETA','TRANSFERENCIA') NOT NULL DEFAULT 'EFECTIVO'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ventas_farmacia`
+-- Índices para tablas volcadas
 --
 
-LOCK TABLES `ventas_farmacia` WRITE;
-/*!40000 ALTER TABLE `ventas_farmacia` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ventas_farmacia` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+--
+-- Indices de la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  ADD PRIMARY KEY (`id_administrador`),
+  ADD UNIQUE KEY `id_usuario_UNIQUE` (`id_usuario`);
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+--
+-- Indices de la tabla `categorias_medicamentos`
+--
+ALTER TABLE `categorias_medicamentos`
+  ADD PRIMARY KEY (`id_categoria`),
+  ADD UNIQUE KEY `nombre_categoria_UNIQUE` (`nombre_categoria`);
+
+--
+-- Indices de la tabla `citas`
+--
+ALTER TABLE `citas`
+  ADD PRIMARY KEY (`id_cita`),
+  ADD KEY `fk_citas_pacientes_idx` (`id_paciente`),
+  ADD KEY `fk_citas_medicos_idx` (`id_medico`),
+  ADD KEY `fk_citas_salas_idx` (`id_sala`),
+  ADD KEY `idx_fecha_hora` (`fecha_hora`);
+
+--
+-- Indices de la tabla `disponibilidades`
+--
+ALTER TABLE `disponibilidades`
+  ADD PRIMARY KEY (`id_disponibilidad`),
+  ADD KEY `fk_disponibilidades_medicos_idx` (`id_medico`);
+
+--
+-- Indices de la tabla `equipos`
+--
+ALTER TABLE `equipos`
+  ADD PRIMARY KEY (`id_equipo`),
+  ADD KEY `fk_equipos_salas_idx` (`id_sala`);
+
+--
+-- Indices de la tabla `especialidades`
+--
+ALTER TABLE `especialidades`
+  ADD PRIMARY KEY (`id_especialidad`),
+  ADD UNIQUE KEY `nombre_especialidad_UNIQUE` (`nombre_especialidad`);
+
+--
+-- Indices de la tabla `historial_medico`
+--
+ALTER TABLE `historial_medico`
+  ADD PRIMARY KEY (`id_historial`),
+  ADD UNIQUE KEY `id_cita_UNIQUE` (`id_cita`);
+
+--
+-- Indices de la tabla `lotes_inventario`
+--
+ALTER TABLE `lotes_inventario`
+  ADD PRIMARY KEY (`id_lote`),
+  ADD KEY `fk_lotes_medicamentos_idx` (`id_medicamento`),
+  ADD KEY `fk_lotes_proveedores_idx` (`id_proveedor`);
+
+--
+-- Indices de la tabla `medicos`
+--
+ALTER TABLE `medicos`
+  ADD PRIMARY KEY (`id_medico`),
+  ADD UNIQUE KEY `id_usuario_UNIQUE` (`id_usuario`),
+  ADD KEY `fk_medicos_especialidades_idx` (`id_especialidad`);
+
+--
+-- Indices de la tabla `pacientes`
+--
+ALTER TABLE `pacientes`
+  ADD PRIMARY KEY (`id_paciente`),
+  ADD UNIQUE KEY `id_usuario_UNIQUE` (`id_usuario`);
+
+--
+-- Indices de la tabla `proveedores`
+--
+ALTER TABLE `proveedores`
+  ADD PRIMARY KEY (`id_proveedor`);
+
+--
+-- Indices de la tabla `recetas`
+--
+ALTER TABLE `recetas`
+  ADD PRIMARY KEY (`id_receta`),
+  ADD KEY `fk_recetas_historial_idx` (`id_historial`),
+  ADD KEY `fk_recetas_pacientes_idx` (`id_paciente`),
+  ADD KEY `fk_recetas_medicos_idx` (`id_medico`);
+
+--
+-- Indices de la tabla `receta_detalles`
+--
+ALTER TABLE `receta_detalles`
+  ADD PRIMARY KEY (`id_receta_detalle`),
+  ADD KEY `fk_recetadetalles_recetas_idx` (`id_receta`),
+  ADD KEY `fk_recetadetalles_medicamentos_idx` (`id_medicamento`);
+
+--
+-- Indices de la tabla `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id_rol`),
+  ADD UNIQUE KEY `nombre_rol_UNIQUE` (`nombre_rol`);
+
+--
+-- Indices de la tabla `salas`
+--
+ALTER TABLE `salas`
+  ADD PRIMARY KEY (`id_sala`),
+  ADD KEY `fk_salas_especialidades_idx` (`id_especialidad`);
+
+--
+-- Indices de la tabla `tb_medicamentos`
+--
+ALTER TABLE `tb_medicamentos`
+  ADD PRIMARY KEY (`id_medicamento`),
+  ADD KEY `fk_medicamentos_categorias_idx` (`id_categoria`);
+
+--
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD UNIQUE KEY `email_UNIQUE` (`email`),
+  ADD KEY `fk_usuarios_roles_idx` (`id_rol`);
+
+--
+-- Indices de la tabla `ventas_farmacia`
+--
+ALTER TABLE `ventas_farmacia`
+  ADD PRIMARY KEY (`id_venta`),
+  ADD KEY `fk_ventas_pacientes_idx` (`id_paciente`),
+  ADD KEY `fk_ventas_recetas_idx` (`id_receta`),
+  ADD KEY `fk_ventas_usuarios_idx` (`id_usuario_cajero`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  MODIFY `id_administrador` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `categorias_medicamentos`
+--
+ALTER TABLE `categorias_medicamentos`
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT de la tabla `citas`
+--
+ALTER TABLE `citas`
+  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `disponibilidades`
+--
+ALTER TABLE `disponibilidades`
+  MODIFY `id_disponibilidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `equipos`
+--
+ALTER TABLE `equipos`
+  MODIFY `id_equipo` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `especialidades`
+--
+ALTER TABLE `especialidades`
+  MODIFY `id_especialidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `historial_medico`
+--
+ALTER TABLE `historial_medico`
+  MODIFY `id_historial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `lotes_inventario`
+--
+ALTER TABLE `lotes_inventario`
+  MODIFY `id_lote` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `medicos`
+--
+ALTER TABLE `medicos`
+  MODIFY `id_medico` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `pacientes`
+--
+ALTER TABLE `pacientes`
+  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `proveedores`
+--
+ALTER TABLE `proveedores`
+  MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `recetas`
+--
+ALTER TABLE `recetas`
+  MODIFY `id_receta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `receta_detalles`
+--
+ALTER TABLE `receta_detalles`
+  MODIFY `id_receta_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `salas`
+--
+ALTER TABLE `salas`
+  MODIFY `id_sala` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `tb_medicamentos`
+--
+ALTER TABLE `tb_medicamentos`
+  MODIFY `id_medicamento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT de la tabla `ventas_farmacia`
+--
+ALTER TABLE `ventas_farmacia`
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  ADD CONSTRAINT `fk_administradores_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `citas`
+--
+ALTER TABLE `citas`
+  ADD CONSTRAINT `fk_citas_medicos` FOREIGN KEY (`id_medico`) REFERENCES `medicos` (`id_medico`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_citas_pacientes` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id_paciente`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_citas_salas` FOREIGN KEY (`id_sala`) REFERENCES `salas` (`id_sala`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `disponibilidades`
+--
+ALTER TABLE `disponibilidades`
+  ADD CONSTRAINT `fk_disponibilidades_medicos` FOREIGN KEY (`id_medico`) REFERENCES `medicos` (`id_medico`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `equipos`
+--
+ALTER TABLE `equipos`
+  ADD CONSTRAINT `fk_equipos_salas` FOREIGN KEY (`id_sala`) REFERENCES `salas` (`id_sala`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `historial_medico`
+--
+ALTER TABLE `historial_medico`
+  ADD CONSTRAINT `fk_historial_citas` FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `lotes_inventario`
+--
+ALTER TABLE `lotes_inventario`
+  ADD CONSTRAINT `fk_lotes_medicamentos` FOREIGN KEY (`id_medicamento`) REFERENCES `tb_medicamentos` (`id_medicamento`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_lotes_proveedores` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedores` (`id_proveedor`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `medicos`
+--
+ALTER TABLE `medicos`
+  ADD CONSTRAINT `fk_medicos_especialidades` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidades` (`id_especialidad`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_medicos_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `pacientes`
+--
+ALTER TABLE `pacientes`
+  ADD CONSTRAINT `fk_pacientes_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `recetas`
+--
+ALTER TABLE `recetas`
+  ADD CONSTRAINT `fk_recetas_historial` FOREIGN KEY (`id_historial`) REFERENCES `historial_medico` (`id_historial`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_recetas_medicos` FOREIGN KEY (`id_medico`) REFERENCES `medicos` (`id_medico`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_recetas_pacientes` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id_paciente`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `receta_detalles`
+--
+ALTER TABLE `receta_detalles`
+  ADD CONSTRAINT `fk_recetadetalles_medicamentos` FOREIGN KEY (`id_medicamento`) REFERENCES `tb_medicamentos` (`id_medicamento`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_recetadetalles_recetas` FOREIGN KEY (`id_receta`) REFERENCES `recetas` (`id_receta`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `salas`
+--
+ALTER TABLE `salas`
+  ADD CONSTRAINT `fk_salas_especialidades` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidades` (`id_especialidad`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `tb_medicamentos`
+--
+ALTER TABLE `tb_medicamentos`
+  ADD CONSTRAINT `fk_medicamentos_categorias` FOREIGN KEY (`id_categoria`) REFERENCES `categorias_medicamentos` (`id_categoria`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD CONSTRAINT `fk_usuarios_roles` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id_rol`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `ventas_farmacia`
+--
+ALTER TABLE `ventas_farmacia`
+  ADD CONSTRAINT `fk_ventas_pacientes` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id_paciente`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_ventas_recetas` FOREIGN KEY (`id_receta`) REFERENCES `recetas` (`id_receta`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_ventas_usuarios` FOREIGN KEY (`id_usuario_cajero`) REFERENCES `usuarios` (`id_usuario`) ON UPDATE CASCADE;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-09-10 22:24:31

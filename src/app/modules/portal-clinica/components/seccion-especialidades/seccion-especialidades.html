@@ -19,7 +19,8 @@
               esp.nombre_especialidad
                 .toLowerCase()
                 .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '') +
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/\s+/g, '') +
               '1.png'
             "
             [alt]="esp.nombre_especialidad"

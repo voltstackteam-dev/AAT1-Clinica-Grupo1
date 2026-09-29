@@ -6,92 +6,407 @@
   </div>
 
   @if (cargando()) {
-    <p>Cargando citas...</p>
+  <p>Cargando citas...</p>
   } @else if (!misCitas().length) {
-    <div class="citas-vacias-alerta">
-      <h3>No tienes citas programadas</h3>
-    </div>
+  <div class="citas-vacias-alerta">
+    <h3>No tienes citas programadas</h3>
+  </div>
   } @else {
-    <div class="citas-grid-historial">
-      @for (cita of misCitas(); track cita.id_cita) {
-        <div class="cita-historial-card">
-          <div class="cita-card-top">
-            <span class="cita-codigo">Cita #{{ cita.id_cita }}</span>
-            <span [class]="'badge-estado estado-' + cita.estado.toLowerCase()">
-              {{ cita.estado | titlecase }}
+  <div class="citas-grid-historial">
+    @for (cita of misCitas(); track cita.id_cita) {
+    <div class="cita-historial-card">
+      <div class="cita-card-top">
+        <span class="cita-codigo">Cita #{{ cita.id_cita }}</span>
+        <span [class]="'badge-estado estado-' + cita.estado.toLowerCase()">
+          {{ cita.estado | titlecase }}
+        </span>
+      </div>
+      <div class="cita-card-cuerpo">
+        <h3>{{ cita.medico }}</h3>
+        <span class="cita-especialidad-tag">{{
+          cita.nombre_especialidad
+          }}</span>
+        <div class="cita-detalles-logistica">
+          <p><span>Fecha:</span> {{ cita.fecha_hora | date: "medium" }}</p>
+          <p><span>Lugar:</span> {{ cita.nombre_sala }}</p>
+          <p>
+            <span>Motivo:</span> {{ cita.motivo_consulta || "No indicado" }}
+          </p>
+        </div>
+      </div>
+      @if (puedeGestionar(cita)) {
+      <div class="cita-card-acciones">
+        <button class="btn-cancelar-urgente" [disabled]="actualizando() === cita.id_cita" (click)="cancelar(cita)">
+          Cancelar cita
+        </button>
+        <button class="btn-reprogramar" [disabled]="actualizando() === cita.id_cita"
+          (click)="prepararReprogramacion(cita)">
+          Reprogramar
+        </button>
+      </div>
+      }
+      @if (editando() === cita.id_cita) {
+      <div class="reprogramar-cita">
+        <label>Nueva fecha
+          <input type="date" [min]="hoy" [ngModel]="fechaNueva()" (ngModelChange)="fechaNueva.set($event)" /></label>
+        <label>Nueva hora
+          <select [ngModel]="horaNueva()" (ngModelChange)="horaNueva.set($event)">
+            <option value="">Selecciona una hora</option>
+            @for (hora of horas; track hora) {
+            <option [value]="hora">{{ hora }}</option>
+            }
+          </select></label>
+        <button class="btn-reprogramar" [disabled]="actualizando() === cita.id_cita" (click)="reprogramar(cita)">
+          Guardar cambio
+        </button>
+        <button class="btn-secundario" type="button" (click)="editando.set(null)">
+          Cerrar
+        </button>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  }
+</div>
+
+
+
+<!-- ============================= -->
+<!-- HISTORIAL MÉDICO -->
+<!-- ============================= -->
+
+<div class="historial-medico-seccion">
+
+  <div class="perfil-encabezado-bloque">
+    <h2>Mi Historial Médico</h2>
+    <p>Consultas anteriores, diagnósticos y recetas.</p>
+    <div class="linea-decorativa-perfil"></div>
+  </div>
+
+  @if (cargandoHistorial()) {
+
+  <p>Cargando historial médico...</p>
+
+  } @else if (!historialMedico().length) {
+
+  <div class="citas-vacias-alerta">
+    <h3>No tienes consultas médicas registradas</h3>
+  </div>
+
+  } @else {
+
+  <div class="tabla-historial-contenedor">
+
+    <table class="tabla-historial">
+
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Médico</th>
+          <th>Especialidad</th>
+          <th>Diagnóstico</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        @for (
+        consulta of historialMedico();
+        track consulta.id_historial
+        ) {
+
+        <tr>
+
+          <td>
+            {{ consulta.fecha_atencion | date:'dd/MM/yyyy HH:mm' }}
+          </td>
+
+          <td>
+            {{ consulta.medico }}
+          </td>
+
+          <td>
+            {{ consulta.nombre_especialidad }}
+          </td>
+
+          <td>
+            {{ consulta.diagnostico }}
+          </td>
+
+          <td>
+
+            <button class="btn-ver-detalles" type="button" (click)="mostrarDetalles(consulta.id_historial)">
+              {{
+              historialExpandido() === consulta.id_historial
+              ? 'Ocultar'
+              : 'Ver detalles'
+              }}
+            </button>
+
+          </td>
+
+        </tr>
+
+        @if (
+        historialExpandido() === consulta.id_historial
+        ) {
+
+        <tr class="fila-detalles">
+
+          <td colspan="5">
+
+            <div class="detalle-consulta">
+
+              <h3>Detalles de la consulta</h3>
+
+              <div class="detalle-grid">
+
+                <div>
+                  <strong>Diagnóstico</strong>
+                  <p>
+                    {{ consulta.diagnostico }}
+                  </p>
+                </div>
+
+                <div>
+                  <strong>Observaciones</strong>
+                  <p>
+                    {{
+                    consulta.observaciones ||
+                    'Sin observaciones'
+                    }}
+                  </p>
+                </div>
+
+              </div>
+
+              @if (consulta.receta) {
+
+              <div class="receta-resumen">
+
+                <h3>Receta médica</h3>
+
+                @for (
+                medicamento of consulta.receta.detalles;
+                track medicamento.id_medicamento
+                ) {
+
+                <div class="medicamento-item">
+
+                  <strong>
+                    {{ medicamento.nombre_medicamento }}
+                  </strong>
+
+                  <p>
+                    <strong>Dosis:</strong>
+                    {{ medicamento.dosis }}
+                  </p>
+
+                  <p>
+                    <strong>Frecuencia:</strong>
+                    {{ medicamento.frecuencia }}
+                  </p>
+
+                  <p>
+                    <strong>Duración:</strong>
+                    {{ medicamento.duracion_dias }}
+                    días
+                  </p>
+
+                  <p>
+                    <strong>Cantidad total de tabletas para cubrir el tratamiento:</strong>
+                    {{ medicamento.cantidad_prescrita }}
+                  </p>
+
+                </div>
+
+                }
+
+                <button class="btn-receta-pdf" type="button" (click)="verReceta(consulta)">
+                  Ver / imprimir receta
+                </button>
+
+              </div>
+
+              } @else {
+
+              <p class="sin-receta">
+                Esta consulta no tiene receta médica.
+              </p>
+
+              }
+
+            </div>
+
+          </td>
+
+        </tr>
+
+        }
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  }
+
+</div>
+
+
+
+@if (recetaSeleccionada(); as consulta) {
+  <div class="receta-modal-overlay">
+    <div class="receta-modal">
+
+      <div class="receta-modal-acciones">
+
+  <button
+    type="button"
+    class="btn-cerrar-receta"
+    (click)="cerrarReceta()"
+  >
+    ← Volver al portal
+  </button>
+
+  <button
+    type="button"
+    class="btn-imprimir-receta"
+    (click)="imprimirReceta()"
+  >
+    Imprimir / Guardar PDF
+  </button>
+
+</div>
+
+      <div class="receta-documento">
+
+
+        <img
+  src="LogoClinica1.png"
+  alt=""
+  class="receta-marca-agua"
+>
+
+  <div class="receta-contenido">
+
+    <div class="receta-encabezado">
+      <img
+        src="LogoClinica1.png"
+        alt="VOLTSTACK — Grupo Hospitalario"
+        class="logo-receta"
+      >
+
+      <h1>RECETA MÉDICA</h1>
+    </div>
+
+
+
+        <div class="receta-datos">
+          <div>
+            <strong>Paciente:</strong>
+            <span>{{ consulta.paciente }}</span>
+          </div>
+
+          <div>
+            <strong>Médico:</strong>
+            <span>{{ consulta.medico }}</span>
+          </div>
+
+          <div>
+            <strong>Especialidad:</strong>
+            <span>{{ consulta.nombre_especialidad }}</span>
+          </div>
+
+          <div>
+            <strong>Fecha:</strong>
+            <span>
+              {{ consulta.fecha_atencion | date:'dd/MM/yyyy HH:mm' }}
             </span>
           </div>
-          <div class="cita-card-cuerpo">
-            <h3>{{ cita.medico }}</h3>
-            <span class="cita-especialidad-tag">{{
-              cita.nombre_especialidad
-            }}</span>
-            <div class="cita-detalles-logistica">
-              <p><span>Fecha:</span> {{ cita.fecha_hora | date: "medium" }}</p>
-              <p><span>Lugar:</span> {{ cita.nombre_sala }}</p>
+        </div>
+
+        <div class="receta-diagnostico">
+          <strong>Diagnóstico</strong>
+          <p>{{ consulta.diagnostico }}</p>
+        </div>
+
+        <div class="receta-medicamentos">
+          <h3>Medicamentos indicados</h3>
+
+          @for (
+            medicamento of consulta.receta.detalles;
+            track medicamento.id_medicamento
+          ) {
+            <div class="medicamento-receta">
+
+              <h4>
+                {{ medicamento.nombre_medicamento }}
+              </h4>
+
               <p>
-                <span>Motivo:</span> {{ cita.motivo_consulta || "No indicado" }}
+                <strong>Dosis:</strong>
+                {{ medicamento.dosis }}
               </p>
-            </div>
-          </div>
-          @if (puedeGestionar(cita)) {
-            <div class="cita-card-acciones">
-              <button
-                class="btn-cancelar-urgente"
-                [disabled]="actualizando() === cita.id_cita"
-                (click)="cancelar(cita)"
-              >
-                Cancelar cita
-              </button>
-              <button
-                class="btn-reprogramar"
-                [disabled]="actualizando() === cita.id_cita"
-                (click)="prepararReprogramacion(cita)"
-              >
-                Reprogramar
-              </button>
-            </div>
-          }
-          @if (editando() === cita.id_cita) {
-            <div class="reprogramar-cita">
-              <label
-                >Nueva fecha
-                <input
-                  type="date"
-                  [min]="hoy"
-                  [ngModel]="fechaNueva()"
-                  (ngModelChange)="fechaNueva.set($event)"
-              /></label>
-              <label
-                >Nueva hora
-                <select
-                  [ngModel]="horaNueva()"
-                  (ngModelChange)="horaNueva.set($event)"
-                >
-                  <option value="">Selecciona una hora</option>
-                  @for (hora of horas; track hora) {
-                    <option [value]="hora">{{ hora }}</option>
-                  }
-                </select></label
-              >
-              <button
-                class="btn-reprogramar"
-                [disabled]="actualizando() === cita.id_cita"
-                (click)="reprogramar(cita)"
-              >
-                Guardar cambio
-              </button>
-              <button
-                class="btn-secundario"
-                type="button"
-                (click)="editando.set(null)"
-              >
-                Cerrar
-              </button>
+
+              <p>
+                <strong>Frecuencia:</strong>
+                {{ medicamento.frecuencia }}
+              </p>
+
+              <p>
+                <strong>Duración:</strong>
+                {{ medicamento.duracion_dias }} días
+              </p>
+
+              <p>
+                <strong>Cantidad total de tabletas para cubrir el tratamiento:</strong>
+                {{ medicamento.cantidad_prescrita }}
+              </p>
+
             </div>
           }
         </div>
-      }
-    </div>
-  }
+
+        @if (consulta.observaciones) {
+          <div class="receta-observaciones">
+            <strong>Observaciones</strong>
+            <p>{{ consulta.observaciones }}</p>
+          </div>
+        }
+
+        <div class="receta-firma">
+          <div class="linea-firma"></div>
+          <strong>{{ consulta.medico }}</strong>
+          <span>{{ consulta.nombre_especialidad }}</span>
+        </div>
+
+        <div class="receta-footer">
+
+  <div class="receta-footer-linea"></div>
+
+  <strong>VOLTSTACK — GRUPO HOSPITALARIO</strong>
+
+  <span>Atención médica profesional y segura</span>
+
+  <span>
+    Este documento corresponde a una receta médica emitida durante una consulta.
+  </span>
+
+  <small>
+    Documento generado desde el portal del paciente.
+  </small>
+
 </div>
+      </div>
+
+    </div>
+  </div>
+    </div>
+
+}

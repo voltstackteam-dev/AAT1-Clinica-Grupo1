@@ -39,7 +39,13 @@
   @for (med of medicamentos(); track med.id_medicamento) {
     <div class="card-medicamento">
       <span class="badge-cat">{{ med.categoria }}</span>
-      <img [src]="med.imagen_url || 'paracetamol.png'" [alt]="med.nombre" />
+      
+      <!-- Se llama al método helper getImagenMedicamento pasándole el nombre del medicamento -->
+      <img 
+        [src]="getImagenMedicamento(med.nombre)" 
+        [alt]="med.nombre" 
+        onerror="this.src = '/paracetamol.png'"
+      />
 
       <div class="card-body">
         <h3>{{ med.nombre }}</h3>

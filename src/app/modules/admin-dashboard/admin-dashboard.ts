@@ -44,9 +44,13 @@ export class AdminDashboardComponent implements OnInit {
   citas = signal<any[]>([]);
   horarios = signal<any[]>([]);
   medicos = signal<any[]>([]);
+historialMedico = signal<any[]>([]);
+cargandoHistorial = signal(false);
+historialExpandido = signal<number | null>(null);
+
   filtroActual = signal('TODAS');
   vistaActiva = signal<
-    'citas' | 'horarios' | 'farmacia' | 'medicos' | 'especialidades'
+    'citas' | 'horarios' | 'farmacia' | 'medicos' | 'especialidades' | 'historial' 
   >('citas');
   cargando = signal(false);
   mensaje = signal('');
@@ -59,7 +63,30 @@ export class AdminDashboardComponent implements OnInit {
   finHorario = signal('17:00');
   fechaNueva = signal('');
   horaNueva = signal('');
+
+  diagnostico = signal('');
+observaciones = signal('');
+
+// Medicamento que se está agregando actualmente
+medicamentoSeleccionado = signal<number | null>(null);
+dosis = signal<number | null>(null);
+frecuencia = signal<number | null>(null);
+duracionDias = signal<number | null>(null);
+
+// Lista de medicamentos de la receta
+medicamentosReceta = signal<any[]>([]);
+
+// Indica que el paciente no necesita receta
+sinReceta = signal(false);
+
+
+cantidadPrescrita = signal<number | null>(null);
+
+guardandoConsulta = signal<number | null>(null);
+
+
   esMedico = false;
+  
   esAdministrador = false;
   hoy = new Date().toISOString().slice(0, 10);
   horas = Array.from(
@@ -99,9 +126,12 @@ export class AdminDashboardComponent implements OnInit {
           );
           return;
         }
-        this.medicoActual.set(Number(medico.id_medico));
-        this.cargarCitas();
-        this.cargarHorarios();
+
+        /*CON ESTO LLAMA A LA FUNCIÓN PARA EL SELECT DE MEDICAMENTOS DE LA FARMACIA*/
+       this.medicoActual.set(Number(medico.id_medico));
+this.cargarCitas();
+this.cargarHorarios();
+this.cargarMedicamentosConsulta();
       },
       error: () =>
         this.mensaje.set(
@@ -152,35 +182,111 @@ export class AdminDashboardComponent implements OnInit {
           ),
       });
   }
-  cambiarVista(
-    vista: 'citas' | 'horarios' | 'farmacia' | 'medicos' | 'especialidades',
-  ): void {
-    if (
-      (vista === 'farmacia' ||
-        vista === 'medicos' ||
-        vista === 'especialidades') &&
-      !this.esAdministrador
-    ) {
-      return;
-    }
 
-    this.vistaActiva.set(vista);
-    this.mensaje.set('');
-    if (vista === 'horarios') {
-      this.cargarHorarios();
-    } else if (vista === 'farmacia') {
-      this.cargarMedicamentos();
-    }
+
+  cargarHistorialMedico(): void {
+  if (!this.esAdministrador) {
+    return;
   }
+
+  this.cargandoHistorial.set(true);
+
+  this.http
+    .get<any>(`${this.api}/historial_medico.php`)
+    .subscribe({
+      next: (respuesta) => {
+        this.historialMedico.set(respuesta.data || []);
+        this.cargandoHistorial.set(false);
+      },
+
+      error: (error) => {
+        this.historialMedico.set([]);
+        this.cargandoHistorial.set(false);
+
+        this.mensaje.set(
+          notificar(
+            error.error?.mensaje ||
+              error.error?.message ||
+              'No se pudo cargar el historial médico.',
+            'error'
+          )
+        );
+      },
+    });
+}
+
+  /*ESTA PARTE PERMITE QUE EL LISTADO DE MEDICAMENTOS APAREZCA EN EL SELECT*/
+  cargarMedicamentosConsulta(): void {
+  this.http.get<any>(this.apiGetMed).subscribe({
+    next: (respuesta) => {
+      if (respuesta.status === 'success') {
+        this.medicamentos.set(respuesta.data || []);
+      } else {
+        this.mensaje.set(
+          notificar(
+            respuesta.message || 'No se pudieron cargar los medicamentos.',
+            'error',
+          ),
+        );
+      }
+    },
+    error: (error) => {
+      this.mensaje.set(
+        notificar(
+          error.error?.message ||
+            error.error?.mensaje ||
+            'No se pudieron cargar los medicamentos.',
+          'error',
+        ),
+      );
+    },
+  });
+}
+
+ cambiarVista(
+  vista: 'citas' | 'horarios' | 'farmacia' | 'medicos' | 'especialidades' | 'historial',
+): void {
+  if (
+    (vista === 'farmacia' ||
+      vista === 'medicos' ||
+      vista === 'especialidades' ||
+      vista === 'historial') &&
+    !this.esAdministrador
+  ) {
+    return;
+  }
+
+  this.vistaActiva.set(vista);
+  this.mensaje.set('');
+
+  if (vista === 'horarios') {
+    this.cargarHorarios();
+
+  } else if (vista === 'farmacia') {
+    this.cargarMedicamentos();
+
+  } else if (vista === 'historial') {
+    this.cargarHistorialMedico();
+  }
+}
+
+
   seleccionarMedico(id: string): void {
     this.medicoActual.set(Number(id));
     this.cargarHorarios();
   }
+  
   citasFiltradas(): any[] {
-    return this.filtroActual() === 'TODAS'
-      ? this.citas()
-      : this.citas().filter((cita) => cita.estado === this.filtroActual());
+  if (this.filtroActual() === 'TODAS') {
+    return this.citas().filter(
+      (cita) => cita.estado !== 'EN_PROCESO'
+    );
   }
+
+  return this.citas().filter(
+    (cita) => cita.estado === this.filtroActual()
+  );
+}
   setFiltro(filtro: string): void {
     this.filtroActual.set(filtro);
   }
@@ -189,15 +295,30 @@ export class AdminDashboardComponent implements OnInit {
       cita.estado === 'PENDIENTE' && (this.esMedico || this.esAdministrador)
     );
   }
+
+
+
+
+
   puedeCancelar(cita: any): boolean {
     return (
       this.esAdministrador &&
       ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado)
     );
   }
-  puedeCompletar(cita: any): boolean {
+
+  /*puedeCompletar(cita: any): boolean {
     return this.esAdministrador && cita.estado === 'CONFIRMADA';
-  }
+  }*/
+
+puedeCompletar(cita: any): boolean {
+  return this.esMedico && cita.estado === 'EN_PROCESO';
+}
+
+puedeIniciar(cita: any): boolean {
+  return this.esMedico && cita.estado === 'CONFIRMADA';
+}
+
   puedeReprogramar(cita: any): boolean {
     return (
       (this.esMedico || this.esAdministrador) &&
@@ -214,21 +335,30 @@ export class AdminDashboardComponent implements OnInit {
     this.actualizandoCita.set(cita.id_cita);
     this.http
       .put<any>(`${this.api}/citas.php`, { id_cita: cita.id_cita, estado })
+      
       .subscribe({
-        next: (respuesta) => {
-          this.citas.update((citas) =>
-            citas.map((item) =>
-              item.id_cita === cita.id_cita
-                ? { ...item, estado: respuesta.estado }
-                : item,
-            ),
-          );
-          this.actualizandoCita.set(null);
-          notificar(
-            'El estado de la cita se actualizó correctamente.',
-            'success',
-          );
-        },
+       next: (respuesta) => {
+  this.citas.update((citas) =>
+    citas.map((item) =>
+      item.id_cita === cita.id_cita
+        ? { ...item, estado: respuesta.estado }
+        : item,
+    ),
+  );
+
+  // Si acabamos de iniciar una nueva consulta,
+  // dejamos el formulario completamente limpio.
+  if (estado === 'EN_PROCESO') {
+    this.limpiarConsulta();
+  }
+
+  this.actualizandoCita.set(null);
+
+  notificar(
+    'El estado de la cita se actualizó correctamente.',
+    'success',
+  );
+},
         error: (error) => {
           this.mensaje.set(
             notificar(
@@ -241,6 +371,163 @@ export class AdminDashboardComponent implements OnInit {
         },
       });
   }
+
+  /*ESTO GUARDA LA CONSULTA*/
+
+guardarConsulta(cita: any): void {
+  if (!this.diagnostico().trim()) {
+    this.mensaje.set(
+      notificar(
+        'Debes ingresar el diagnóstico antes de completar la cita.',
+        'warning',
+      ),
+    );
+    return;
+  }
+
+  this.guardandoConsulta.set(cita.id_cita);
+
+  const datos = {
+  id_cita: cita.id_cita,
+  diagnostico: this.diagnostico().trim(),
+  observaciones: this.observaciones().trim() || null,
+  sin_receta: this.sinReceta(),
+  medicamentos: this.medicamentosReceta()
+};
+
+  this.http
+    .post<any>(
+      'http://localhost:8000/api/guardar_consulta.php',
+      datos,
+    )
+    
+    .subscribe({
+      next: (respuesta) => {
+        this.citas.update((citas) =>
+          citas.map((item) =>
+            item.id_cita === cita.id_cita
+              ? {
+                  ...item,
+                  estado: 'COMPLETADA',
+                }
+              : item,
+          ),
+        );
+
+        this.limpiarConsulta();
+
+        this.guardandoConsulta.set(null);
+
+        this.mensaje.set(
+          notificar(
+            respuesta.mensaje ||
+              'Consulta completada correctamente.',
+            'success',
+          ),
+        );
+      },
+
+      error: (error) => {
+        this.guardandoConsulta.set(null);
+
+        this.mensaje.set(
+          notificar(
+            error.error?.mensaje ||
+              error.error?.message ||
+              'No se pudo guardar la consulta.',
+            'error',
+          ),
+        );
+      },
+    });
+}
+
+
+/*ESTO LIMPIA LOS DATOS*/
+
+limpiarConsulta(): void {
+  this.diagnostico.set('');
+  this.observaciones.set('');
+
+  this.medicamentoSeleccionado.set(null);
+  this.dosis.set(null);
+  this.frecuencia.set(null);
+  this.duracionDias.set(null);
+
+  this.medicamentosReceta.set([]);
+  this.sinReceta.set(false);
+}
+
+
+calcularCantidad(): number {
+  const dosis = Number(this.dosis());
+  const frecuenciaHoras = Number(this.frecuencia());
+  const dias = Number(this.duracionDias());
+
+  if (!dosis || !frecuenciaHoras || !dias) {
+    return 0;
+  }
+
+  const tomasPorDia = 24 / frecuenciaHoras;
+
+  return dosis * tomasPorDia * dias;
+}
+
+agregarMedicamento(): void {
+  if (!this.medicamentoSeleccionado()) {
+    this.mensaje.set(
+      notificar('Selecciona un medicamento.', 'warning')
+    );
+    return;
+  }
+
+  if (!this.dosis() || !this.frecuencia() || !this.duracionDias()) {
+    this.mensaje.set(
+      notificar(
+        'Completa la dosis, frecuencia y duración.',
+        'warning'
+      )
+    );
+    return;
+  }
+
+  const medicamento = this.medicamentos().find(
+    (med) =>
+      Number(med.id_medicamento) ===
+      Number(this.medicamentoSeleccionado())
+  );
+
+  if (!medicamento) {
+    return;
+  }
+
+  const cantidad = this.calcularCantidad();
+
+  this.medicamentosReceta.update((lista) => [
+    ...lista,
+    {
+      id_medicamento: medicamento.id_medicamento,
+      nombre: medicamento.nombre,
+      dosis: this.dosis(),
+      frecuencia: this.frecuencia(),
+      duracion_dias: this.duracionDias(),
+      cantidad_prescrita: cantidad
+    }
+  ]);
+
+  // Limpiar formulario para poder agregar otro medicamento
+  this.medicamentoSeleccionado.set(null);
+  this.dosis.set(null);
+  this.frecuencia.set(null);
+  this.duracionDias.set(null);
+}
+
+eliminarMedicamento(indice: number): void {
+  this.medicamentosReceta.update((lista) =>
+    lista.filter((_, i) => i !== indice)
+  );
+}
+
   prepararReprogramacion(cita: any): void {
     const [fecha, hora] = String(cita.fecha_hora).split(' ');
     this.editandoCita.set(cita.id_cita);

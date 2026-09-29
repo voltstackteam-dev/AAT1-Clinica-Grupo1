@@ -1,10 +1,10 @@
 <?php
 
 $servidor = getenv('DB_HOST') ?: 'localhost';
-$puerto = getenv('DB_PORT') ?: '3308';
+$puerto = getenv('DB_PORT') ?: '3306';
 $usuario = getenv('DB_USER') ?: 'root';
 $password = getenv('DB_PASSWORD') ?: '';
-$baseDatos = getenv('DB_NAME') ?: 'hospital';
+$baseDatos = getenv('DB_NAME') ?: 'hospitalyfarmacia';
 
 try {
     $conexion = new PDO(

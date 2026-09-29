@@ -20,6 +20,13 @@ export class HistorialCitasComponent implements OnInit {
   private api = 'http://localhost:8000/api/citas.php';
   misCitas = signal<any[]>([]);
   cargando = signal(true);
+  
+/*AGREGUE ESTO PARA EL HISTORIAL DE CITAS EN EL PORTAL DEL PACIENTE*/
+
+  historialMedico = signal<any[]>([]);
+cargandoHistorial = signal(true);
+historialExpandido = signal<number | null>(null);
+
   mensaje = signal('');
   editando = signal<number | null>(null);
   actualizando = signal<number | null>(null);
@@ -38,6 +45,7 @@ export class HistorialCitasComponent implements OnInit {
       return;
     }
     this.cargarCitas();
+    this.cargarHistorial();
   }
   cargarCitas(): void {
     const usuario = this.auth.obtenerUsuario();
@@ -56,6 +64,67 @@ export class HistorialCitasComponent implements OnInit {
         },
       });
   }
+
+
+
+cargarHistorial(): void {
+  this.http
+    .get<any>('http://localhost:8000/api/historial_medico.php')
+    .subscribe({
+      next: (respuesta) => {
+        this.historialMedico.set(respuesta.data || []);
+        this.cargandoHistorial.set(false);
+      },
+      error: (error) => {
+        console.error('Error al cargar historial:', error);
+
+        this.historialMedico.set([]);
+        this.cargandoHistorial.set(false);
+
+        this.mensaje.set(
+          notificar(
+            error.error?.mensaje ||
+              'No se pudo cargar el historial médico.',
+            'error',
+          ),
+        );
+      },
+    });
+}
+
+mostrarDetalles(id: number): void {
+  this.historialExpandido.update((actual) =>
+    actual === id ? null : id
+  );
+}
+
+
+
+/*ESTO ES PARA VER LA RECETA*/
+
+recetaSeleccionada = signal<any | null>(null);
+
+verReceta(consulta: any): void {
+  if (!consulta.receta) {
+    this.mensaje.set(
+      notificar('Esta consulta no tiene una receta médica.', 'warning')
+    );
+    return;
+  }
+
+  this.recetaSeleccionada.set(consulta);
+}
+
+cerrarReceta(): void {
+  this.recetaSeleccionada.set(null);
+}
+
+imprimirReceta(): void {
+  window.print();
+}
+
+
+
 
   puedeGestionar(cita: any): boolean {
     return cita.estado === 'PENDIENTE';

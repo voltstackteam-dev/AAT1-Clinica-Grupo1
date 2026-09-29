@@ -33,6 +33,23 @@ export class FarmaciaComponent implements OnInit {
     this.cargarMedicamentos('Todos');
   }
 
+  // --- MÉTODO HELPER PARA GENERAR LA RUTA DE LA IMAGEN EN PUBLIC ---
+  getImagenMedicamento(nombreMedicamento: string): string {
+    if (!nombreMedicamento) return '/paracetamol.png';
+
+    // Limpia el nombre del medicamento para que coincida con el archivo en public/
+    // Ej: "Aspirina 500mg" -> "aspirina500mg.png"
+    
+    const nombreLimpio = nombreMedicamento
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Elimina tildes
+      .replace(/[^a-z0-9]/g, '');     // Elimina espacios, guiones y caracteres especiales
+
+    return `/${nombreLimpio}.png`;
+  }
+
   cargarMedicamentos(categoria: string) {
     this.categoriaActual.set(categoria);
     const url =
