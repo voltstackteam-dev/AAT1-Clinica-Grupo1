@@ -48,6 +48,13 @@ historialMedico = signal<any[]>([]);
 cargandoHistorial = signal(false);
 historialExpandido = signal<number | null>(null);
 
+
+// Historial del paciente seleccionado por el médico
+historialPaciente = signal<any[]>([]);
+pacienteHistorialSeleccionado = signal<any | null>(null);
+cargandoHistorialPaciente = signal(false);
+
+
   filtroActual = signal('TODAS');
   vistaActiva = signal<
     'citas' | 'horarios' | 'farmacia' | 'medicos' | 'especialidades' | 'historial' 
@@ -214,6 +221,40 @@ this.cargarMedicamentosConsulta();
       },
     });
 }
+
+
+verHistorialPaciente(cita: any): void {
+  if (!cita?.id_paciente) {
+    console.error('La cita no tiene id_paciente.');
+    return;
+  }
+
+  this.pacienteHistorialSeleccionado.set(cita);
+  this.cargandoHistorialPaciente.set(true);
+  this.historialPaciente.set([]);
+
+  const url = `${this.api}/historial_medico.php?id_paciente=${cita.id_paciente}`;
+
+  this.http.get<any>(url).subscribe({
+    next: (respuesta) => {
+      this.historialPaciente.set(respuesta.data || []);
+      this.cargandoHistorialPaciente.set(false);
+    },
+    error: (error) => {
+      console.error('Error al cargar el historial del paciente:', error);
+      this.historialPaciente.set([]);
+      this.cargandoHistorialPaciente.set(false);
+    }
+  });
+}
+
+cerrarHistorialPaciente(): void {
+  this.historialPaciente.set([]);
+  this.pacienteHistorialSeleccionado.set(null);
+  this.cargandoHistorialPaciente.set(false);
+}
+
+
 
   /*ESTA PARTE PERMITE QUE EL LISTADO DE MEDICAMENTOS APAREZCA EN EL SELECT*/
   cargarMedicamentosConsulta(): void {

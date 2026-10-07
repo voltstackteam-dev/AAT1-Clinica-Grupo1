@@ -951,3 +951,582 @@
   color: #4a5568;
   font-size: 0.88rem;
 }
+
+
+/* ==========================================
+   HISTORIAL MÉDICO DEL PACIENTE
+   ========================================== */
+
+.historial-paciente-panel {
+  margin: 30px 0;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8edf3;
+}
+
+
+/* ==========================================
+   ENCABEZADO DEL HISTORIAL
+   ========================================== */
+
+.historial-paciente-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.historial-paciente-header h3 {
+  margin: 3px 0;
+  font-size: 24px;
+  color: #26364a;
+}
+
+.historial-paciente-header p {
+  margin: 4px 0 0;
+  color: #7a869a;
+  font-size: 14px;
+}
+
+
+/* ==========================================
+   LISTA DE CONSULTAS
+   ========================================== */
+
+.historial-paciente-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+
+/* ==========================================
+   CARD DE CADA CONSULTA
+   ========================================== */
+
+.historial-paciente-card {
+  background: #ffffff;
+  border: 1px solid #dfe5ec;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(38, 54, 74, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.historial-paciente-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 18px rgba(38, 54, 74, 0.12);
+}
+
+
+/* ==========================================
+   ENCABEZADO DE LA CONSULTA
+   FECHA + DOCTOR
+   ========================================== */
+
+.historial-paciente-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+
+  padding: 18px 22px;
+
+  background: #f1f5f9;
+  border-bottom: 1px solid #dfe5ec;
+}
+
+
+/* Fecha */
+
+.historial-paciente-card-header h4 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #26364a;
+}
+
+.historial-paciente-card-header > div:first-child span {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: #7a869a;
+}
+
+
+/* Doctor */
+
+.historial-doctor {
+  text-align: right;
+  padding-left: 25px;
+  border-left: 1px solid #d8dee7;
+}
+
+.historial-doctor strong {
+  display: block;
+  font-size: 14px;
+  color: #26364a;
+}
+
+.historial-doctor small {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #7a869a;
+}
+
+
+/* ==========================================
+   CUERPO DE LA CONSULTA
+   ========================================== */
+
+.historial-paciente-card-body {
+  padding: 18px 20px;
+
+  display: grid;
+
+  /*
+   * Tres columnas:
+   * Diagnóstico | Observaciones | Doctor
+   */
+  grid-template-columns: 1fr 1fr 1fr;
+
+  gap: 14px;
+}
+
+
+/* ==========================================
+   DATOS DE LA CONSULTA
+   ========================================== */
+
+.historial-item {
+  background: #f8fafc;
+  padding: 15px;
+
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+
+  min-height: 75px;
+}
+
+.historial-item strong {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  color: #7a869a;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.historial-item p {
+  margin: 0;
+
+  color: #4b5563;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* ==========================================
+   INFORMACIÓN DEL DOCTOR
+   DENTRO DEL MISMO NIVEL QUE LOS DATOS
+   ========================================== */
+
+.historial-doctor {
+  text-align: left;
+
+  background: #f8fafc;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  border: 1px solid #e8edf3;
+
+  min-height: 75px;
+}
+
+.historial-doctor strong {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 14px;
+
+  color: #26364a;
+}
+
+.historial-doctor small {
+  display: block;
+
+  font-size: 13px;
+
+  color: #7a869a;
+}
+
+
+/* ==========================================
+   RECETA MÉDICA
+   ========================================== */
+
+.historial-receta {
+  grid-column: 1 / -1;
+
+  background: #f8fafc;
+
+  padding: 15px 18px;
+
+  border-radius: 10px;
+
+  border: 1px solid #e1e7ee;
+}
+
+
+/* Título */
+
+.historial-receta-title {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 12px;
+
+  color: #26364a;
+}
+
+.historial-receta-title i {
+  font-size: 18px;
+}
+
+
+/* ==========================================
+   DETALLES DE LA RECETA
+   ========================================== */
+
+.receta-detalles {
+  background: #ffffff;
+
+  border-radius: 8px;
+
+  padding: 10px 14px;
+}
+
+
+/* Fecha de emisión */
+
+.receta-fecha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding-bottom: 9px;
+  margin-bottom: 4px;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.receta-fecha small {
+  color: #7a869a;
+  font-size: 12px;
+}
+
+.receta-fecha strong {
+  color: #26364a;
+  font-size: 13px;
+}
+
+
+/* ==========================================
+   MEDICAMENTOS
+   CADA UNO EN UNA SOLA LÍNEA
+   ========================================== */
+
+.medicamentos-historial {
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Una línea por medicamento */
+
+.medicamento-historial-item {
+  display: grid;
+
+  /*
+   * Medicamento | Dosis | Frecuencia | Duración | Cantidad
+   */
+  grid-template-columns: 1.6fr 1fr 1.3fr 1fr 0.8fr;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 11px 0;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.medicamento-historial-item:last-child {
+  border-bottom: none;
+}
+
+
+/* Nombre del medicamento */
+
+.medicamento-historial-nombre {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  white-space: nowrap;
+}
+
+.medicamento-historial-nombre strong {
+  color: #26364a;
+  font-size: 13px;
+}
+
+
+/* Datos del medicamento */
+
+.medicamento-historial-datos {
+  display: contents;
+}
+
+.medicamento-historial-datos span {
+  font-size: 12px;
+  color: #667085;
+
+  white-space: nowrap;
+}
+
+.medicamento-historial-datos span strong {
+  color: #4b5563;
+}
+
+
+/* ==========================================
+   SIN RECETA
+   ========================================== */
+
+.sin-receta {
+  grid-column: 1 / -1;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 14px;
+
+  background: #f8fafc;
+
+  border-radius: 10px;
+
+  border: 1px dashed #d5dce5;
+
+  color: #7a869a;
+}
+
+.sin-receta i {
+  font-size: 18px;
+}
+
+
+/* ==========================================
+   CARGANDO / VACÍO
+   ========================================== */
+
+.historial-cargando,
+.historial-vacio {
+  padding: 30px;
+
+  text-align: center;
+
+  color: #7a869a;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 1000px) {
+
+  .historial-paciente-card-body {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .historial-doctor {
+    grid-column: 1 / -1;
+  }
+
+  .medicamento-historial-item {
+    grid-template-columns: 1.5fr 1fr 1fr;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .historial-paciente-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .historial-paciente-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .historial-doctor {
+    width: 100%;
+
+    text-align: left;
+
+    padding-left: 15px;
+
+    border-left: none;
+    border-top: 1px solid #d8dee7;
+  }
+
+  .historial-paciente-card-body {
+    grid-template-columns: 1fr;
+  }
+
+  .historial-doctor {
+    grid-column: auto;
+  }
+
+  .medicamento-historial-item {
+    grid-template-columns: 1fr;
+
+    gap: 6px;
+  }
+
+  .medicamento-historial-nombre {
+    margin-bottom: 4px;
+  }
+
+  .medicamento-historial-datos {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px 15px;
+  }
+
+}
+
+/* ==========================================
+   BOTÓN VER HISTORIAL
+   ========================================== */
+
+.btn-historial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 12px;
+  padding: 8px 18px;
+
+  background: #ffffff;
+  color: #2563a8;
+
+  border: 1.5px solid #2563a8;
+  border-radius: 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+/* Cuando pasas el mouse */
+.btn-historial:hover {
+  background: #2563a8;
+  color: #ffffff;
+
+  box-shadow: 0 4px 10px rgba(37, 99, 168, 0.20);
+
+  transform: translateY(-1px);
+}
+
+/* Cuando haces clic */
+.btn-historial:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Quitar el borde de enfoque de Bootstrap */
+.btn-historial:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 168, 0.15);
+}
+
+
+/* ==========================================
+   BOTÓN CERRAR HISTORIAL
+   ========================================== */
+
+.btn-cerrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 18px;
+
+  background: #ea0000;
+  color: #fdfdfd;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.btn-cerrar:hover {
+  background: #f1f5f9;
+  color: #ea0000;
+  border-color: #ea0000;
+
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+
+  transform: translateY(-1px);
+}
+
+/* Click */
+.btn-cerrar:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Focus */
+.btn-cerrar:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.15);
+}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-09-2026 a las 06:08:06
+-- Tiempo de generación: 08-10-2026 a las 00:36:41
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -96,7 +96,11 @@ INSERT INTO `citas` (`id_cita`, `id_paciente`, `id_medico`, `id_sala`, `fecha_ho
 (2, 4, 1, 1, '2026-09-30 13:00:00', 'Gripe', 'COMPLETADA', '2026-09-26 00:14:19', '2026-09-26 07:19:09'),
 (3, 4, 1, 1, '2026-09-29 14:00:00', 'Seguimiento a la consulta de la migraña', 'COMPLETADA', '2026-09-28 20:57:00', '2026-09-28 22:02:08'),
 (4, 3, 1, 1, '2026-10-01 16:00:00', 'Dolor de estomado', 'COMPLETADA', '2026-09-28 23:12:02', '2026-09-29 02:19:11'),
-(5, 4, 1, 2, '2026-10-02 10:00:00', 'Dolores musculares y fiebres altas', 'CONFIRMADA', '2026-09-28 23:49:15', '2026-09-29 00:35:22');
+(5, 4, 1, 2, '2026-10-02 10:00:00', 'Dolores musculares y fiebres altas', 'COMPLETADA', '2026-09-28 23:49:15', '2026-10-01 02:17:20'),
+(6, 3, 1, 2, '2026-10-01 14:00:00', 'Fiebre alta', 'EN_PROCESO', '2026-10-01 02:25:44', '2026-10-01 02:30:32'),
+(7, 4, 2, 1, '2026-10-12 11:00:00', 'Seguimiento a la gripe', 'EN_PROCESO', '2026-10-07 18:18:05', '2026-10-07 20:16:03'),
+(8, 1, 2, 1, '2026-10-12 12:00:00', 'consulta pediadtrica', 'COMPLETADA', '2026-10-07 20:08:45', '2026-10-07 20:10:52'),
+(9, 1, 2, 1, '2026-10-26 13:00:00', 'consulta de seguimiento', 'CONFIRMADA', '2026-10-07 21:00:34', '2026-10-07 21:00:55');
 
 -- --------------------------------------------------------
 
@@ -121,7 +125,8 @@ INSERT INTO `disponibilidades` (`id_disponibilidad`, `id_medico`, `dia_semana`, 
 (2, 1, 'MARTES', '13:00:00', '17:00:00'),
 (3, 1, 'MIERCOLES', '08:00:00', '17:00:00'),
 (4, 1, 'JUEVES', '13:00:00', '17:00:00'),
-(5, 1, 'VIERNES', '08:00:00', '12:00:00');
+(5, 1, 'VIERNES', '08:00:00', '12:00:00'),
+(6, 2, 'LUNES', '08:00:00', '17:00:00');
 
 -- --------------------------------------------------------
 
@@ -179,7 +184,9 @@ CREATE TABLE `historial_medico` (
 INSERT INTO `historial_medico` (`id_historial`, `id_cita`, `diagnostico`, `receta`, `observaciones`, `fecha_atencion`) VALUES
 (1, 2, 'migraña', NULL, 'cada dos días', '2026-09-26 07:19:09'),
 (2, 3, 'Gripe', NULL, 'Mantenerse hidratado y reposo', '2026-09-28 22:02:08'),
-(3, 4, 'Amebas', NULL, 'Dieta de comida blanda', '2026-09-29 02:19:11');
+(3, 4, 'Amebas', NULL, 'Dieta de comida blanda', '2026-09-29 02:19:11'),
+(4, 5, 'Posible infección', NULL, 'Reposo e hidratación', '2026-10-01 02:17:20'),
+(5, 8, 'mocos', NULL, 'dolor en la nariz', '2026-10-07 20:10:52');
 
 -- --------------------------------------------------------
 
@@ -286,7 +293,8 @@ CREATE TABLE `recetas` (
 INSERT INTO `recetas` (`id_receta`, `id_historial`, `id_paciente`, `id_medico`, `fecha_emision`, `estado`) VALUES
 (1, 1, 4, 1, '2026-09-26 07:19:09', 'EMITIDA'),
 (2, 2, 4, 1, '2026-09-28 22:02:08', 'EMITIDA'),
-(3, 3, 3, 1, '2026-09-29 02:19:11', 'EMITIDA');
+(3, 3, 3, 1, '2026-09-29 02:19:11', 'EMITIDA'),
+(4, 4, 4, 1, '2026-10-01 02:17:20', 'EMITIDA');
 
 -- --------------------------------------------------------
 
@@ -312,7 +320,10 @@ INSERT INTO `receta_detalles` (`id_receta_detalle`, `id_receta`, `id_medicamento
 (1, 1, 5, '1', '8', 1, 1),
 (2, 2, 1, '1 tableta(s)', 'Cada 24 horas', 5, 5),
 (3, 2, 2, '1 tableta(s)', 'Cada 12 horas', 5, 10),
-(4, 3, 1, '1 tableta(s)', 'Cada 6 horas', 5, 20);
+(4, 3, 1, '1 tableta(s)', 'Cada 6 horas', 5, 20),
+(5, 4, 1, '1 tableta(s)', 'Cada 12 horas', 2, 4),
+(6, 4, 2, '1 tableta(s)', 'Cada 6 horas', 3, 12),
+(7, 4, 1, '2 tableta(s)', 'Cada 6 horas', 5, 40);
 
 -- --------------------------------------------------------
 
@@ -589,13 +600,13 @@ ALTER TABLE `categorias_medicamentos`
 -- AUTO_INCREMENT de la tabla `citas`
 --
 ALTER TABLE `citas`
-  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `disponibilidades`
 --
 ALTER TABLE `disponibilidades`
-  MODIFY `id_disponibilidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_disponibilidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `equipos`
@@ -613,7 +624,7 @@ ALTER TABLE `especialidades`
 -- AUTO_INCREMENT de la tabla `historial_medico`
 --
 ALTER TABLE `historial_medico`
-  MODIFY `id_historial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_historial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `lotes_inventario`
@@ -643,13 +654,13 @@ ALTER TABLE `proveedores`
 -- AUTO_INCREMENT de la tabla `recetas`
 --
 ALTER TABLE `recetas`
-  MODIFY `id_receta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_receta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `receta_detalles`
 --
 ALTER TABLE `receta_detalles`
-  MODIFY `id_receta_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_receta_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
