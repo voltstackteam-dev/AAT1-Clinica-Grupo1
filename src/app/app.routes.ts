@@ -14,6 +14,9 @@ import { SeccionEspecialidades } from './modules/portal-clinica/components/secci
 import { ListadoMedicosComponent } from './modules/portal-clinica/components/listado-medicos/listado-medicos';
 import { InfoHospitalesComponent } from './modules/portal-clinica/components/info-hospitales/info-hospitales';
 
+// IMPORTA DASHBOARD AQUÍ
+import { DashboardComponent } from './dashboard/dashboard'; 
+
 export const routes: Routes = [
   // Inicio / Home completo tradicional
   { path: '', component: PortalClinicaComponent },
@@ -33,7 +36,12 @@ export const routes: Routes = [
   { path: 'registro', component: RegistroComponent },
   { path: 'login-personal', component: AdminLoginComponent },
   { path: 'admin/control-citas', component: AdminDashboardComponent },
+  
+  //  AGREGA LA RUTA DE TU DASHBOARD AQUÍ
+  // Puedes llamarla 'dashboard' o 'admin/dashboard' como prefieras
+  { path: 'dashboard', component: DashboardComponent }, 
 
+  
   { path: '**', redirectTo: '' },
 
   //Rutas: paciente, médico y admin. / //Ruta por defecto (Aun no estan porque hace falta crear la ruta de medico, admin)
