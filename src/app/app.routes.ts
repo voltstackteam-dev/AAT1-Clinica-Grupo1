@@ -7,6 +7,7 @@ import { LoginComponent } from './modules/login/login';
 import { RegistroComponent } from './modules/registro/registro';
 import { AdminLoginComponent } from './modules/admin-login/admin-login';
 import { AdminDashboardComponent } from './modules/admin-dashboard/admin-dashboard';
+import { DashboardComponent } from './dashboard/dashboard';
 
 // Importamos los componentes hijos directamente para sus rutas físicas dedicadas
 import { SeccionServicios } from './modules/portal-clinica/components/seccion-servicios/seccion-servicios';
@@ -34,7 +35,9 @@ export const routes: Routes = [
   { path: 'login-personal', component: AdminLoginComponent },
   { path: 'admin/control-citas', component: AdminDashboardComponent },
 
+  { path: 'dashboard', component: DashboardComponent },
   { path: '**', redirectTo: '' },
+
 
   //Rutas: paciente, médico y admin. / //Ruta por defecto (Aun no estan porque hace falta crear la ruta de medico, admin)
 ];

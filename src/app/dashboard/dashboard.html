@@ -1,0 +1,97 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1>Panel de Control - Clínica AAT1</h1>
+    <p>Resumen general del día</p>
+  </header>
+
+  <!-- Tarjetas de Métricas (KPIs) -->
+  <div class="metrics-grid">
+    <div class="metric-card" *ngFor="let metric of metrics">
+      <div
+        class="metric-icon"
+        [style.background-color]="metric.color + '20'"
+        [style.color]="metric.color"
+      >
+        {{ metric.icon }}
+      </div>
+      <div class="metric-info">
+        <h3>{{ metric.title }}</h3>
+        <p class="metric-value">{{ metric.value }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <!-- Tabla de Citas Recientes -->
+    <div class="card table-card">
+      <div class="card-header">
+        <h2>Citas Recientes</h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Paciente</th>
+            <th>Médico</th>
+            <th>Hora</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of recentAppointments">
+            <td>{{ app.patient }}</td>
+            <td>{{ app.doctor }}</td>
+            <td>{{ app.time }}</td>
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="{
+                  'status-completed': app.status === 'Completada' || app.status === 'En Proceso',
+                  'status-waiting': app.status === 'En Espera' || app.status === 'Confirmada',
+                  'status-cancelled': app.status === 'Cancelada',
+                }"
+              >
+                {{ app.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="side-column">
+      <!-- Gráfica de Especialidades (CSS puro) -->
+      <div class="card chart-card">
+        <div class="card-header">
+          <h2>Citas por Especialidad</h2>
+        </div>
+        <div class="chart-container">
+          <div class="chart-row" *ngFor="let item of specialtyData">
+            <span class="chart-label">{{ item.name }}</span>
+            <div class="chart-bar-bg">
+              <div class="chart-bar-fill" [style.width.%]="item.percentage"></div>
+            </div>
+            <span class="chart-value">{{ item.count }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventario Bajo -->
+      <div class="card stock-card">
+        <div class="card-header">
+          <h2>Alerta de Inventario</h2>
+        </div>
+        <ul class="stock-list">
+          <li *ngFor="let item of lowStock">
+            <div class="stock-info">
+              <span class="stock-name">{{ item.item }}</span>
+              <span class="stock-qty">Quedan {{ item.quantity }} (Mín: {{ item.min }})</span>
+            </div>
+            <div class="stock-bar">
+              <div class="stock-bar-fill" [style.width.%]="(item.quantity / item.min) * 100"></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
