@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit {
   metrics = [
     { title: 'Citas Hoy', value: '0', icon: '📅', color: '#3b82f6' },
     { title: 'Pacientes Nuevos', value: '0', icon: '👤', color: '#10b981' },
-    { title: 'Ingresos del Mes', value: '$0', icon: '💰', color: '#f59e0b' },
+    { title: 'Ingresos del Mes', value: 'Q0', icon: '💰', color: '#f59e0b' },
     { title: 'Stock Bajo', value: '0', icon: '⚠️', color: '#ef4444' }
   ];
 
