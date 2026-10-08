@@ -8,12 +8,13 @@ import { RegistroComponent } from './modules/registro/registro';
 import { AdminLoginComponent } from './modules/admin-login/admin-login';
 import { AdminDashboardComponent } from './modules/admin-dashboard/admin-dashboard';
 import { DashboardComponent } from './dashboard/dashboard';
-
+import { adminGuard } from './guards/auth-guard';
 // Importamos los componentes hijos directamente para sus rutas físicas dedicadas
 import { SeccionServicios } from './modules/portal-clinica/components/seccion-servicios/seccion-servicios';
 import { SeccionEspecialidades } from './modules/portal-clinica/components/seccion-especialidades/seccion-especialidades';
 import { ListadoMedicosComponent } from './modules/portal-clinica/components/listado-medicos/listado-medicos';
 import { InfoHospitalesComponent } from './modules/portal-clinica/components/info-hospitales/info-hospitales';
+import { PerfilComponent } from './shared/components/perfil/perfil';
 
 export const routes: Routes = [
   // Inicio / Home completo tradicional
@@ -33,9 +34,9 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'login-personal', component: AdminLoginComponent },
-  { path: 'admin/control-citas', component: AdminDashboardComponent },
-
+  { path: 'admin/control-citas', component: AdminDashboardComponent, canActivate: [adminGuard],},
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'perfil', component: PerfilComponent },
   { path: '**', redirectTo: '' },
 
 

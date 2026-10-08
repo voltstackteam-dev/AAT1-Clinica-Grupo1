@@ -1,4 +1,4 @@
-import { Component, inject, computed } from "@angular/core";
+import { Component, inject, computed, HostListener } from "@angular/core";
 import { CommonModule, NgClass } from "@angular/common";
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { CarritoService } from "../../../services/carrito";
@@ -21,12 +21,11 @@ import { AuthService } from "../../../services/auth.service";
 export class NavbarComponent {
   private carritoService = inject(CarritoService);
   private authService = inject(AuthService);
+
   usuario = this.authService.usuario;
 
   cantidadItems = computed(() =>
-    this.carritoService
-      .items()
-      .reduce((total, item) => total + item.cantidad, 0),
+    this.carritoService.items().reduce((total, item) => total + item.cantidad, 0),
   );
 
   menuAbierto: boolean = false;
@@ -45,6 +44,15 @@ export class NavbarComponent {
   alternarCarrito(): void {
     this.cerrarMenu();
     this.carritoAbierto = !this.carritoAbierto;
+  }
+
+  @HostListener("document:click", ["$event"])
+  cerrarCarritoAlHacerClickAfuera(event: MouseEvent): void {
+    const elemento = event.target as HTMLElement;
+
+    if (this.carritoAbierto && !elemento.closest(".carrito-dropdown") && !elemento.closest(".btn-carrito-nav")) {
+      this.carritoAbierto = false;
+    }
   }
 
   manejarNavegacionSesion(event: Event): void {

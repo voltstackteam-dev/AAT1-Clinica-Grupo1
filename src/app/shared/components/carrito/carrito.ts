@@ -16,9 +16,7 @@ export class CarritoComponent {
 
   total = computed(() => this.carritoService.obtenerTotal());
 
-  cantidad = computed(() =>
-    this.carritoService.items().reduce((total, item) => total + item.cantidad, 0),
-  );
+  cantidad = computed(() => this.carritoService.items().reduce((total, item) => total + item.cantidad, 0));
 
   vaciarCarrito(): void {
     this.carritoService.limpiarCarrito();
