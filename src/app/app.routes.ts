@@ -7,6 +7,7 @@ import { LoginComponent } from './modules/login/login';
 import { RegistroComponent } from './modules/registro/registro';
 import { AdminLoginComponent } from './modules/admin-login/admin-login';
 import { AdminDashboardComponent } from './modules/admin-dashboard/admin-dashboard';
+import { AdminGuard } from './guards/admin-guard';
 
 // Importamos los componentes hijos directamente para sus rutas físicas dedicadas
 import { SeccionServicios } from './modules/portal-clinica/components/seccion-servicios/seccion-servicios';
@@ -37,9 +38,9 @@ export const routes: Routes = [
   { path: 'login-personal', component: AdminLoginComponent },
   { path: 'admin/control-citas', component: AdminDashboardComponent },
   
-  //  AGREGA LA RUTA DE TU DASHBOARD AQUÍ
-  // Puedes llamarla 'dashboard' o 'admin/dashboard' como prefieras
-  { path: 'dashboard', component: DashboardComponent }, 
+  //  RUTA DE TU DASHBOARD AQUÍ
+  
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] }, 
 
   
   { path: '**', redirectTo: '' },
