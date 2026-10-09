@@ -48,9 +48,8 @@ historialExpandido = signal<number | null>(null);
     this.cargarHistorial();
   }
   cargarCitas(): void {
-    const usuario = this.auth.obtenerUsuario();
     this.http
-      .get<any>(`${this.api}?id_usuario=${usuario.id_usuario}`)
+      .get<any>(this.api)
       .subscribe({
         next: (r) => {
           this.misCitas.set(r.data || []);

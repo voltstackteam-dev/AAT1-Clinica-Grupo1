@@ -93,7 +93,7 @@ ejecutarApi(function () use ($conexion, $metodo): void {
             ON s.id_sala = c.id_sala';
 
     if ($metodo === 'GET') {
-        $usuario = verificarRol([1]);
+        $usuario = verificarRol([1, 2, 3]);
         $p = [];
         $sql = $base;
 
