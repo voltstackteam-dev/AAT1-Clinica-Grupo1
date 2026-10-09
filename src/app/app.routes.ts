@@ -16,6 +16,9 @@ import { ListadoMedicosComponent } from './modules/portal-clinica/components/lis
 import { InfoHospitalesComponent } from './modules/portal-clinica/components/info-hospitales/info-hospitales';
 import { PerfilComponent } from './shared/components/perfil/perfil';
 
+// IMPORTA DASHBOARD AQUÍ
+import { DashboardComponent } from './dashboard/dashboard'; 
+
 export const routes: Routes = [
   // Inicio / Home completo tradicional
   { path: '', component: PortalClinicaComponent },
@@ -34,9 +37,19 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'login-personal', component: AdminLoginComponent },
+<<<<<<< HEAD
   { path: 'admin/control-citas', component: AdminDashboardComponent, canActivate: [adminGuard],},
   { path: 'dashboard', component: DashboardComponent },
   { path: 'perfil', component: PerfilComponent },
+=======
+  { path: 'admin/control-citas', component: AdminDashboardComponent },
+  
+  //  RUTA DE TU DASHBOARD AQUÍ
+  
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] }, 
+
+  
+>>>>>>> origin/Mario
   { path: '**', redirectTo: '' },
 
 
