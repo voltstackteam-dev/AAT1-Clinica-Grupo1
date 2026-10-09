@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { CarritoService } from './carrito';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { Observable, tap } from 'rxjs';
 export class AuthService {
   private apiURL = 'http://localhost:8000/api/login.php';
 
-  constructor(private http: HttpClient) {}
+ constructor(private http: HttpClient, private carritoService: CarritoService) {}
 
   usuario = signal<any>(this.leerUsuario());
 
@@ -25,6 +26,7 @@ export class AuthService {
 
           localStorage.setItem('usuario', JSON.stringify(respuesta.usuario));
           this.usuario.set(respuesta.usuario);
+          this.carritoService.recargarCarrito();
         }
       }),
     );
@@ -35,6 +37,7 @@ export class AuthService {
 
     localStorage.removeItem('usuario');
     this.usuario.set(null);
+    this.carritoService.recargarCarrito();
   }
 
   obtenerToken(): string | null {

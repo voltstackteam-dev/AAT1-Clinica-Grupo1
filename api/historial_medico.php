@@ -16,16 +16,22 @@ ejecutarApi(function () use ($conexion, $metodo): void {
      * Administrador (rol 1):
      * puede consultar todos los historiales médicos.
      *
+     * Médico (rol 2):
+     * puede consultar el historial de un paciente
+     * que tenga una cita con ese médico.
+     *
      * Paciente (rol 3):
      * solamente puede consultar su propio historial.
      */
-    $usuario = verificarRol([1, 3]);
+    $usuario = verificarRol([1, 2, 3]);
 
     $idPaciente = null;
 
     /*
-     * Si es paciente, obtenemos el paciente
-     * relacionado con su usuario.
+     * PACIENTE
+     *
+     * Obtenemos el paciente relacionado
+     * con su usuario.
      */
     if ((int) $usuario->id_rol === 3) {
 
@@ -50,13 +56,102 @@ ejecutarApi(function () use ($conexion, $metodo): void {
     }
 
     /*
+     * MÉDICO
+     *
+     * El médico debe enviar:
+     *
+     * historial_medico.php?id_paciente=5
+     *
+     * Primero obtenemos su id_medico.
+     */
+    if ((int) $usuario->id_rol === 2) {
+
+        if (!isset($_GET['id_paciente'])) {
+            responderError(
+                'Debe indicar el paciente cuyo historial desea consultar.',
+                400
+            );
+        }
+
+        $idPaciente = (int) $_GET['id_paciente'];
+
+        if ($idPaciente <= 0) {
+            responderError(
+                'El paciente indicado no es valido.',
+                400
+            );
+        }
+
+        /*
+         * Obtenemos el perfil médico relacionado
+         * con el usuario que inició sesión.
+         */
+        $medico = $conexion->prepare(
+            'SELECT id_medico
+             FROM medicos
+             WHERE id_usuario = :usuario'
+        );
+
+        $medico->execute([
+            ':usuario' => (int) $usuario->id_usuario
+        ]);
+
+        $idMedico = (int) $medico->fetchColumn();
+
+        if (!$idMedico) {
+            responderError(
+                'La cuenta no tiene un perfil médico asociado.',
+                403
+            );
+        }
+
+        /*
+         * SEGURIDAD
+         *
+         * Comprobamos que el paciente tenga
+         * al menos una cita con este médico.
+         *
+         * Esto evita que un médico pueda consultar
+         * arbitrariamente el historial de cualquier paciente.
+         */
+        $autorizacion = $conexion->prepare(
+            'SELECT 1
+             FROM citas
+             WHERE id_paciente = :paciente
+               AND id_medico = :medico
+             LIMIT 1'
+        );
+
+        $autorizacion->execute([
+            ':paciente' => $idPaciente,
+            ':medico' => $idMedico
+        ]);
+
+        if (!$autorizacion->fetchColumn()) {
+            responderError(
+                'No tiene permiso para consultar el historial de este paciente.',
+                403
+            );
+        }
+    }
+
+    /*
      * Obtenemos los historiales médicos.
      *
-     * Si es administrador:
-     *   obtiene todos los historiales.
+     * Administrador:
+     *   todos los historiales.
      *
-     * Si es paciente:
-     *   obtiene solamente su historial.
+     * Paciente:
+     *   solamente su historial.
+     *
+     * Médico:
+     *   solamente el historial del paciente solicitado.
+     *
+     * IMPORTANTE:
+     * El historial NO se filtra por médico.
+     *
+     * Por eso aparecerán también las consultas
+     * realizadas por otros médicos.
      */
     $sql = '
         SELECT
@@ -93,8 +188,10 @@ ejecutarApi(function () use ($conexion, $metodo): void {
     $parametros = [];
 
     /*
-     * Solamente agregamos el filtro cuando
-     * el usuario es paciente.
+     * Para pacientes y médicos filtramos
+     * por el paciente correspondiente.
+     *
+     * Para administradores no agregamos filtro.
      */
     if ($idPaciente !== null) {
 

@@ -7,16 +7,12 @@ import { LoginComponent } from './modules/login/login';
 import { RegistroComponent } from './modules/registro/registro';
 import { AdminLoginComponent } from './modules/admin-login/admin-login';
 import { AdminDashboardComponent } from './modules/admin-dashboard/admin-dashboard';
-import { AdminGuard } from './guards/admin-guard';
 
 // Importamos los componentes hijos directamente para sus rutas físicas dedicadas
 import { SeccionServicios } from './modules/portal-clinica/components/seccion-servicios/seccion-servicios';
 import { SeccionEspecialidades } from './modules/portal-clinica/components/seccion-especialidades/seccion-especialidades';
 import { ListadoMedicosComponent } from './modules/portal-clinica/components/listado-medicos/listado-medicos';
 import { InfoHospitalesComponent } from './modules/portal-clinica/components/info-hospitales/info-hospitales';
-
-// IMPORTA DASHBOARD AQUÍ
-import { DashboardComponent } from './dashboard/dashboard'; 
 
 export const routes: Routes = [
   // Inicio / Home completo tradicional
@@ -37,13 +33,9 @@ export const routes: Routes = [
   { path: 'registro', component: RegistroComponent },
   { path: 'login-personal', component: AdminLoginComponent },
   { path: 'admin/control-citas', component: AdminDashboardComponent },
-  
-  //  RUTA DE TU DASHBOARD AQUÍ
-  
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] }, 
 
-  
   { path: '**', redirectTo: '' },
+
 
   //Rutas: paciente, médico y admin. / //Ruta por defecto (Aun no estan porque hace falta crear la ruta de medico, admin)
 ];

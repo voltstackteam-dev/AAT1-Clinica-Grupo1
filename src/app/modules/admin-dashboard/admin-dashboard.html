@@ -44,17 +44,13 @@
     }
 
     @if (esAdministrador) {
-  <button
-    class="btn-pestana"
-    [class.active]="vistaActiva() === 'historial'"
-    (click)="cambiarVista('historial')"
-  >
-    Historial médico
-  </button>
-}
+    <button class="btn-pestana" [class.active]="vistaActiva() === 'historial'" (click)="cambiarVista('historial')">
+      Historial médico
+    </button>
+    }
 
 
-    
+
   </div>
 
   @if (vistaActiva() === "citas") {
@@ -109,6 +105,12 @@
         <div class="info-col">
           <small>PACIENTE</small>
           <h4>{{ cita.paciente }}</h4>
+
+          <!-- Ver historial completo del paciente -->
+          <button  *ngIf="esMedico && (cita.estado === 'CONFIRMADA' || cita.estado === 'EN_PROCESO')" type="button"
+            class="btn-historial" (click)="verHistorialPaciente(cita)">
+            VER HISTORIAL
+          </button>
         </div>
         <div class="info-col">
           <small>MÉDICO Y SALA</small>
@@ -123,6 +125,272 @@
         </div>
       </div>
 
+
+      <!-- =====================================================
+           HISTORIAL MÉDICO DEL PACIENTE
+           Solo aparece en la cita cuyo botón fue presionado
+      ====================================================== -->
+
+      @if (
+      esMedico &&
+      pacienteHistorialSeleccionado()?.id_cita === cita.id_cita
+      ) {
+
+      <div class="historial-paciente-panel">
+
+        <div class="historial-paciente-header">
+
+          <div>
+            <h3>
+              <i class="bi bi-file-medical"></i>
+              Historial médico
+            </h3>
+
+            <p>
+              Paciente:
+              <strong>
+                {{ cita.paciente }}
+              </strong>
+            </p>
+          </div>
+
+          <button type="button" class="btn-cerrar" (click)="cerrarHistorialPaciente()">
+            <i class="bi bi-x-lg"></i>
+            Cerrar
+          </button>
+
+        </div>
+
+
+        <!-- CARGANDO HISTORIAL -->
+
+        @if (cargandoHistorialPaciente()) {
+
+        <div class="historial-loading">
+
+          <div class="spinner-border text-primary" role="status"></div>
+
+          <p>
+            Cargando historial médico...
+          </p>
+
+        </div>
+
+        }
+
+
+        <!-- NO HAY HISTORIAL -->
+
+        @else if (historialPaciente().length === 0) {
+
+        <div class="historial-empty">
+
+          <i class="bi bi-info-circle"></i>
+
+          <p>
+            Este paciente no tiene consultas médicas
+            registradas anteriormente.
+          </p>
+
+        </div>
+
+        }
+
+
+        <!-- HISTORIAL ENCONTRADO -->
+
+        @else {
+
+        <div class="historial-paciente-list">
+
+          @for (
+          consulta of historialPaciente();
+          track consulta.id_consulta
+          ) {
+
+          <div class="historial-paciente-card">
+
+            
+             
+            </div>
+
+            
+
+            <div class="historial-paciente-card-body">
+
+              
+
+              <!-- MOTIVO -->
+
+              <div class="historial-item" *ngIf="consulta.motivo">
+
+                <strong>
+                  Motivo de consulta
+                </strong>
+
+                <p>
+                  {{ consulta.motivo }}
+                </p>
+
+              </div>
+
+
+              <!-- DIAGNÓSTICO -->
+
+              <div class="historial-item" *ngIf="consulta.diagnostico">
+
+                <strong>
+                  Diagnóstico
+                </strong>
+
+                <p>
+                  {{ consulta.diagnostico }}
+                </p>
+
+              </div>
+
+
+              <!-- OBSERVACIONES -->
+
+              <div class="historial-item" *ngIf="consulta.observaciones">
+
+                <strong>
+                  Observaciones
+                </strong>
+
+                <p>
+                  {{ consulta.observaciones }}
+                </p>
+
+              </div>
+
+               <div class="historial-doctor">
+    <strong>
+      Dr(a). {{ consulta.medico }}
+    </strong>
+
+    <small>
+      {{ consulta.nombre_especialidad || 'Médico general' }}
+    </small>
+  </div>
+
+
+              <!-- RECETA -->
+
+              @if (consulta.receta) {
+
+              <div class="historial-receta">
+
+                <div class="historial-receta-title">
+
+                  <i class="bi bi-prescription2"></i>
+
+                  <strong>
+                    Receta médica
+                  </strong>
+
+                </div>
+
+                <div class="receta-detalles">
+
+                  <div class="receta-fecha">
+                    <small>
+                      Fecha de emisión:
+                    </small>
+
+                    <strong>
+                      {{ consulta.receta.fecha_emision | date:'dd/MM/yyyy HH:mm' }}
+                    </strong>
+                  </div>
+
+
+                  @if (consulta.receta.detalles?.length > 0) {
+
+                  <div class="medicamentos-historial">
+
+                    @for (
+                    medicamento of consulta.receta.detalles;
+                    track $index
+                    ) {
+
+                    <div class="medicamento-historial-item">
+
+                      <div class="medicamento-historial-nombre">
+                        💊
+                        <strong>
+                          {{ medicamento.nombre_medicamento }}
+                        </strong>
+                      </div>
+
+                      <div class="medicamento-historial-datos">
+
+                        <span>
+                          <strong>Dosis:</strong>
+                          {{ medicamento.dosis }}
+                        </span>
+
+                        <span>
+                          <strong>Frecuencia:</strong>
+                          {{ medicamento.frecuencia }}
+                        </span>
+
+                        <span>
+                          <strong>Duración:</strong>
+                          {{ medicamento.duracion_dias }} días
+                        </span>
+
+                        <span>
+                          <strong>Cantidad:</strong>
+                          {{ medicamento.cantidad_prescrita }}
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                    }
+
+                  </div>
+
+                  } @else {
+
+                  <p>
+                    No hay medicamentos registrados en esta receta.
+                  </p>
+
+                  }
+
+                </div>
+
+              </div>
+
+              } @else {
+
+              <div class="sin-receta">
+
+                <i class="bi bi-check-circle"></i>
+
+                <span>
+                  No se indicó receta médica.
+                </span>
+
+              </div>
+
+              }
+
+            </div>
+
+          
+
+          }
+
+        </div>
+
+        }
+
+      </div>
+
+      }
 
 
       @if (cita.estado === 'EN_PROCESO' && esMedico) {
@@ -146,15 +414,15 @@
         <h4>Receta</h4>
 
         <div class="no-receta">
-        <!-- Opción para indicar que no necesita receta -->
-        <label class="checkbox-receta">
-          <input type="checkbox" [ngModel]="sinReceta()" (ngModelChange)="
+          <!-- Opción para indicar que no necesita receta -->
+          <label class="checkbox-receta">
+            <input type="checkbox" [ngModel]="sinReceta()" (ngModelChange)="
       sinReceta.set($event);
       $event && medicamentosReceta.set([])
     " />
 
-          El paciente no necesita receta
-        </label>
+            El paciente no necesita receta
+          </label>
 
         </div>
 
@@ -353,6 +621,7 @@
         }
       </div>
       }
+
       @if (editandoCita() === cita.id_cita) {
       <div class="editar-cita">
         <label>Nueva fecha
@@ -374,11 +643,23 @@
       }
     </div>
     }
+
+
+
+
+
     @if (!citasFiltradas().length) {
     <p>No hay citas para este filtro.</p>
     }
   </div>
   }
+
+
+
+
+
+
+
   } @else if (vistaActiva() === "horarios") {
   <section class="seccion-horarios">
     <div class="header-subseccion">
@@ -545,178 +826,174 @@
 
     @if (cargandoHistorial()) {
 
-      <p>Cargando historial médico...</p>
+    <p>Cargando historial médico...</p>
 
     } @else if (!historialMedico().length) {
 
-      <div class="citas-vacias-alerta">
-        <h3>No hay historiales médicos registrados</h3>
-        <p>
-          Todavía no existen consultas médicas completadas.
-        </p>
-      </div>
+    <div class="citas-vacias-alerta">
+      <h3>No hay historiales médicos registrados</h3>
+      <p>
+        Todavía no existen consultas médicas completadas.
+      </p>
+    </div>
 
     } @else {
 
-      <div class="tabla-historial-contenedor">
+    <div class="tabla-historial-contenedor">
 
-        <table class="tabla-historial">
+      <table class="tabla-historial">
 
-          <thead>
-            <tr>
-              <th>Paciente</th>
-              <th>Fecha</th>
-              <th>Médico</th>
-              <th>Especialidad</th>
-              <th>Diagnóstico</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
+        <thead>
+          <tr>
+            <th>Paciente</th>
+            <th>Fecha</th>
+            <th>Médico</th>
+            <th>Especialidad</th>
+            <th>Diagnóstico</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
 
-          <tbody>
+        <tbody>
 
-            @for (consulta of historialMedico(); track consulta.id_historial) {
+          @for (consulta of historialMedico(); track consulta.id_historial) {
 
-              <tr>
+          <tr>
 
-                <td>
-                  <strong>{{ consulta.paciente }}</strong>
-                </td>
+            <td>
+              <strong>{{ consulta.paciente }}</strong>
+            </td>
 
-                <td>
-                  {{ consulta.fecha_atencion | date: "medium" }}
-                </td>
+            <td>
+              {{ consulta.fecha_atencion | date: "medium" }}
+            </td>
 
-                <td>
-                  {{ consulta.medico }}
-                </td>
+            <td>
+              {{ consulta.medico }}
+            </td>
 
-                <td>
-                  {{ consulta.nombre_especialidad }}
-                </td>
+            <td>
+              {{ consulta.nombre_especialidad }}
+            </td>
 
-                <td>
-                  {{ consulta.diagnostico }}
-                </td>
+            <td>
+              {{ consulta.diagnostico }}
+            </td>
 
-                <td>
+            <td>
 
-                  <button
-                    type="button"
-                    class="btn-editar-cita"
-                    (click)="
+              <button type="button" class="btn-editar-cita" (click)="
                       historialExpandido.set(
                         historialExpandido() === consulta.id_historial
                           ? null
                           : consulta.id_historial
                       )
-                    "
-                  >
-                    {{
-                      historialExpandido() === consulta.id_historial
-                        ? "Ocultar"
-                        : "Ver detalles"
-                    }}
-                  </button>
+                    ">
+                {{
+                historialExpandido() === consulta.id_historial
+                ? "Ocultar"
+                : "Ver detalles"
+                }}
+              </button>
 
-                </td>
+            </td>
 
-              </tr>
+          </tr>
 
-              @if (historialExpandido() === consulta.id_historial) {
+          @if (historialExpandido() === consulta.id_historial) {
 
-                <tr>
+          <tr>
 
-                  <td colspan="6">
+            <td colspan="6">
 
-                    <div class="detalle-historial">
+              <div class="detalle-historial">
 
-                      <p>
-                        <strong>Motivo de consulta:</strong>
-                        {{ consulta.motivo_consulta || "Sin motivo registrado" }}
-                      </p>
+                <p>
+                  <strong>Motivo de consulta:</strong>
+                  {{ consulta.motivo_consulta || "Sin motivo registrado" }}
+                </p>
 
-                      <p>
-                        <strong>Observaciones:</strong>
-                        {{ consulta.observaciones || "Sin observaciones" }}
-                      </p>
+                <p>
+                  <strong>Observaciones:</strong>
+                  {{ consulta.observaciones || "Sin observaciones" }}
+                </p>
 
-                      @if (consulta.receta) {
+                @if (consulta.receta) {
 
-                        <div class="receta-historial">
+                <div class="receta-historial">
 
-                          <h4>Receta médica</h4>
+                  <h4>Receta médica</h4>
 
-                          <p>
-                            <strong>Fecha de emisión:</strong>
-                            {{ consulta.receta.fecha_emision | date: "medium" }}
-                          </p>
+                  <p>
+                    <strong>Fecha de emisión:</strong>
+                    {{ consulta.receta.fecha_emision | date: "medium" }}
+                  </p>
 
-                          <p>
-                            <strong>Estado:</strong>
-                            {{ consulta.receta.estado }}
-                          </p>
+                  <p>
+                    <strong>Estado:</strong>
+                    {{ consulta.receta.estado }}
+                  </p>
 
-                          @if (consulta.receta.detalles?.length) {
+                  @if (consulta.receta.detalles?.length) {
 
-                            <h5>Medicamentos</h5>
+                  <h5>Medicamentos</h5>
 
-                            @for (
-                              medicamento of consulta.receta.detalles;
-                              track medicamento.id_medicamento
-                            ) {
+                  @for (
+                  medicamento of consulta.receta.detalles;
+                  track medicamento.id_medicamento
+                  ) {
 
-                              <div class="medicamento-receta-item">
+                  <div class="medicamento-receta-item">
 
-                                <strong>
-                                  {{ medicamento.nombre_medicamento }}
-                                </strong>
+                    <strong>
+                      {{ medicamento.nombre_medicamento }}
+                    </strong>
 
-                                <span>
-                                  {{ medicamento.dosis }}
-                                  • {{ medicamento.frecuencia }}
-                                  • {{ medicamento.duracion_dias }} días
-                                </span>
+                    <span>
+                      {{ medicamento.dosis }}
+                      • {{ medicamento.frecuencia }}
+                      • {{ medicamento.duracion_dias }} días
+                    </span>
 
-                                <span>
-                                  Cantidad para cubrir el tratamiento:
-                                  <strong>
-                                    {{ medicamento.cantidad_prescrita }}
-                                  </strong>
-                                </span>
+                    <span>
+                      Cantidad para cubrir el tratamiento:
+                      <strong>
+                        {{ medicamento.cantidad_prescrita }}
+                      </strong>
+                    </span>
 
-                              </div>
+                  </div>
 
-                            }
+                  }
 
-                          }
+                  }
 
-                        </div>
+                </div>
 
-                      } @else {
+                } @else {
 
-                        <p>
-                          <strong>Receta:</strong>
-                          No se indicó receta para esta consulta.
-                        </p>
+                <p>
+                  <strong>Receta:</strong>
+                  No se indicó receta para esta consulta.
+                </p>
 
-                      }
+                }
 
-                    </div>
+              </div>
 
-                  </td>
+            </td>
 
-                </tr>
+          </tr>
 
-              }
+          }
 
-            }
+          }
 
-          </tbody>
+        </tbody>
 
-        </table>
+      </table>
 
-      </div>
+    </div>
 
     }
 
