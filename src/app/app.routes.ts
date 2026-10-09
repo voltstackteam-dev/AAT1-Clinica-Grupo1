@@ -7,7 +7,7 @@ import { LoginComponent } from './modules/login/login';
 import { RegistroComponent } from './modules/registro/registro';
 import { AdminLoginComponent } from './modules/admin-login/admin-login';
 import { AdminDashboardComponent } from './modules/admin-dashboard/admin-dashboard';
-import { DashboardComponent } from './dashboard/dashboard';
+/* import { DashboardComponent } from './dashboard/dashboard'; */
 import { adminGuard } from './guards/auth-guard';
 // Importamos los componentes hijos directamente para sus rutas físicas dedicadas
 import { SeccionServicios } from './modules/portal-clinica/components/seccion-servicios/seccion-servicios';
@@ -37,19 +37,9 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'login-personal', component: AdminLoginComponent },
-<<<<<<< HEAD
   { path: 'admin/control-citas', component: AdminDashboardComponent, canActivate: [adminGuard],},
   { path: 'dashboard', component: DashboardComponent },
   { path: 'perfil', component: PerfilComponent },
-=======
-  { path: 'admin/control-citas', component: AdminDashboardComponent },
-  
-  //  RUTA DE TU DASHBOARD AQUÍ
-  
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] }, 
-
-  
->>>>>>> origin/Mario
   { path: '**', redirectTo: '' },
 
 

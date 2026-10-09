@@ -1,7 +1,7 @@
 <?php
 
 $servidor = getenv('DB_HOST') ?: 'localhost';
-$puerto = getenv('DB_PORT') ?: '3306';
+$puerto = getenv('DB_PORT') ?: '3308';
 $usuario = getenv('DB_USER') ?: 'root';
 $password = getenv('DB_PASSWORD') ?: '';
 $baseDatos = getenv('DB_NAME') ?: 'hospitalyfarmacia';

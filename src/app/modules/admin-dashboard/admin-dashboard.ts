@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { DashboardComponent } from '../../dashboard/dashboard';
 
 export interface MedicamentoAdmin {
   id_medicamento: number;
@@ -23,6 +24,7 @@ export interface MedicamentoAdmin {
     CommonModule,
     FormsModule,
     RegistroMedicoComponent,
+    DashboardComponent
   ],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
@@ -57,7 +59,7 @@ cargandoHistorialPaciente = signal(false);
 
   filtroActual = signal('TODAS');
   vistaActiva = signal<
-    'citas' | 'horarios' | 'farmacia' | 'medicos' | 'especialidades' | 'historial' 
+    'citas' | 'horarios' | 'farmacia' | 'medicos' | 'especialidades' | 'historial' | 'dashboard'
   >('citas');
   cargando = signal(false);
   mensaje = signal('');
@@ -285,13 +287,14 @@ cerrarHistorialPaciente(): void {
 }
 
  cambiarVista(
-  vista: 'citas' | 'horarios' | 'farmacia' | 'medicos' | 'especialidades' | 'historial',
+  vista: 'citas' | 'horarios' | 'farmacia' | 'medicos' | 'especialidades' | 'historial' | 'dashboard',
 ): void {
   if (
     (vista === 'farmacia' ||
       vista === 'medicos' ||
       vista === 'especialidades' ||
-      vista === 'historial') &&
+      vista === 'historial'||
+      vista === 'dashboard') &&
     !this.esAdministrador
   ) {
     return;

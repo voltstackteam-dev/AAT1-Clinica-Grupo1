@@ -48,6 +48,11 @@
       Historial médico
     </button>
     }
+    @if (esAdministrador) {
+    <button class="btn-pestana" [class.active]="vistaActiva() === 'dashboard'" (click)="cambiarVista('dashboard')">
+      Dashboard
+    </button>
+    }
 
 
 
@@ -999,3 +1004,7 @@
 
   </div>
   }
+
+  @if (vistaActiva() === 'dashboard') {
+    <app-dashboard></app-dashboard>
+}
